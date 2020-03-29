@@ -8778,6 +8778,33 @@ namespace LitePlacer
             return true;
         }
 
+
+        // ========================================================================================
+        public void CameraToFirstComponent(int TapeNum)
+        {
+            if (!Tapes.PrepareForFastPlacement_m("CC0603KRX7R9BB103", 1))
+            {
+                return;
+            }
+
+            // find the part location and go there:
+            double PartX = 0.0;
+            double PartY = 0.0;
+            double A = 0.0;
+
+            // GetPartLocationFromHolePosition_m calculates A correctly, but we have already figured out X and Y
+            if (!Tapes.GetPartLocationFromHolePosition_m(TapeNum, Tapes.FastXpos, Tapes.FastYpos, out PartX, out PartY, out A))
+            {
+                ShowMessageBox(
+                    "Can't find tape hole",
+                    "Tape error",
+                    MessageBoxButtons.OK
+                );
+            }
+
+            CNC_XY_m(PartX, PartY);
+        }
+
         // =================================================================================
         // PickUpPartWithHoleMeasurement_m(): Picks next part from the tape, measuring the hole
         private bool PickUpPartWithHoleMeasurement_m(int TapeNumber)
@@ -15592,7 +15619,22 @@ namespace LitePlacer
             CNC_RawWrite("{\"gc\":\"G28.3 A0\"}");
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Nozzle.Move_m(Cnc.CurrentX, Cnc.CurrentY, Cnc.CurrentA);
+        }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            double xo = Setting.DownCam_NozzleOffsetX;
+            double yo = Setting.DownCam_NozzleOffsetY;
+            CNC_XY_m(Cnc.CurrentX - xo, Cnc.CurrentY - yo);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            CameraToFirstComponent(0);
+        }
     }	// end of: 	public partial class FormMain : Form
 
 
