@@ -65,6 +65,7 @@
             this.Bookmark5_button = new System.Windows.Forms.Button();
             this.Bookmark6_button = new System.Windows.Forms.Button();
             this.Tapes_tabPage = new System.Windows.Forms.TabPage();
+            this.button3 = new System.Windows.Forms.Button();
             this.label158 = new System.Windows.Forms.Label();
             this.label157 = new System.Windows.Forms.Label();
             this.ResetSelectedPlaceZs_button = new System.Windows.Forms.Button();
@@ -793,6 +794,37 @@
             this.NozzleLoad_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.gotoLoadStartPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyMovesFromNozzle1ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.Calibration_tabPage = new System.Windows.Forms.TabPage();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.label176 = new System.Windows.Forms.Label();
+            this.label175 = new System.Windows.Forms.Label();
+            this.label174 = new System.Windows.Forms.Label();
+            this.label173 = new System.Windows.Forms.Label();
+            this.label172 = new System.Windows.Forms.Label();
+            this.label170 = new System.Windows.Forms.Label();
+            this.label171 = new System.Windows.Forms.Label();
+            this.label168 = new System.Windows.Forms.Label();
+            this.label169 = new System.Windows.Forms.Label();
+            this.label167 = new System.Windows.Forms.Label();
+            this.label166 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.bottomRight_Go_button = new System.Windows.Forms.Button();
+            this.topRight_Go_button = new System.Windows.Forms.Button();
+            this.bottomLeft_Go_button = new System.Windows.Forms.Button();
+            this.topLeft_Go_button = new System.Windows.Forms.Button();
+            this.bottomRight_YPos_textBox = new System.Windows.Forms.TextBox();
+            this.bottomRight_XPos_textBox = new System.Windows.Forms.TextBox();
+            this.topRight_YPos_textBox = new System.Windows.Forms.TextBox();
+            this.topRight_XPos_textBox = new System.Windows.Forms.TextBox();
+            this.bottomLeft_YPos_textBox = new System.Windows.Forms.TextBox();
+            this.bottomLeft_XPos_textBox = new System.Windows.Forms.TextBox();
+            this.topLeft_YPos_textBox = new System.Windows.Forms.TextBox();
+            this.topLeft_XPos_textBox = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.CAD_openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.GotoX_textBox = new System.Windows.Forms.TextBox();
@@ -821,7 +853,10 @@
             this.label164 = new System.Windows.Forms.Label();
             this.label165 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.label177 = new System.Windows.Forms.Label();
+            this.label178 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.Tapes_tabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TapesOld_dataGridView)).BeginInit();
             this.Tapes_contextMenuStrip.SuspendLayout();
@@ -894,6 +929,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.NoOfNozzles_UpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NozzlesLoad_dataGridView)).BeginInit();
             this.NozzleLoad_contextMenuStrip.SuspendLayout();
+            this.Calibration_tabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // Park_button
@@ -1301,6 +1338,17 @@
             this.Tapes_tabPage.TabIndex = 6;
             this.Tapes_tabPage.Text = "Tape Positions";
             this.Tapes_tabPage.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(1154, 516);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 49);
+            this.button3.TabIndex = 96;
+            this.button3.Text = "Cam to comp 1";
+            this.toolTip1.SetToolTip(this.button3, "Moves the machine on hole 1 on the selected tape.");
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // label158
             // 
@@ -8583,6 +8631,7 @@
             this.tabControlPages.Controls.Add(this.Components_tabPage);
             this.tabControlPages.Controls.Add(this.Tapes_tabPage);
             this.tabControlPages.Controls.Add(this.Nozzles_tabPage);
+            this.tabControlPages.Controls.Add(this.Calibration_tabPage);
             this.tabControlPages.Location = new System.Drawing.Point(3, 2);
             this.tabControlPages.Name = "tabControlPages";
             this.tabControlPages.SelectedIndex = 0;
@@ -9310,6 +9359,326 @@
             this.copyMovesFromNozzle1ToolStripMenuItem1.Text = "Copy moves from nozzle 1";
             this.copyMovesFromNozzle1ToolStripMenuItem1.Click += new System.EventHandler(this.copyLoadMovesFromNozzle1_ToolStripMenuItem_Click);
             // 
+            // Calibration_tabPage
+            // 
+            this.Calibration_tabPage.Controls.Add(this.label177);
+            this.Calibration_tabPage.Controls.Add(this.label178);
+            this.Calibration_tabPage.Controls.Add(this.textBox3);
+            this.Calibration_tabPage.Controls.Add(this.textBox4);
+            this.Calibration_tabPage.Controls.Add(this.button7);
+            this.Calibration_tabPage.Controls.Add(this.button6);
+            this.Calibration_tabPage.Controls.Add(this.button5);
+            this.Calibration_tabPage.Controls.Add(this.label176);
+            this.Calibration_tabPage.Controls.Add(this.label175);
+            this.Calibration_tabPage.Controls.Add(this.label174);
+            this.Calibration_tabPage.Controls.Add(this.label173);
+            this.Calibration_tabPage.Controls.Add(this.label172);
+            this.Calibration_tabPage.Controls.Add(this.label170);
+            this.Calibration_tabPage.Controls.Add(this.label171);
+            this.Calibration_tabPage.Controls.Add(this.label168);
+            this.Calibration_tabPage.Controls.Add(this.label169);
+            this.Calibration_tabPage.Controls.Add(this.label167);
+            this.Calibration_tabPage.Controls.Add(this.label166);
+            this.Calibration_tabPage.Controls.Add(this.button4);
+            this.Calibration_tabPage.Controls.Add(this.textBox1);
+            this.Calibration_tabPage.Controls.Add(this.textBox2);
+            this.Calibration_tabPage.Controls.Add(this.bottomRight_Go_button);
+            this.Calibration_tabPage.Controls.Add(this.topRight_Go_button);
+            this.Calibration_tabPage.Controls.Add(this.bottomLeft_Go_button);
+            this.Calibration_tabPage.Controls.Add(this.topLeft_Go_button);
+            this.Calibration_tabPage.Controls.Add(this.bottomRight_YPos_textBox);
+            this.Calibration_tabPage.Controls.Add(this.bottomRight_XPos_textBox);
+            this.Calibration_tabPage.Controls.Add(this.topRight_YPos_textBox);
+            this.Calibration_tabPage.Controls.Add(this.topRight_XPos_textBox);
+            this.Calibration_tabPage.Controls.Add(this.bottomLeft_YPos_textBox);
+            this.Calibration_tabPage.Controls.Add(this.bottomLeft_XPos_textBox);
+            this.Calibration_tabPage.Controls.Add(this.topLeft_YPos_textBox);
+            this.Calibration_tabPage.Controls.Add(this.topLeft_XPos_textBox);
+            this.Calibration_tabPage.Controls.Add(this.pictureBox1);
+            this.Calibration_tabPage.Location = new System.Drawing.Point(4, 22);
+            this.Calibration_tabPage.Name = "Calibration_tabPage";
+            this.Calibration_tabPage.Size = new System.Drawing.Size(1245, 635);
+            this.Calibration_tabPage.TabIndex = 8;
+            this.Calibration_tabPage.Text = "Machine Calibration";
+            this.Calibration_tabPage.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button7.Location = new System.Drawing.Point(1107, 110);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(120, 23);
+            this.button7.TabIndex = 29;
+            this.button7.Text = "A > C > D > B > E";
+            this.button7.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button6.Location = new System.Drawing.Point(1107, 65);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(120, 23);
+            this.button6.TabIndex = 28;
+            this.button6.Text = "A > C > B > D > E";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button5.Location = new System.Drawing.Point(1107, 21);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(120, 23);
+            this.button5.TabIndex = 27;
+            this.button5.Text = "A > B > C > D > E";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // label176
+            // 
+            this.label176.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.label176.AutoSize = true;
+            this.label176.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label176.Location = new System.Drawing.Point(546, 269);
+            this.label176.Name = "label176";
+            this.label176.Size = new System.Drawing.Size(27, 25);
+            this.label176.TabIndex = 26;
+            this.label176.Text = "E";
+            // 
+            // label175
+            // 
+            this.label175.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label175.AutoSize = true;
+            this.label175.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label175.Location = new System.Drawing.Point(937, 517);
+            this.label175.Name = "label175";
+            this.label175.Size = new System.Drawing.Size(28, 25);
+            this.label175.TabIndex = 25;
+            this.label175.Text = "D";
+            // 
+            // label174
+            // 
+            this.label174.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label174.AutoSize = true;
+            this.label174.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label174.Location = new System.Drawing.Point(162, 517);
+            this.label174.Name = "label174";
+            this.label174.Size = new System.Drawing.Size(28, 25);
+            this.label174.TabIndex = 24;
+            this.label174.Text = "C";
+            // 
+            // label173
+            // 
+            this.label173.AutoSize = true;
+            this.label173.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label173.Location = new System.Drawing.Point(937, 127);
+            this.label173.Name = "label173";
+            this.label173.Size = new System.Drawing.Size(27, 25);
+            this.label173.TabIndex = 23;
+            this.label173.Text = "B";
+            // 
+            // label172
+            // 
+            this.label172.AutoSize = true;
+            this.label172.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label172.Location = new System.Drawing.Point(162, 127);
+            this.label172.Name = "label172";
+            this.label172.Size = new System.Drawing.Size(27, 25);
+            this.label172.TabIndex = 22;
+            this.label172.Text = "A";
+            // 
+            // label170
+            // 
+            this.label170.AutoSize = true;
+            this.label170.Location = new System.Drawing.Point(487, 413);
+            this.label170.Name = "label170";
+            this.label170.Size = new System.Drawing.Size(35, 13);
+            this.label170.TabIndex = 21;
+            this.label170.Text = "Y Pos";
+            // 
+            // label171
+            // 
+            this.label171.AutoSize = true;
+            this.label171.Location = new System.Drawing.Point(487, 387);
+            this.label171.Name = "label171";
+            this.label171.Size = new System.Drawing.Size(35, 13);
+            this.label171.TabIndex = 20;
+            this.label171.Text = "X Pos";
+            // 
+            // label168
+            // 
+            this.label168.AutoSize = true;
+            this.label168.Location = new System.Drawing.Point(12, 576);
+            this.label168.Name = "label168";
+            this.label168.Size = new System.Drawing.Size(35, 13);
+            this.label168.TabIndex = 19;
+            this.label168.Text = "Y Pos";
+            // 
+            // label169
+            // 
+            this.label169.AutoSize = true;
+            this.label169.Location = new System.Drawing.Point(12, 550);
+            this.label169.Name = "label169";
+            this.label169.Size = new System.Drawing.Size(35, 13);
+            this.label169.TabIndex = 18;
+            this.label169.Text = "X Pos";
+            // 
+            // label167
+            // 
+            this.label167.AutoSize = true;
+            this.label167.Location = new System.Drawing.Point(12, 75);
+            this.label167.Name = "label167";
+            this.label167.Size = new System.Drawing.Size(35, 13);
+            this.label167.TabIndex = 17;
+            this.label167.Text = "Y Pos";
+            // 
+            // label166
+            // 
+            this.label166.AutoSize = true;
+            this.label166.Location = new System.Drawing.Point(12, 49);
+            this.label166.Name = "label166";
+            this.label166.Size = new System.Drawing.Size(35, 13);
+            this.label166.TabIndex = 16;
+            this.label166.Text = "X Pos";
+            // 
+            // button4
+            // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.button4.Location = new System.Drawing.Point(528, 436);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(70, 23);
+            this.button4.TabIndex = 15;
+            this.button4.Text = "Go";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBox1.Location = new System.Drawing.Point(528, 410);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(70, 20);
+            this.textBox1.TabIndex = 14;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBox2.Location = new System.Drawing.Point(528, 384);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(70, 20);
+            this.textBox2.TabIndex = 13;
+            // 
+            // bottomRight_Go_button
+            // 
+            this.bottomRight_Go_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomRight_Go_button.Location = new System.Drawing.Point(1003, 599);
+            this.bottomRight_Go_button.Name = "bottomRight_Go_button";
+            this.bottomRight_Go_button.Size = new System.Drawing.Size(70, 23);
+            this.bottomRight_Go_button.TabIndex = 12;
+            this.bottomRight_Go_button.Text = "Go";
+            this.bottomRight_Go_button.UseVisualStyleBackColor = true;
+            // 
+            // topRight_Go_button
+            // 
+            this.topRight_Go_button.Location = new System.Drawing.Point(1003, 94);
+            this.topRight_Go_button.Name = "topRight_Go_button";
+            this.topRight_Go_button.Size = new System.Drawing.Size(70, 23);
+            this.topRight_Go_button.TabIndex = 11;
+            this.topRight_Go_button.Text = "Go";
+            this.topRight_Go_button.UseVisualStyleBackColor = true;
+            // 
+            // bottomLeft_Go_button
+            // 
+            this.bottomLeft_Go_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomLeft_Go_button.Location = new System.Drawing.Point(53, 599);
+            this.bottomLeft_Go_button.Name = "bottomLeft_Go_button";
+            this.bottomLeft_Go_button.Size = new System.Drawing.Size(70, 23);
+            this.bottomLeft_Go_button.TabIndex = 10;
+            this.bottomLeft_Go_button.Text = "Go";
+            this.bottomLeft_Go_button.UseVisualStyleBackColor = true;
+            // 
+            // topLeft_Go_button
+            // 
+            this.topLeft_Go_button.Location = new System.Drawing.Point(53, 94);
+            this.topLeft_Go_button.Name = "topLeft_Go_button";
+            this.topLeft_Go_button.Size = new System.Drawing.Size(70, 23);
+            this.topLeft_Go_button.TabIndex = 9;
+            this.topLeft_Go_button.Text = "Go";
+            this.topLeft_Go_button.UseVisualStyleBackColor = true;
+            // 
+            // bottomRight_YPos_textBox
+            // 
+            this.bottomRight_YPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomRight_YPos_textBox.Location = new System.Drawing.Point(1003, 573);
+            this.bottomRight_YPos_textBox.Name = "bottomRight_YPos_textBox";
+            this.bottomRight_YPos_textBox.Size = new System.Drawing.Size(70, 20);
+            this.bottomRight_YPos_textBox.TabIndex = 8;
+            // 
+            // bottomRight_XPos_textBox
+            // 
+            this.bottomRight_XPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomRight_XPos_textBox.Location = new System.Drawing.Point(1003, 547);
+            this.bottomRight_XPos_textBox.Name = "bottomRight_XPos_textBox";
+            this.bottomRight_XPos_textBox.Size = new System.Drawing.Size(70, 20);
+            this.bottomRight_XPos_textBox.TabIndex = 7;
+            // 
+            // topRight_YPos_textBox
+            // 
+            this.topRight_YPos_textBox.Location = new System.Drawing.Point(1003, 68);
+            this.topRight_YPos_textBox.Name = "topRight_YPos_textBox";
+            this.topRight_YPos_textBox.Size = new System.Drawing.Size(70, 20);
+            this.topRight_YPos_textBox.TabIndex = 6;
+            // 
+            // topRight_XPos_textBox
+            // 
+            this.topRight_XPos_textBox.Location = new System.Drawing.Point(1003, 42);
+            this.topRight_XPos_textBox.Name = "topRight_XPos_textBox";
+            this.topRight_XPos_textBox.Size = new System.Drawing.Size(70, 20);
+            this.topRight_XPos_textBox.TabIndex = 5;
+            // 
+            // bottomLeft_YPos_textBox
+            // 
+            this.bottomLeft_YPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomLeft_YPos_textBox.Location = new System.Drawing.Point(53, 573);
+            this.bottomLeft_YPos_textBox.Name = "bottomLeft_YPos_textBox";
+            this.bottomLeft_YPos_textBox.Size = new System.Drawing.Size(70, 20);
+            this.bottomLeft_YPos_textBox.TabIndex = 4;
+            // 
+            // bottomLeft_XPos_textBox
+            // 
+            this.bottomLeft_XPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomLeft_XPos_textBox.Location = new System.Drawing.Point(53, 547);
+            this.bottomLeft_XPos_textBox.Name = "bottomLeft_XPos_textBox";
+            this.bottomLeft_XPos_textBox.Size = new System.Drawing.Size(70, 20);
+            this.bottomLeft_XPos_textBox.TabIndex = 3;
+            // 
+            // topLeft_YPos_textBox
+            // 
+            this.topLeft_YPos_textBox.Location = new System.Drawing.Point(53, 68);
+            this.topLeft_YPos_textBox.Name = "topLeft_YPos_textBox";
+            this.topLeft_YPos_textBox.Size = new System.Drawing.Size(70, 20);
+            this.topLeft_YPos_textBox.TabIndex = 2;
+            // 
+            // topLeft_XPos_textBox
+            // 
+            this.topLeft_XPos_textBox.Location = new System.Drawing.Point(53, 42);
+            this.topLeft_XPos_textBox.Name = "topLeft_XPos_textBox";
+            this.topLeft_XPos_textBox.Size = new System.Drawing.Size(70, 20);
+            this.topLeft_XPos_textBox.TabIndex = 1;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.pictureBox1.Image = global::LitePlacer.Properties.Resources.liteplacer_calibration_pattern;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(1090, 635);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // CAD_openFileDialog
             // 
             this.CAD_openFileDialog.Filter = "CSV files (*.csv)|*.csv|KiCad files (*.pos)|*.pos|All files (*.*)|*.*";
@@ -9564,16 +9933,41 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button3
+            // label177
             // 
-            this.button3.Location = new System.Drawing.Point(1154, 516);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 49);
-            this.button3.TabIndex = 96;
-            this.button3.Text = "Cam to comp 1";
-            this.toolTip1.SetToolTip(this.button3, "Moves the machine on hole 1 on the selected tape.");
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.label177.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label177.AutoSize = true;
+            this.label177.Location = new System.Drawing.Point(1103, 217);
+            this.label177.Name = "label177";
+            this.label177.Size = new System.Drawing.Size(77, 13);
+            this.label177.TabIndex = 33;
+            this.label177.Text = "Y Quanta Step";
+            // 
+            // label178
+            // 
+            this.label178.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label178.AutoSize = true;
+            this.label178.Location = new System.Drawing.Point(1103, 162);
+            this.label178.Name = "label178";
+            this.label178.Size = new System.Drawing.Size(77, 13);
+            this.label178.TabIndex = 32;
+            this.label178.Text = "X Quanta Step";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox3.Location = new System.Drawing.Point(1106, 237);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(121, 20);
+            this.textBox3.TabIndex = 31;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox4.Location = new System.Drawing.Point(1106, 182);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(121, 20);
+            this.textBox4.TabIndex = 30;
             // 
             // FormMain
             // 
@@ -9733,6 +10127,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.NoOfNozzles_UpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NozzlesLoad_dataGridView)).EndInit();
             this.NozzleLoad_contextMenuStrip.ResumeLayout(false);
+            this.Calibration_tabPage.ResumeLayout(false);
+            this.Calibration_tabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -10048,7 +10445,6 @@
 		private System.Windows.Forms.Label label56;
 		private System.Windows.Forms.Label CadFileName_label;
 		private System.Windows.Forms.Label CAD_label;
-		private System.Windows.Forms.TabControl tabControlPages;
 		private System.Windows.Forms.Label label87;
 		private System.Windows.Forms.NumericUpDown SmallMovement_numericUpDown;
 		private System.Windows.Forms.GroupBox groupBox3;
@@ -10531,6 +10927,42 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        public System.Windows.Forms.TabControl tabControlPages;
+        private System.Windows.Forms.TabPage Calibration_tabPage;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button bottomRight_Go_button;
+        private System.Windows.Forms.Button topRight_Go_button;
+        private System.Windows.Forms.Button bottomLeft_Go_button;
+        private System.Windows.Forms.Button topLeft_Go_button;
+        private System.Windows.Forms.TextBox bottomRight_YPos_textBox;
+        private System.Windows.Forms.TextBox bottomRight_XPos_textBox;
+        private System.Windows.Forms.TextBox topRight_YPos_textBox;
+        private System.Windows.Forms.TextBox topRight_XPos_textBox;
+        private System.Windows.Forms.TextBox bottomLeft_YPos_textBox;
+        private System.Windows.Forms.TextBox bottomLeft_XPos_textBox;
+        private System.Windows.Forms.TextBox topLeft_YPos_textBox;
+        private System.Windows.Forms.TextBox topLeft_XPos_textBox;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label168;
+        private System.Windows.Forms.Label label169;
+        private System.Windows.Forms.Label label167;
+        private System.Windows.Forms.Label label166;
+        private System.Windows.Forms.Label label170;
+        private System.Windows.Forms.Label label171;
+        private System.Windows.Forms.Label label176;
+        private System.Windows.Forms.Label label175;
+        private System.Windows.Forms.Label label174;
+        private System.Windows.Forms.Label label173;
+        private System.Windows.Forms.Label label172;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Label label177;
+        private System.Windows.Forms.Label label178;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBox4;
     }
 }
 
