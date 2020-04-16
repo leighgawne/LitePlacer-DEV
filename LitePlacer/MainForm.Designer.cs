@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Park_button = new System.Windows.Forms.Button();
             this.TestNozzleRecognition_button = new System.Windows.Forms.Button();
             this.DownCamZoomFactor_textBox = new System.Windows.Forms.TextBox();
@@ -795,6 +795,15 @@
             this.gotoLoadStartPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyMovesFromNozzle1ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.Calibration_tabPage = new System.Windows.Forms.TabPage();
+            this.PositionSetupEnable_checkBox = new System.Windows.Forms.CheckBox();
+            this.bottomRight_Set_button = new System.Windows.Forms.Button();
+            this.bottomLeft_Set_button = new System.Windows.Forms.Button();
+            this.topRight_Set_button = new System.Windows.Forms.Button();
+            this.topLeft_Set_button = new System.Windows.Forms.Button();
+            this.label177 = new System.Windows.Forms.Label();
+            this.label178 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
@@ -809,9 +818,9 @@
             this.label169 = new System.Windows.Forms.Label();
             this.label167 = new System.Windows.Forms.Label();
             this.label166 = new System.Windows.Forms.Label();
-            this.button4 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.centre_Go_button = new System.Windows.Forms.Button();
+            this.centre_YPos_textBox = new System.Windows.Forms.TextBox();
+            this.centre_XPos_textBox = new System.Windows.Forms.TextBox();
             this.bottomRight_Go_button = new System.Windows.Forms.Button();
             this.topRight_Go_button = new System.Windows.Forms.Button();
             this.bottomLeft_Go_button = new System.Windows.Forms.Button();
@@ -853,10 +862,8 @@
             this.label164 = new System.Windows.Forms.Label();
             this.label165 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            this.label177 = new System.Windows.Forms.Label();
-            this.label178 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.centre_Set_button = new System.Windows.Forms.Button();
+            this.PositionIsNozzle_checkBox = new System.Windows.Forms.CheckBox();
             this.Tapes_tabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TapesOld_dataGridView)).BeginInit();
             this.Tapes_contextMenuStrip.SuspendLayout();
@@ -8398,14 +8405,14 @@
             this.JobData_GridView.AllowUserToAddRows = false;
             this.JobData_GridView.AllowUserToResizeRows = false;
             this.JobData_GridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.JobData_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.JobData_GridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ComponentCount,
@@ -9361,6 +9368,13 @@
             // 
             // Calibration_tabPage
             // 
+            this.Calibration_tabPage.Controls.Add(this.PositionIsNozzle_checkBox);
+            this.Calibration_tabPage.Controls.Add(this.centre_Set_button);
+            this.Calibration_tabPage.Controls.Add(this.PositionSetupEnable_checkBox);
+            this.Calibration_tabPage.Controls.Add(this.bottomRight_Set_button);
+            this.Calibration_tabPage.Controls.Add(this.bottomLeft_Set_button);
+            this.Calibration_tabPage.Controls.Add(this.topRight_Set_button);
+            this.Calibration_tabPage.Controls.Add(this.topLeft_Set_button);
             this.Calibration_tabPage.Controls.Add(this.label177);
             this.Calibration_tabPage.Controls.Add(this.label178);
             this.Calibration_tabPage.Controls.Add(this.textBox3);
@@ -9379,9 +9393,9 @@
             this.Calibration_tabPage.Controls.Add(this.label169);
             this.Calibration_tabPage.Controls.Add(this.label167);
             this.Calibration_tabPage.Controls.Add(this.label166);
-            this.Calibration_tabPage.Controls.Add(this.button4);
-            this.Calibration_tabPage.Controls.Add(this.textBox1);
-            this.Calibration_tabPage.Controls.Add(this.textBox2);
+            this.Calibration_tabPage.Controls.Add(this.centre_Go_button);
+            this.Calibration_tabPage.Controls.Add(this.centre_YPos_textBox);
+            this.Calibration_tabPage.Controls.Add(this.centre_XPos_textBox);
             this.Calibration_tabPage.Controls.Add(this.bottomRight_Go_button);
             this.Calibration_tabPage.Controls.Add(this.topRight_Go_button);
             this.Calibration_tabPage.Controls.Add(this.bottomLeft_Go_button);
@@ -9401,6 +9415,94 @@
             this.Calibration_tabPage.TabIndex = 8;
             this.Calibration_tabPage.Text = "Machine Calibration";
             this.Calibration_tabPage.UseVisualStyleBackColor = true;
+            // 
+            // PositionSetupEnable_checkBox
+            // 
+            this.PositionSetupEnable_checkBox.AutoSize = true;
+            this.PositionSetupEnable_checkBox.Location = new System.Drawing.Point(1097, 605);
+            this.PositionSetupEnable_checkBox.Name = "PositionSetupEnable_checkBox";
+            this.PositionSetupEnable_checkBox.Size = new System.Drawing.Size(130, 17);
+            this.PositionSetupEnable_checkBox.TabIndex = 38;
+            this.PositionSetupEnable_checkBox.Text = "Enable Position Setup";
+            this.PositionSetupEnable_checkBox.UseVisualStyleBackColor = true;
+            this.PositionSetupEnable_checkBox.CheckedChanged += new System.EventHandler(this.PositionSetupEnable_checkBox_CheckedChanged);
+            // 
+            // bottomRight_Set_button
+            // 
+            this.bottomRight_Set_button.Enabled = false;
+            this.bottomRight_Set_button.Location = new System.Drawing.Point(1003, 517);
+            this.bottomRight_Set_button.Name = "bottomRight_Set_button";
+            this.bottomRight_Set_button.Size = new System.Drawing.Size(70, 23);
+            this.bottomRight_Set_button.TabIndex = 37;
+            this.bottomRight_Set_button.Text = "Set";
+            this.bottomRight_Set_button.UseVisualStyleBackColor = true;
+            // 
+            // bottomLeft_Set_button
+            // 
+            this.bottomLeft_Set_button.Enabled = false;
+            this.bottomLeft_Set_button.Location = new System.Drawing.Point(53, 517);
+            this.bottomLeft_Set_button.Name = "bottomLeft_Set_button";
+            this.bottomLeft_Set_button.Size = new System.Drawing.Size(70, 23);
+            this.bottomLeft_Set_button.TabIndex = 36;
+            this.bottomLeft_Set_button.Text = "Set";
+            this.bottomLeft_Set_button.UseVisualStyleBackColor = true;
+            // 
+            // topRight_Set_button
+            // 
+            this.topRight_Set_button.Enabled = false;
+            this.topRight_Set_button.Location = new System.Drawing.Point(1003, 13);
+            this.topRight_Set_button.Name = "topRight_Set_button";
+            this.topRight_Set_button.Size = new System.Drawing.Size(70, 23);
+            this.topRight_Set_button.TabIndex = 35;
+            this.topRight_Set_button.Text = "Set";
+            this.topRight_Set_button.UseVisualStyleBackColor = true;
+            // 
+            // topLeft_Set_button
+            // 
+            this.topLeft_Set_button.Enabled = false;
+            this.topLeft_Set_button.Location = new System.Drawing.Point(53, 13);
+            this.topLeft_Set_button.Name = "topLeft_Set_button";
+            this.topLeft_Set_button.Size = new System.Drawing.Size(70, 23);
+            this.topLeft_Set_button.TabIndex = 34;
+            this.topLeft_Set_button.Text = "Set";
+            this.topLeft_Set_button.UseVisualStyleBackColor = true;
+            this.topLeft_Set_button.Click += new System.EventHandler(this.topLeft_Set_button_Click);
+            // 
+            // label177
+            // 
+            this.label177.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label177.AutoSize = true;
+            this.label177.Location = new System.Drawing.Point(1103, 217);
+            this.label177.Name = "label177";
+            this.label177.Size = new System.Drawing.Size(77, 13);
+            this.label177.TabIndex = 33;
+            this.label177.Text = "Y Quanta Step";
+            // 
+            // label178
+            // 
+            this.label178.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label178.AutoSize = true;
+            this.label178.Location = new System.Drawing.Point(1103, 162);
+            this.label178.Name = "label178";
+            this.label178.Size = new System.Drawing.Size(77, 13);
+            this.label178.TabIndex = 32;
+            this.label178.Text = "X Quanta Step";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox3.Location = new System.Drawing.Point(1106, 237);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(121, 20);
+            this.textBox3.TabIndex = 31;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox4.Location = new System.Drawing.Point(1106, 182);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(121, 20);
+            this.textBox4.TabIndex = 30;
             // 
             // button7
             // 
@@ -9489,7 +9591,7 @@
             // label170
             // 
             this.label170.AutoSize = true;
-            this.label170.Location = new System.Drawing.Point(487, 413);
+            this.label170.Location = new System.Drawing.Point(487, 437);
             this.label170.Name = "label170";
             this.label170.Size = new System.Drawing.Size(35, 13);
             this.label170.TabIndex = 21;
@@ -9498,7 +9600,7 @@
             // label171
             // 
             this.label171.AutoSize = true;
-            this.label171.Location = new System.Drawing.Point(487, 387);
+            this.label171.Location = new System.Drawing.Point(487, 411);
             this.label171.Name = "label171";
             this.label171.Size = new System.Drawing.Size(35, 13);
             this.label171.TabIndex = 20;
@@ -9540,38 +9642,42 @@
             this.label166.TabIndex = 16;
             this.label166.Text = "X Pos";
             // 
-            // button4
+            // centre_Go_button
             // 
-            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.centre_Go_button.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.button4.Location = new System.Drawing.Point(528, 436);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(70, 23);
-            this.button4.TabIndex = 15;
-            this.button4.Text = "Go";
-            this.button4.UseVisualStyleBackColor = true;
+            this.centre_Go_button.Enabled = false;
+            this.centre_Go_button.Location = new System.Drawing.Point(528, 460);
+            this.centre_Go_button.Name = "centre_Go_button";
+            this.centre_Go_button.Size = new System.Drawing.Size(70, 23);
+            this.centre_Go_button.TabIndex = 15;
+            this.centre_Go_button.Text = "Go";
+            this.centre_Go_button.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // centre_YPos_textBox
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.centre_YPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBox1.Location = new System.Drawing.Point(528, 410);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(70, 20);
-            this.textBox1.TabIndex = 14;
+            this.centre_YPos_textBox.Enabled = false;
+            this.centre_YPos_textBox.Location = new System.Drawing.Point(528, 434);
+            this.centre_YPos_textBox.Name = "centre_YPos_textBox";
+            this.centre_YPos_textBox.Size = new System.Drawing.Size(70, 20);
+            this.centre_YPos_textBox.TabIndex = 14;
             // 
-            // textBox2
+            // centre_XPos_textBox
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.centre_XPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBox2.Location = new System.Drawing.Point(528, 384);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(70, 20);
-            this.textBox2.TabIndex = 13;
+            this.centre_XPos_textBox.Enabled = false;
+            this.centre_XPos_textBox.Location = new System.Drawing.Point(528, 408);
+            this.centre_XPos_textBox.Name = "centre_XPos_textBox";
+            this.centre_XPos_textBox.Size = new System.Drawing.Size(70, 20);
+            this.centre_XPos_textBox.TabIndex = 13;
             // 
             // bottomRight_Go_button
             // 
             this.bottomRight_Go_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomRight_Go_button.Enabled = false;
             this.bottomRight_Go_button.Location = new System.Drawing.Point(1003, 599);
             this.bottomRight_Go_button.Name = "bottomRight_Go_button";
             this.bottomRight_Go_button.Size = new System.Drawing.Size(70, 23);
@@ -9581,6 +9687,7 @@
             // 
             // topRight_Go_button
             // 
+            this.topRight_Go_button.Enabled = false;
             this.topRight_Go_button.Location = new System.Drawing.Point(1003, 94);
             this.topRight_Go_button.Name = "topRight_Go_button";
             this.topRight_Go_button.Size = new System.Drawing.Size(70, 23);
@@ -9591,6 +9698,7 @@
             // bottomLeft_Go_button
             // 
             this.bottomLeft_Go_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomLeft_Go_button.Enabled = false;
             this.bottomLeft_Go_button.Location = new System.Drawing.Point(53, 599);
             this.bottomLeft_Go_button.Name = "bottomLeft_Go_button";
             this.bottomLeft_Go_button.Size = new System.Drawing.Size(70, 23);
@@ -9600,6 +9708,7 @@
             // 
             // topLeft_Go_button
             // 
+            this.topLeft_Go_button.Enabled = false;
             this.topLeft_Go_button.Location = new System.Drawing.Point(53, 94);
             this.topLeft_Go_button.Name = "topLeft_Go_button";
             this.topLeft_Go_button.Size = new System.Drawing.Size(70, 23);
@@ -9610,6 +9719,7 @@
             // bottomRight_YPos_textBox
             // 
             this.bottomRight_YPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomRight_YPos_textBox.Enabled = false;
             this.bottomRight_YPos_textBox.Location = new System.Drawing.Point(1003, 573);
             this.bottomRight_YPos_textBox.Name = "bottomRight_YPos_textBox";
             this.bottomRight_YPos_textBox.Size = new System.Drawing.Size(70, 20);
@@ -9618,6 +9728,7 @@
             // bottomRight_XPos_textBox
             // 
             this.bottomRight_XPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomRight_XPos_textBox.Enabled = false;
             this.bottomRight_XPos_textBox.Location = new System.Drawing.Point(1003, 547);
             this.bottomRight_XPos_textBox.Name = "bottomRight_XPos_textBox";
             this.bottomRight_XPos_textBox.Size = new System.Drawing.Size(70, 20);
@@ -9625,6 +9736,7 @@
             // 
             // topRight_YPos_textBox
             // 
+            this.topRight_YPos_textBox.Enabled = false;
             this.topRight_YPos_textBox.Location = new System.Drawing.Point(1003, 68);
             this.topRight_YPos_textBox.Name = "topRight_YPos_textBox";
             this.topRight_YPos_textBox.Size = new System.Drawing.Size(70, 20);
@@ -9632,6 +9744,7 @@
             // 
             // topRight_XPos_textBox
             // 
+            this.topRight_XPos_textBox.Enabled = false;
             this.topRight_XPos_textBox.Location = new System.Drawing.Point(1003, 42);
             this.topRight_XPos_textBox.Name = "topRight_XPos_textBox";
             this.topRight_XPos_textBox.Size = new System.Drawing.Size(70, 20);
@@ -9640,6 +9753,7 @@
             // bottomLeft_YPos_textBox
             // 
             this.bottomLeft_YPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomLeft_YPos_textBox.Enabled = false;
             this.bottomLeft_YPos_textBox.Location = new System.Drawing.Point(53, 573);
             this.bottomLeft_YPos_textBox.Name = "bottomLeft_YPos_textBox";
             this.bottomLeft_YPos_textBox.Size = new System.Drawing.Size(70, 20);
@@ -9648,6 +9762,7 @@
             // bottomLeft_XPos_textBox
             // 
             this.bottomLeft_XPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bottomLeft_XPos_textBox.Enabled = false;
             this.bottomLeft_XPos_textBox.Location = new System.Drawing.Point(53, 547);
             this.bottomLeft_XPos_textBox.Name = "bottomLeft_XPos_textBox";
             this.bottomLeft_XPos_textBox.Size = new System.Drawing.Size(70, 20);
@@ -9655,6 +9770,7 @@
             // 
             // topLeft_YPos_textBox
             // 
+            this.topLeft_YPos_textBox.Enabled = false;
             this.topLeft_YPos_textBox.Location = new System.Drawing.Point(53, 68);
             this.topLeft_YPos_textBox.Name = "topLeft_YPos_textBox";
             this.topLeft_YPos_textBox.Size = new System.Drawing.Size(70, 20);
@@ -9662,6 +9778,7 @@
             // 
             // topLeft_XPos_textBox
             // 
+            this.topLeft_XPos_textBox.Enabled = false;
             this.topLeft_XPos_textBox.Location = new System.Drawing.Point(53, 42);
             this.topLeft_XPos_textBox.Name = "topLeft_XPos_textBox";
             this.topLeft_XPos_textBox.Size = new System.Drawing.Size(70, 20);
@@ -9933,41 +10050,25 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label177
+            // centre_Set_button
             // 
-            this.label177.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label177.AutoSize = true;
-            this.label177.Location = new System.Drawing.Point(1103, 217);
-            this.label177.Name = "label177";
-            this.label177.Size = new System.Drawing.Size(77, 13);
-            this.label177.TabIndex = 33;
-            this.label177.Text = "Y Quanta Step";
+            this.centre_Set_button.Enabled = false;
+            this.centre_Set_button.Location = new System.Drawing.Point(528, 379);
+            this.centre_Set_button.Name = "centre_Set_button";
+            this.centre_Set_button.Size = new System.Drawing.Size(70, 23);
+            this.centre_Set_button.TabIndex = 39;
+            this.centre_Set_button.Text = "Set";
+            this.centre_Set_button.UseVisualStyleBackColor = true;
             // 
-            // label178
+            // PositionIsNozzle_checkBox
             // 
-            this.label178.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label178.AutoSize = true;
-            this.label178.Location = new System.Drawing.Point(1103, 162);
-            this.label178.Name = "label178";
-            this.label178.Size = new System.Drawing.Size(77, 13);
-            this.label178.TabIndex = 32;
-            this.label178.Text = "X Quanta Step";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox3.Location = new System.Drawing.Point(1106, 237);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(121, 20);
-            this.textBox3.TabIndex = 31;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox4.Location = new System.Drawing.Point(1106, 182);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(121, 20);
-            this.textBox4.TabIndex = 30;
+            this.PositionIsNozzle_checkBox.AutoSize = true;
+            this.PositionIsNozzle_checkBox.Location = new System.Drawing.Point(1097, 573);
+            this.PositionIsNozzle_checkBox.Name = "PositionIsNozzle_checkBox";
+            this.PositionIsNozzle_checkBox.Size = new System.Drawing.Size(135, 17);
+            this.PositionIsNozzle_checkBox.TabIndex = 40;
+            this.PositionIsNozzle_checkBox.Text = "Use Position As Nozzle";
+            this.PositionIsNozzle_checkBox.UseVisualStyleBackColor = true;
             // 
             // FormMain
             // 
@@ -10027,6 +10128,7 @@
             this.Controls.Add(this.xpos_textBox);
             this.Controls.Add(this.label14);
             this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "FormMain";
@@ -10942,9 +11044,9 @@
         private System.Windows.Forms.TextBox bottomLeft_XPos_textBox;
         private System.Windows.Forms.TextBox topLeft_YPos_textBox;
         private System.Windows.Forms.TextBox topLeft_XPos_textBox;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button centre_Go_button;
+        private System.Windows.Forms.TextBox centre_YPos_textBox;
+        private System.Windows.Forms.TextBox centre_XPos_textBox;
         private System.Windows.Forms.Label label168;
         private System.Windows.Forms.Label label169;
         private System.Windows.Forms.Label label167;
@@ -10963,6 +11065,13 @@
         private System.Windows.Forms.Label label178;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Button bottomRight_Set_button;
+        private System.Windows.Forms.Button bottomLeft_Set_button;
+        private System.Windows.Forms.Button topRight_Set_button;
+        private System.Windows.Forms.Button topLeft_Set_button;
+        private System.Windows.Forms.CheckBox PositionSetupEnable_checkBox;
+        private System.Windows.Forms.Button centre_Set_button;
+        private System.Windows.Forms.CheckBox PositionIsNozzle_checkBox;
     }
 }
 

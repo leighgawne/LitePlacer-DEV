@@ -15635,6 +15635,48 @@ namespace LitePlacer
         {
             CameraToFirstComponent(0);
         }
+
+        private void PositionSetupEnable_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            topLeft_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
+            topLeft_YPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
+            topLeft_XPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
+            topLeft_Go_button.Enabled = PositionSetupEnable_checkBox.Checked;
+
+            topRight_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
+            topRight_YPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
+            topRight_XPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
+            topRight_Go_button.Enabled = PositionSetupEnable_checkBox.Checked;
+
+            bottomLeft_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
+            bottomLeft_YPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
+            bottomLeft_XPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
+            bottomLeft_Go_button.Enabled = PositionSetupEnable_checkBox.Checked;
+
+            bottomRight_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
+            bottomRight_YPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
+            bottomRight_XPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
+            bottomRight_Go_button.Enabled = PositionSetupEnable_checkBox.Checked;
+
+            centre_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
+            centre_YPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
+            centre_XPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
+            centre_Go_button.Enabled = PositionSetupEnable_checkBox.Checked;
+        }
+
+        private void topLeft_Set_button_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Thingy()
+        {
+            Setting.General_Mark1X = Cnc.CurrentX;
+            Setting.General_Mark1Y = Cnc.CurrentY;
+            Setting.General_Mark1A = Cnc.CurrentA;
+            Setting.General_Mark1Name = Mark1_textBox.Text;
+            Bookmark1_button.Text = Setting.General_Mark1Name;
+        }
     }	// end of: 	public partial class FormMain : Form
 
 
