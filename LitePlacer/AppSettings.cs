@@ -155,6 +155,21 @@ namespace LitePlacer
         public int DownCam_DesiredY = 480;
         public int UpCam_DesiredX = 640;
         public int UpCam_DesiredY = 480;
+
+        public double Calibration_Common_X = 0.0;
+        public double Calibration_Common_Y = 0.0;
+        public double Calibration_A_Marker_X = 0.0;
+        public double Calibration_A_Marker_Y = 0.0;
+        public double Calibration_B_Marker_X = 0.0;
+        public double Calibration_B_Marker_Y = 0.0;
+        public double Calibration_C_Marker_X = 0.0;
+        public double Calibration_C_Marker_Y = 0.0;
+        public double Calibration_D_Marker_X = 0.0;
+        public double Calibration_D_Marker_Y = 0.0;
+        public double Calibration_E_Marker_X = 0.0;
+        public double Calibration_E_Marker_Y = 0.0;
+        public double Calibration_X_Quanta_Step_Size = 20.0;
+        public double Calibration_Y_Quanta_Step_Size = 20.0;
     }
 
     // =================================================================================

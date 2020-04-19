@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Park_button = new System.Windows.Forms.Button();
             this.TestNozzleRecognition_button = new System.Windows.Forms.Button();
             this.DownCamZoomFactor_textBox = new System.Windows.Forms.TextBox();
@@ -795,6 +795,9 @@
             this.gotoLoadStartPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyMovesFromNozzle1ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.Calibration_tabPage = new System.Windows.Forms.TabPage();
+            this.setQuantaSteps_button = new System.Windows.Forms.Button();
+            this.PositionIsNozzle_checkBox = new System.Windows.Forms.CheckBox();
+            this.centre_Set_button = new System.Windows.Forms.Button();
             this.PositionSetupEnable_checkBox = new System.Windows.Forms.CheckBox();
             this.bottomRight_Set_button = new System.Windows.Forms.Button();
             this.bottomLeft_Set_button = new System.Windows.Forms.Button();
@@ -802,8 +805,8 @@
             this.topLeft_Set_button = new System.Windows.Forms.Button();
             this.label177 = new System.Windows.Forms.Label();
             this.label178 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.yQuantaStep_textBox = new System.Windows.Forms.TextBox();
+            this.xQuantaStep_textBox = new System.Windows.Forms.TextBox();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
@@ -862,8 +865,7 @@
             this.label164 = new System.Windows.Forms.Label();
             this.label165 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            this.centre_Set_button = new System.Windows.Forms.Button();
-            this.PositionIsNozzle_checkBox = new System.Windows.Forms.CheckBox();
+            this.runCalibration_button = new System.Windows.Forms.Button();
             this.Tapes_tabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TapesOld_dataGridView)).BeginInit();
             this.Tapes_contextMenuStrip.SuspendLayout();
@@ -8405,14 +8407,14 @@
             this.JobData_GridView.AllowUserToAddRows = false;
             this.JobData_GridView.AllowUserToResizeRows = false;
             this.JobData_GridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.JobData_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.JobData_GridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ComponentCount,
@@ -9368,6 +9370,8 @@
             // 
             // Calibration_tabPage
             // 
+            this.Calibration_tabPage.Controls.Add(this.runCalibration_button);
+            this.Calibration_tabPage.Controls.Add(this.setQuantaSteps_button);
             this.Calibration_tabPage.Controls.Add(this.PositionIsNozzle_checkBox);
             this.Calibration_tabPage.Controls.Add(this.centre_Set_button);
             this.Calibration_tabPage.Controls.Add(this.PositionSetupEnable_checkBox);
@@ -9377,8 +9381,8 @@
             this.Calibration_tabPage.Controls.Add(this.topLeft_Set_button);
             this.Calibration_tabPage.Controls.Add(this.label177);
             this.Calibration_tabPage.Controls.Add(this.label178);
-            this.Calibration_tabPage.Controls.Add(this.textBox3);
-            this.Calibration_tabPage.Controls.Add(this.textBox4);
+            this.Calibration_tabPage.Controls.Add(this.yQuantaStep_textBox);
+            this.Calibration_tabPage.Controls.Add(this.xQuantaStep_textBox);
             this.Calibration_tabPage.Controls.Add(this.button7);
             this.Calibration_tabPage.Controls.Add(this.button6);
             this.Calibration_tabPage.Controls.Add(this.button5);
@@ -9416,6 +9420,37 @@
             this.Calibration_tabPage.Text = "Machine Calibration";
             this.Calibration_tabPage.UseVisualStyleBackColor = true;
             // 
+            // setQuantaSteps_button
+            // 
+            this.setQuantaSteps_button.Location = new System.Drawing.Point(1106, 273);
+            this.setQuantaSteps_button.Name = "setQuantaSteps_button";
+            this.setQuantaSteps_button.Size = new System.Drawing.Size(70, 23);
+            this.setQuantaSteps_button.TabIndex = 41;
+            this.setQuantaSteps_button.Text = "Set";
+            this.setQuantaSteps_button.UseVisualStyleBackColor = true;
+            this.setQuantaSteps_button.Click += new System.EventHandler(this.setQuantaSteps_button_Click);
+            // 
+            // PositionIsNozzle_checkBox
+            // 
+            this.PositionIsNozzle_checkBox.AutoSize = true;
+            this.PositionIsNozzle_checkBox.Location = new System.Drawing.Point(1097, 573);
+            this.PositionIsNozzle_checkBox.Name = "PositionIsNozzle_checkBox";
+            this.PositionIsNozzle_checkBox.Size = new System.Drawing.Size(135, 17);
+            this.PositionIsNozzle_checkBox.TabIndex = 40;
+            this.PositionIsNozzle_checkBox.Text = "Use Position As Nozzle";
+            this.PositionIsNozzle_checkBox.UseVisualStyleBackColor = true;
+            // 
+            // centre_Set_button
+            // 
+            this.centre_Set_button.Enabled = false;
+            this.centre_Set_button.Location = new System.Drawing.Point(528, 379);
+            this.centre_Set_button.Name = "centre_Set_button";
+            this.centre_Set_button.Size = new System.Drawing.Size(70, 23);
+            this.centre_Set_button.TabIndex = 39;
+            this.centre_Set_button.Text = "Set";
+            this.centre_Set_button.UseVisualStyleBackColor = true;
+            this.centre_Set_button.Click += new System.EventHandler(this.centre_Set_button_Click);
+            // 
             // PositionSetupEnable_checkBox
             // 
             this.PositionSetupEnable_checkBox.AutoSize = true;
@@ -9436,6 +9471,7 @@
             this.bottomRight_Set_button.TabIndex = 37;
             this.bottomRight_Set_button.Text = "Set";
             this.bottomRight_Set_button.UseVisualStyleBackColor = true;
+            this.bottomRight_Set_button.Click += new System.EventHandler(this.bottomRight_Set_button_Click);
             // 
             // bottomLeft_Set_button
             // 
@@ -9446,6 +9482,7 @@
             this.bottomLeft_Set_button.TabIndex = 36;
             this.bottomLeft_Set_button.Text = "Set";
             this.bottomLeft_Set_button.UseVisualStyleBackColor = true;
+            this.bottomLeft_Set_button.Click += new System.EventHandler(this.bottomLeft_Set_button_Click);
             // 
             // topRight_Set_button
             // 
@@ -9456,6 +9493,7 @@
             this.topRight_Set_button.TabIndex = 35;
             this.topRight_Set_button.Text = "Set";
             this.topRight_Set_button.UseVisualStyleBackColor = true;
+            this.topRight_Set_button.Click += new System.EventHandler(this.topRight_Set_button_Click);
             // 
             // topLeft_Set_button
             // 
@@ -9488,21 +9526,21 @@
             this.label178.TabIndex = 32;
             this.label178.Text = "X Quanta Step";
             // 
-            // textBox3
+            // yQuantaStep_textBox
             // 
-            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox3.Location = new System.Drawing.Point(1106, 237);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(121, 20);
-            this.textBox3.TabIndex = 31;
+            this.yQuantaStep_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.yQuantaStep_textBox.Location = new System.Drawing.Point(1106, 237);
+            this.yQuantaStep_textBox.Name = "yQuantaStep_textBox";
+            this.yQuantaStep_textBox.Size = new System.Drawing.Size(121, 20);
+            this.yQuantaStep_textBox.TabIndex = 31;
             // 
-            // textBox4
+            // xQuantaStep_textBox
             // 
-            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox4.Location = new System.Drawing.Point(1106, 182);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(121, 20);
-            this.textBox4.TabIndex = 30;
+            this.xQuantaStep_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.xQuantaStep_textBox.Location = new System.Drawing.Point(1106, 182);
+            this.xQuantaStep_textBox.Name = "xQuantaStep_textBox";
+            this.xQuantaStep_textBox.Size = new System.Drawing.Size(121, 20);
+            this.xQuantaStep_textBox.TabIndex = 30;
             // 
             // button7
             // 
@@ -9653,6 +9691,7 @@
             this.centre_Go_button.TabIndex = 15;
             this.centre_Go_button.Text = "Go";
             this.centre_Go_button.UseVisualStyleBackColor = true;
+            this.centre_Go_button.Click += new System.EventHandler(this.centre_Go_button_Click);
             // 
             // centre_YPos_textBox
             // 
@@ -9661,6 +9700,7 @@
             this.centre_YPos_textBox.Enabled = false;
             this.centre_YPos_textBox.Location = new System.Drawing.Point(528, 434);
             this.centre_YPos_textBox.Name = "centre_YPos_textBox";
+            this.centre_YPos_textBox.ReadOnly = true;
             this.centre_YPos_textBox.Size = new System.Drawing.Size(70, 20);
             this.centre_YPos_textBox.TabIndex = 14;
             // 
@@ -9671,6 +9711,7 @@
             this.centre_XPos_textBox.Enabled = false;
             this.centre_XPos_textBox.Location = new System.Drawing.Point(528, 408);
             this.centre_XPos_textBox.Name = "centre_XPos_textBox";
+            this.centre_XPos_textBox.ReadOnly = true;
             this.centre_XPos_textBox.Size = new System.Drawing.Size(70, 20);
             this.centre_XPos_textBox.TabIndex = 13;
             // 
@@ -9684,6 +9725,7 @@
             this.bottomRight_Go_button.TabIndex = 12;
             this.bottomRight_Go_button.Text = "Go";
             this.bottomRight_Go_button.UseVisualStyleBackColor = true;
+            this.bottomRight_Go_button.Click += new System.EventHandler(this.bottomRight_Go_button_Click);
             // 
             // topRight_Go_button
             // 
@@ -9694,6 +9736,7 @@
             this.topRight_Go_button.TabIndex = 11;
             this.topRight_Go_button.Text = "Go";
             this.topRight_Go_button.UseVisualStyleBackColor = true;
+            this.topRight_Go_button.Click += new System.EventHandler(this.topRight_Go_button_Click);
             // 
             // bottomLeft_Go_button
             // 
@@ -9705,6 +9748,7 @@
             this.bottomLeft_Go_button.TabIndex = 10;
             this.bottomLeft_Go_button.Text = "Go";
             this.bottomLeft_Go_button.UseVisualStyleBackColor = true;
+            this.bottomLeft_Go_button.Click += new System.EventHandler(this.bottomLeft_Go_button_Click);
             // 
             // topLeft_Go_button
             // 
@@ -9715,6 +9759,7 @@
             this.topLeft_Go_button.TabIndex = 9;
             this.topLeft_Go_button.Text = "Go";
             this.topLeft_Go_button.UseVisualStyleBackColor = true;
+            this.topLeft_Go_button.Click += new System.EventHandler(this.topLeft_Go_button_Click);
             // 
             // bottomRight_YPos_textBox
             // 
@@ -9722,6 +9767,7 @@
             this.bottomRight_YPos_textBox.Enabled = false;
             this.bottomRight_YPos_textBox.Location = new System.Drawing.Point(1003, 573);
             this.bottomRight_YPos_textBox.Name = "bottomRight_YPos_textBox";
+            this.bottomRight_YPos_textBox.ReadOnly = true;
             this.bottomRight_YPos_textBox.Size = new System.Drawing.Size(70, 20);
             this.bottomRight_YPos_textBox.TabIndex = 8;
             // 
@@ -9731,6 +9777,7 @@
             this.bottomRight_XPos_textBox.Enabled = false;
             this.bottomRight_XPos_textBox.Location = new System.Drawing.Point(1003, 547);
             this.bottomRight_XPos_textBox.Name = "bottomRight_XPos_textBox";
+            this.bottomRight_XPos_textBox.ReadOnly = true;
             this.bottomRight_XPos_textBox.Size = new System.Drawing.Size(70, 20);
             this.bottomRight_XPos_textBox.TabIndex = 7;
             // 
@@ -9739,6 +9786,7 @@
             this.topRight_YPos_textBox.Enabled = false;
             this.topRight_YPos_textBox.Location = new System.Drawing.Point(1003, 68);
             this.topRight_YPos_textBox.Name = "topRight_YPos_textBox";
+            this.topRight_YPos_textBox.ReadOnly = true;
             this.topRight_YPos_textBox.Size = new System.Drawing.Size(70, 20);
             this.topRight_YPos_textBox.TabIndex = 6;
             // 
@@ -9747,6 +9795,7 @@
             this.topRight_XPos_textBox.Enabled = false;
             this.topRight_XPos_textBox.Location = new System.Drawing.Point(1003, 42);
             this.topRight_XPos_textBox.Name = "topRight_XPos_textBox";
+            this.topRight_XPos_textBox.ReadOnly = true;
             this.topRight_XPos_textBox.Size = new System.Drawing.Size(70, 20);
             this.topRight_XPos_textBox.TabIndex = 5;
             // 
@@ -9756,6 +9805,7 @@
             this.bottomLeft_YPos_textBox.Enabled = false;
             this.bottomLeft_YPos_textBox.Location = new System.Drawing.Point(53, 573);
             this.bottomLeft_YPos_textBox.Name = "bottomLeft_YPos_textBox";
+            this.bottomLeft_YPos_textBox.ReadOnly = true;
             this.bottomLeft_YPos_textBox.Size = new System.Drawing.Size(70, 20);
             this.bottomLeft_YPos_textBox.TabIndex = 4;
             // 
@@ -9765,6 +9815,7 @@
             this.bottomLeft_XPos_textBox.Enabled = false;
             this.bottomLeft_XPos_textBox.Location = new System.Drawing.Point(53, 547);
             this.bottomLeft_XPos_textBox.Name = "bottomLeft_XPos_textBox";
+            this.bottomLeft_XPos_textBox.ReadOnly = true;
             this.bottomLeft_XPos_textBox.Size = new System.Drawing.Size(70, 20);
             this.bottomLeft_XPos_textBox.TabIndex = 3;
             // 
@@ -9773,6 +9824,7 @@
             this.topLeft_YPos_textBox.Enabled = false;
             this.topLeft_YPos_textBox.Location = new System.Drawing.Point(53, 68);
             this.topLeft_YPos_textBox.Name = "topLeft_YPos_textBox";
+            this.topLeft_YPos_textBox.ReadOnly = true;
             this.topLeft_YPos_textBox.Size = new System.Drawing.Size(70, 20);
             this.topLeft_YPos_textBox.TabIndex = 2;
             // 
@@ -9781,6 +9833,7 @@
             this.topLeft_XPos_textBox.Enabled = false;
             this.topLeft_XPos_textBox.Location = new System.Drawing.Point(53, 42);
             this.topLeft_XPos_textBox.Name = "topLeft_XPos_textBox";
+            this.topLeft_XPos_textBox.ReadOnly = true;
             this.topLeft_XPos_textBox.Size = new System.Drawing.Size(70, 20);
             this.topLeft_XPos_textBox.TabIndex = 1;
             // 
@@ -10050,25 +10103,16 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // centre_Set_button
+            // runCalibration_button
             // 
-            this.centre_Set_button.Enabled = false;
-            this.centre_Set_button.Location = new System.Drawing.Point(528, 379);
-            this.centre_Set_button.Name = "centre_Set_button";
-            this.centre_Set_button.Size = new System.Drawing.Size(70, 23);
-            this.centre_Set_button.TabIndex = 39;
-            this.centre_Set_button.Text = "Set";
-            this.centre_Set_button.UseVisualStyleBackColor = true;
-            // 
-            // PositionIsNozzle_checkBox
-            // 
-            this.PositionIsNozzle_checkBox.AutoSize = true;
-            this.PositionIsNozzle_checkBox.Location = new System.Drawing.Point(1097, 573);
-            this.PositionIsNozzle_checkBox.Name = "PositionIsNozzle_checkBox";
-            this.PositionIsNozzle_checkBox.Size = new System.Drawing.Size(135, 17);
-            this.PositionIsNozzle_checkBox.TabIndex = 40;
-            this.PositionIsNozzle_checkBox.Text = "Use Position As Nozzle";
-            this.PositionIsNozzle_checkBox.UseVisualStyleBackColor = true;
+            this.runCalibration_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.runCalibration_button.Location = new System.Drawing.Point(1107, 356);
+            this.runCalibration_button.Name = "runCalibration_button";
+            this.runCalibration_button.Size = new System.Drawing.Size(120, 23);
+            this.runCalibration_button.TabIndex = 42;
+            this.runCalibration_button.Text = "Calibrate";
+            this.runCalibration_button.UseVisualStyleBackColor = true;
+            this.runCalibration_button.Click += new System.EventHandler(this.runCalibration_button_Click);
             // 
             // FormMain
             // 
@@ -10132,6 +10176,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "FormMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LitePlacer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -11063,8 +11108,8 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label177;
         private System.Windows.Forms.Label label178;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox yQuantaStep_textBox;
+        private System.Windows.Forms.TextBox xQuantaStep_textBox;
         private System.Windows.Forms.Button bottomRight_Set_button;
         private System.Windows.Forms.Button bottomLeft_Set_button;
         private System.Windows.Forms.Button topRight_Set_button;
@@ -11072,6 +11117,8 @@
         private System.Windows.Forms.CheckBox PositionSetupEnable_checkBox;
         private System.Windows.Forms.Button centre_Set_button;
         private System.Windows.Forms.CheckBox PositionIsNozzle_checkBox;
+        private System.Windows.Forms.Button setQuantaSteps_button;
+        private System.Windows.Forms.Button runCalibration_button;
     }
 }
 

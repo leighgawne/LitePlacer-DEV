@@ -34,7 +34,8 @@ using AForge.Imaging;
 using AForge.Imaging.Filters;
 using AForge.Math.Geometry;
 using Newtonsoft.Json;
-
+using LitePlacer.Calibration.Actions;
+using LitePlacer.Model;
 
 namespace LitePlacer
 {
@@ -219,6 +220,10 @@ namespace LitePlacer
 
             Display_dataGridView.DataError += new
                 DataGridViewDataErrorEventHandler(Display_dataGridView_DataError);
+
+            LoadCalibrationSettingsToUI();
+
+            CalibrationAction.CNC_XYZ_m = CNC_XYA_m;
         }
 
         // ==============================================================================================
@@ -15636,6 +15641,22 @@ namespace LitePlacer
             CameraToFirstComponent(0);
         }
 
+        private void LoadCalibrationSettingsToUI()
+        {
+            topLeft_XPos_textBox.Text = Setting.Calibration_A_Marker_X.ToString();
+            topLeft_YPos_textBox.Text = Setting.Calibration_A_Marker_Y.ToString();
+            topRight_XPos_textBox.Text = Setting.Calibration_B_Marker_X.ToString();
+            topRight_YPos_textBox.Text = Setting.Calibration_B_Marker_Y.ToString();
+            bottomLeft_XPos_textBox.Text = Setting.Calibration_C_Marker_X.ToString();
+            bottomLeft_YPos_textBox.Text = Setting.Calibration_C_Marker_Y.ToString();
+            bottomRight_XPos_textBox.Text = Setting.Calibration_D_Marker_X.ToString();
+            bottomRight_YPos_textBox.Text = Setting.Calibration_D_Marker_Y.ToString();
+            centre_XPos_textBox.Text = Setting.Calibration_E_Marker_X.ToString();
+            centre_YPos_textBox.Text = Setting.Calibration_E_Marker_Y.ToString();
+            xQuantaStep_textBox.Text = Setting.Calibration_X_Quanta_Step_Size.ToString();
+            yQuantaStep_textBox.Text = Setting.Calibration_Y_Quanta_Step_Size.ToString();
+        }
+
         private void PositionSetupEnable_checkBox_CheckedChanged(object sender, EventArgs e)
         {
             topLeft_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
@@ -15666,16 +15687,93 @@ namespace LitePlacer
 
         private void topLeft_Set_button_Click(object sender, EventArgs e)
         {
+            Setting.Calibration_A_Marker_X = Cnc.CurrentX;
+            Setting.Calibration_A_Marker_Y = Cnc.CurrentY;
+            LoadCalibrationSettingsToUI();
+        }
+
+        private void topRight_Set_button_Click(object sender, EventArgs e)
+        {
+            Setting.Calibration_B_Marker_X = Cnc.CurrentX;
+            Setting.Calibration_B_Marker_Y = Cnc.CurrentY;
+            LoadCalibrationSettingsToUI();
+        }
+
+        private void bottomLeft_Set_button_Click(object sender, EventArgs e)
+        {
+            Setting.Calibration_C_Marker_X = Cnc.CurrentX;
+            Setting.Calibration_C_Marker_Y = Cnc.CurrentY;
+            LoadCalibrationSettingsToUI();
+        }
+
+        private void bottomRight_Set_button_Click(object sender, EventArgs e)
+        {
+            Setting.Calibration_D_Marker_X = Cnc.CurrentX;
+            Setting.Calibration_D_Marker_Y = Cnc.CurrentY;
+            LoadCalibrationSettingsToUI();
+        }
+
+        private void centre_Set_button_Click(object sender, EventArgs e)
+        {
+            Setting.Calibration_E_Marker_X = Cnc.CurrentX;
+            Setting.Calibration_E_Marker_Y = Cnc.CurrentY;
+            LoadCalibrationSettingsToUI();
+        }
+
+        private void setQuantaSteps_button_Click(object sender, EventArgs e)
+        {
+            if (double.TryParse(xQuantaStep_textBox.Text, out double xQuantaStep))
+            {
+                Setting.Calibration_X_Quanta_Step_Size = xQuantaStep;
+            }
+
+            if (double.TryParse(yQuantaStep_textBox.Text, out double yQuantaStep))
+            {
+                Setting.Calibration_Y_Quanta_Step_Size = yQuantaStep;
+            }
+        }
+
+        private void topLeft_Go_button_Click(object sender, EventArgs e)
+        {
+            CNC_XY_m(
+                Setting.Calibration_A_Marker_X, 
+                Setting.Calibration_A_Marker_Y);
+        }
+
+        private void topRight_Go_button_Click(object sender, EventArgs e)
+        {
+            CNC_XY_m(
+                Setting.Calibration_B_Marker_X,
+                Setting.Calibration_B_Marker_Y);
 
         }
 
-        private void Thingy()
+        private void bottomLeft_Go_button_Click(object sender, EventArgs e)
         {
-            Setting.General_Mark1X = Cnc.CurrentX;
-            Setting.General_Mark1Y = Cnc.CurrentY;
-            Setting.General_Mark1A = Cnc.CurrentA;
-            Setting.General_Mark1Name = Mark1_textBox.Text;
-            Bookmark1_button.Text = Setting.General_Mark1Name;
+            CNC_XY_m(
+                Setting.Calibration_C_Marker_X,
+                Setting.Calibration_C_Marker_Y);
+        }
+
+        private void bottomRight_Go_button_Click(object sender, EventArgs e)
+        {
+            CNC_XY_m(
+                Setting.Calibration_D_Marker_X,
+                Setting.Calibration_D_Marker_Y);
+        }
+
+        private void centre_Go_button_Click(object sender, EventArgs e)
+        {
+            CNC_XY_m(
+                Setting.Calibration_E_Marker_X,
+                Setting.Calibration_E_Marker_Y);
+        }
+
+        private void runCalibration_button_Click(object sender, EventArgs e)
+        {
+            var repeatabilityProfilier = new RepeatabilityProfilier();
+            RepeatabilityProfilier.FormMain = this;
+            repeatabilityProfilier.ExecuteProfiling();
         }
     }	// end of: 	public partial class FormMain : Form
 
