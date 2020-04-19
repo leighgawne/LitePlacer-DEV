@@ -156,8 +156,8 @@ namespace LitePlacer
         public int UpCam_DesiredX = 640;
         public int UpCam_DesiredY = 480;
 
-        public double Calibration_Common_X = 0.0;
-        public double Calibration_Common_Y = 0.0;
+        public double Calibration_Common_X = 1.0;
+        public double Calibration_Common_Y = 1.0;
         public double Calibration_A_Marker_X = 0.0;
         public double Calibration_A_Marker_Y = 0.0;
         public double Calibration_B_Marker_X = 0.0;

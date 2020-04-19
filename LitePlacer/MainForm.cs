@@ -15660,29 +15660,10 @@ namespace LitePlacer
         private void PositionSetupEnable_checkBox_CheckedChanged(object sender, EventArgs e)
         {
             topLeft_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
-            topLeft_YPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
-            topLeft_XPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
-            topLeft_Go_button.Enabled = PositionSetupEnable_checkBox.Checked;
-
             topRight_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
-            topRight_YPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
-            topRight_XPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
-            topRight_Go_button.Enabled = PositionSetupEnable_checkBox.Checked;
-
             bottomLeft_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
-            bottomLeft_YPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
-            bottomLeft_XPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
-            bottomLeft_Go_button.Enabled = PositionSetupEnable_checkBox.Checked;
-
             bottomRight_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
-            bottomRight_YPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
-            bottomRight_XPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
-            bottomRight_Go_button.Enabled = PositionSetupEnable_checkBox.Checked;
-
             centre_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
-            centre_YPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
-            centre_XPos_textBox.Enabled = PositionSetupEnable_checkBox.Checked;
-            centre_Go_button.Enabled = PositionSetupEnable_checkBox.Checked;
         }
 
         private void topLeft_Set_button_Click(object sender, EventArgs e)
@@ -15774,6 +15755,70 @@ namespace LitePlacer
             var repeatabilityProfilier = new RepeatabilityProfilier();
             RepeatabilityProfilier.FormMain = this;
             repeatabilityProfilier.ExecuteProfiling();
+        }
+
+        private void goToCommon_button_Click(object sender, EventArgs e)
+        {
+            CNC_XY_m(
+                Setting.Calibration_Common_X,
+                Setting.Calibration_Common_Y);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            CNC_XY_m(
+                Setting.Calibration_A_Marker_X,
+                Setting.Calibration_A_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_B_Marker_X,
+                Setting.Calibration_B_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_C_Marker_X,
+                Setting.Calibration_C_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_D_Marker_X,
+                Setting.Calibration_D_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_E_Marker_X,
+                Setting.Calibration_E_Marker_Y);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            CNC_XY_m(
+                Setting.Calibration_A_Marker_X,
+                Setting.Calibration_A_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_C_Marker_X,
+                Setting.Calibration_C_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_B_Marker_X,
+                Setting.Calibration_B_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_D_Marker_X,
+                Setting.Calibration_D_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_E_Marker_X,
+                Setting.Calibration_E_Marker_Y);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            CNC_XY_m(
+                Setting.Calibration_A_Marker_X,
+                Setting.Calibration_A_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_C_Marker_X,
+                Setting.Calibration_C_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_D_Marker_X,
+                Setting.Calibration_D_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_B_Marker_X,
+                Setting.Calibration_B_Marker_Y);
+            CNC_XY_m(
+                Setting.Calibration_E_Marker_X,
+                Setting.Calibration_E_Marker_Y);
         }
     }	// end of: 	public partial class FormMain : Form
 

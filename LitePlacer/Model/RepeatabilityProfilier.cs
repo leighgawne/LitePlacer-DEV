@@ -148,30 +148,30 @@ namespace LitePlacer.Model
 
         public static void MoveFunctionOfQuanta(ProfileExecutor profileExecutor, int directionMultiplierX, int directionMultiplierY)
         {
-            int quantaCurrentStepX = 0;
-            int quantaCurrentStepY = 0;
+            int quantaCurrentStepX = 1;
+            int quantaCurrentStepY = 1;
 
-            while ((quantaCurrentStepX <= CalibrationProfiles.QuantisationStepCountX) || (quantaCurrentStepY <= CalibrationProfiles.QuantisationStepCountY))
+            while ((quantaCurrentStepX <= CalibrationProfiles.QuantisationStepCountX) && (quantaCurrentStepY <= CalibrationProfiles.QuantisationStepCountY))
             {
-                quantaCurrentStepX = quantaCurrentStepX + (quantaCurrentStepX * directionMultiplierX);
-                quantaCurrentStepY = quantaCurrentStepY + (quantaCurrentStepY * directionMultiplierY);
-
-                double newX = FormMain.Cnc.CurrentX + (FormMain.Setting.Calibration_X_Quanta_Step_Size * (Math.Min(CalibrationProfiles.QuantisationStepCountX, quantaCurrentStepX)));
-                double newY = FormMain.Cnc.CurrentY + (FormMain.Setting.Calibration_Y_Quanta_Step_Size * (Math.Min(CalibrationProfiles.QuantisationStepCountY, quantaCurrentStepY)));
+                double newX = FormMain.Cnc.CurrentX + (FormMain.Setting.Calibration_X_Quanta_Step_Size * (Math.Min(CalibrationProfiles.QuantisationStepCountX, quantaCurrentStepX)) * directionMultiplierX);
+                double newY = FormMain.Cnc.CurrentY + (FormMain.Setting.Calibration_Y_Quanta_Step_Size * (Math.Min(CalibrationProfiles.QuantisationStepCountY, quantaCurrentStepY)) * directionMultiplierY);
 
                 ExecuteMove(
                     profileExecutor,
                     newX,
                     newY);
+
+                quantaCurrentStepX++;
+                quantaCurrentStepY++;
             }
         }
 
         public static void ExecuteMove(ProfileExecutor profileExecutor, double posX, double posY)
         {
             FormMain.CNC_XY_m(posX, posY);
-            Thread.Sleep(2000);
+            Thread.Sleep(400);
             HomeToNominalCalibrationPosition(profileExecutor);
-            Thread.Sleep(2000);
+            Thread.Sleep(400);
         }
     }
     
