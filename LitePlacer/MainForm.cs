@@ -46,7 +46,7 @@ namespace LitePlacer
     public partial class FormMain : Form
     {
         public CNC Cnc;
-        Camera DownCamera;
+        public Camera DownCamera;
         Camera UpCamera;
         NozzleClass Nozzle;
         TapesClass Tapes;
@@ -15750,13 +15750,6 @@ namespace LitePlacer
                 Setting.Calibration_E_Marker_Y);
         }
 
-        private void runCalibration_button_Click(object sender, EventArgs e)
-        {
-            var repeatabilityProfilier = new RepeatabilityProfilier();
-            RepeatabilityProfilier.FormMain = this;
-            repeatabilityProfilier.ExecuteProfiling();
-        }
-
         private void goToCommon_button_Click(object sender, EventArgs e)
         {
             CNC_XY_m(
@@ -15819,6 +15812,58 @@ namespace LitePlacer
             CNC_XY_m(
                 Setting.Calibration_E_Marker_X,
                 Setting.Calibration_E_Marker_Y);
+        }
+
+        CalibrationProfiles calibrationProfiles = new CalibrationProfiles();
+
+        private void runCalibration_button_Click(object sender, EventArgs e)
+        {
+            var repeatabilityProfilier = new RepeatabilityProfilier();
+            RepeatabilityProfilier.FormMain = this;
+            repeatabilityProfilier.ExecuteProfiling(
+                new List<CalibrationProfile>()
+                {
+                    calibrationProfiles.PositionA,
+                    calibrationProfiles.PositionB,
+                    calibrationProfiles.PositionC,
+                    calibrationProfiles.PositionD,
+                    calibrationProfiles.PositionE
+                });
+        }
+
+        private void runCalibrationA_button_Click(object sender, EventArgs e)
+        {
+            var repeatabilityProfilier = new RepeatabilityProfilier();
+            RepeatabilityProfilier.FormMain = this;
+            repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionA });
+        }
+
+        private void runCalibrationB_button_Click(object sender, EventArgs e)
+        {
+            var repeatabilityProfilier = new RepeatabilityProfilier();
+            RepeatabilityProfilier.FormMain = this;
+            repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionB });
+        }
+
+        private void runCalibrationC_button_Click(object sender, EventArgs e)
+        {
+            var repeatabilityProfilier = new RepeatabilityProfilier();
+            RepeatabilityProfilier.FormMain = this;
+            repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionC });
+        }
+
+        private void runCalibrationD_button_Click(object sender, EventArgs e)
+        {
+            var repeatabilityProfilier = new RepeatabilityProfilier();
+            RepeatabilityProfilier.FormMain = this;
+            repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionD });
+        }
+
+        private void runCalibrationE_button_Click(object sender, EventArgs e)
+        {
+            var repeatabilityProfilier = new RepeatabilityProfilier();
+            RepeatabilityProfilier.FormMain = this;
+            repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionE });
         }
     }	// end of: 	public partial class FormMain : Form
 

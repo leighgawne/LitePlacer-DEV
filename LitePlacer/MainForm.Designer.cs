@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Park_button = new System.Windows.Forms.Button();
             this.TestNozzleRecognition_button = new System.Windows.Forms.Button();
             this.DownCamZoomFactor_textBox = new System.Windows.Forms.TextBox();
@@ -816,7 +816,7 @@
             this.label175 = new System.Windows.Forms.Label();
             this.label174 = new System.Windows.Forms.Label();
             this.label173 = new System.Windows.Forms.Label();
-            this.label172 = new System.Windows.Forms.Label();
+            this.a_label = new System.Windows.Forms.Label();
             this.label170 = new System.Windows.Forms.Label();
             this.label171 = new System.Windows.Forms.Label();
             this.label168 = new System.Windows.Forms.Label();
@@ -867,6 +867,11 @@
             this.label164 = new System.Windows.Forms.Label();
             this.label165 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
+            this.runCalibrationA_button = new System.Windows.Forms.Button();
+            this.runCalibrationB_button = new System.Windows.Forms.Button();
+            this.runCalibrationC_button = new System.Windows.Forms.Button();
+            this.runCalibrationD_button = new System.Windows.Forms.Button();
+            this.runCalibrationE_button = new System.Windows.Forms.Button();
             this.Tapes_tabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TapesOld_dataGridView)).BeginInit();
             this.Tapes_contextMenuStrip.SuspendLayout();
@@ -8408,14 +8413,14 @@
             this.JobData_GridView.AllowUserToAddRows = false;
             this.JobData_GridView.AllowUserToResizeRows = false;
             this.JobData_GridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.JobData_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.JobData_GridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ComponentCount,
@@ -9371,6 +9376,11 @@
             // 
             // Calibration_tabPage
             // 
+            this.Calibration_tabPage.Controls.Add(this.runCalibrationE_button);
+            this.Calibration_tabPage.Controls.Add(this.runCalibrationD_button);
+            this.Calibration_tabPage.Controls.Add(this.runCalibrationC_button);
+            this.Calibration_tabPage.Controls.Add(this.runCalibrationB_button);
+            this.Calibration_tabPage.Controls.Add(this.runCalibrationA_button);
             this.Calibration_tabPage.Controls.Add(this.goToCommon_button);
             this.Calibration_tabPage.Controls.Add(this.runCalibration_button);
             this.Calibration_tabPage.Controls.Add(this.setQuantaSteps_button);
@@ -9392,7 +9402,7 @@
             this.Calibration_tabPage.Controls.Add(this.label175);
             this.Calibration_tabPage.Controls.Add(this.label174);
             this.Calibration_tabPage.Controls.Add(this.label173);
-            this.Calibration_tabPage.Controls.Add(this.label172);
+            this.Calibration_tabPage.Controls.Add(this.a_label);
             this.Calibration_tabPage.Controls.Add(this.label170);
             this.Calibration_tabPage.Controls.Add(this.label171);
             this.Calibration_tabPage.Controls.Add(this.label168);
@@ -9440,7 +9450,7 @@
             this.runCalibration_button.Name = "runCalibration_button";
             this.runCalibration_button.Size = new System.Drawing.Size(120, 23);
             this.runCalibration_button.TabIndex = 42;
-            this.runCalibration_button.Text = "Calibrate";
+            this.runCalibration_button.Text = "Calibrate All";
             this.runCalibration_button.UseVisualStyleBackColor = true;
             this.runCalibration_button.Click += new System.EventHandler(this.runCalibration_button_Click);
             // 
@@ -9643,15 +9653,16 @@
             this.label173.TabIndex = 23;
             this.label173.Text = "B";
             // 
-            // label172
+            // a_label
             // 
-            this.label172.AutoSize = true;
-            this.label172.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label172.Location = new System.Drawing.Point(162, 127);
-            this.label172.Name = "label172";
-            this.label172.Size = new System.Drawing.Size(27, 25);
-            this.label172.TabIndex = 22;
-            this.label172.Text = "A";
+            this.a_label.AutoSize = true;
+            this.a_label.BackColor = System.Drawing.Color.Transparent;
+            this.a_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.a_label.Location = new System.Drawing.Point(162, 127);
+            this.a_label.Name = "a_label";
+            this.a_label.Size = new System.Drawing.Size(27, 25);
+            this.a_label.TabIndex = 22;
+            this.a_label.Text = "A";
             // 
             // label170
             // 
@@ -9724,7 +9735,6 @@
             // 
             this.centre_YPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.centre_YPos_textBox.Enabled = false;
             this.centre_YPos_textBox.Location = new System.Drawing.Point(528, 434);
             this.centre_YPos_textBox.Name = "centre_YPos_textBox";
             this.centre_YPos_textBox.ReadOnly = true;
@@ -9735,7 +9745,6 @@
             // 
             this.centre_XPos_textBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.centre_XPos_textBox.Enabled = false;
             this.centre_XPos_textBox.Location = new System.Drawing.Point(528, 408);
             this.centre_XPos_textBox.Name = "centre_XPos_textBox";
             this.centre_XPos_textBox.ReadOnly = true;
@@ -10117,6 +10126,61 @@
             this.button2.Text = "Go Cam";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // runCalibrationA_button
+            // 
+            this.runCalibrationA_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.runCalibrationA_button.Location = new System.Drawing.Point(1107, 401);
+            this.runCalibrationA_button.Name = "runCalibrationA_button";
+            this.runCalibrationA_button.Size = new System.Drawing.Size(73, 23);
+            this.runCalibrationA_button.TabIndex = 44;
+            this.runCalibrationA_button.Text = "Calibrate A";
+            this.runCalibrationA_button.UseVisualStyleBackColor = true;
+            this.runCalibrationA_button.Click += new System.EventHandler(this.runCalibrationA_button_Click);
+            // 
+            // runCalibrationB_button
+            // 
+            this.runCalibrationB_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.runCalibrationB_button.Location = new System.Drawing.Point(1107, 428);
+            this.runCalibrationB_button.Name = "runCalibrationB_button";
+            this.runCalibrationB_button.Size = new System.Drawing.Size(73, 23);
+            this.runCalibrationB_button.TabIndex = 45;
+            this.runCalibrationB_button.Text = "Calibrate B";
+            this.runCalibrationB_button.UseVisualStyleBackColor = true;
+            this.runCalibrationB_button.Click += new System.EventHandler(this.runCalibrationB_button_Click);
+            // 
+            // runCalibrationC_button
+            // 
+            this.runCalibrationC_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.runCalibrationC_button.Location = new System.Drawing.Point(1107, 455);
+            this.runCalibrationC_button.Name = "runCalibrationC_button";
+            this.runCalibrationC_button.Size = new System.Drawing.Size(73, 23);
+            this.runCalibrationC_button.TabIndex = 46;
+            this.runCalibrationC_button.Text = "Calibrate C";
+            this.runCalibrationC_button.UseVisualStyleBackColor = true;
+            this.runCalibrationC_button.Click += new System.EventHandler(this.runCalibrationC_button_Click);
+            // 
+            // runCalibrationD_button
+            // 
+            this.runCalibrationD_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.runCalibrationD_button.Location = new System.Drawing.Point(1107, 482);
+            this.runCalibrationD_button.Name = "runCalibrationD_button";
+            this.runCalibrationD_button.Size = new System.Drawing.Size(73, 23);
+            this.runCalibrationD_button.TabIndex = 47;
+            this.runCalibrationD_button.Text = "Calibrate D";
+            this.runCalibrationD_button.UseVisualStyleBackColor = true;
+            this.runCalibrationD_button.Click += new System.EventHandler(this.runCalibrationD_button_Click);
+            // 
+            // runCalibrationE_button
+            // 
+            this.runCalibrationE_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.runCalibrationE_button.Location = new System.Drawing.Point(1107, 509);
+            this.runCalibrationE_button.Name = "runCalibrationE_button";
+            this.runCalibrationE_button.Size = new System.Drawing.Size(73, 23);
+            this.runCalibrationE_button.TabIndex = 48;
+            this.runCalibrationE_button.Text = "Calibrate E";
+            this.runCalibrationE_button.UseVisualStyleBackColor = true;
+            this.runCalibrationE_button.Click += new System.EventHandler(this.runCalibrationE_button_Click);
             // 
             // FormMain
             // 
@@ -11106,7 +11170,7 @@
         private System.Windows.Forms.Label label175;
         private System.Windows.Forms.Label label174;
         private System.Windows.Forms.Label label173;
-        private System.Windows.Forms.Label label172;
+        private System.Windows.Forms.Label a_label;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button5;
@@ -11124,6 +11188,11 @@
         private System.Windows.Forms.Button setQuantaSteps_button;
         private System.Windows.Forms.Button runCalibration_button;
         private System.Windows.Forms.Button goToCommon_button;
+        private System.Windows.Forms.Button runCalibrationE_button;
+        private System.Windows.Forms.Button runCalibrationD_button;
+        private System.Windows.Forms.Button runCalibrationC_button;
+        private System.Windows.Forms.Button runCalibrationB_button;
+        private System.Windows.Forms.Button runCalibrationA_button;
     }
 }
 
