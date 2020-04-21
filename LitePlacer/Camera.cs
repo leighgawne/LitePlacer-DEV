@@ -287,7 +287,19 @@ namespace LitePlacer
             return (Monikers);
         }
 
+        List<AForgeFunction> CalibrationMeasurementFunctions
+        {
+            get
+            {
+                var measurementFunctions = new List<AForgeFunction>()
+                {
+                    new AForgeFunction() { func = ThresholdFunct, parameter_double = 100.0 },
+                    new AForgeFunction() { func = InvertFunct, parameter_int = 1 },
+                };
 
+                return (measurementFunctions);
+            }
+        }
 
         // ==========================================================================================================
         // Video processing and measurements are done by appying AForge functions one by one to a videoframe.
@@ -493,6 +505,10 @@ namespace LitePlacer
             PauseProcessing = pause;  // restart video is it was running
         }
 
+        public void UseCalibrationMeasurementFunctions()
+        {
+            MeasurementFunctions = CalibrationMeasurementFunctions;
+        }
 
         // ==========================================================================================================
         // Measurements are done by taking one frame and processing that:

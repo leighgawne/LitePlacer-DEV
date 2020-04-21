@@ -259,6 +259,8 @@ namespace LitePlacer.Model
 
             if (FormMain.DownCamera.IsRunning())
             {
+                FormMain.DownCamera.UseCalibrationMeasurementFunctions();
+
                 if (FormMain.DownCamera.GetClosestCircle(out X, out Y, 20.0 / FormMain.Setting.DownCam_XmmPerPixel) > 0)
                 {
                     X = X * FormMain.Setting.DownCam_XmmPerPixel;
