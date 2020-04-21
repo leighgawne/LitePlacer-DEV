@@ -224,6 +224,8 @@ namespace LitePlacer
             LoadCalibrationSettingsToUI();
 
             CalibrationAction.CNC_XYZ_m = CNC_XYA_m;
+
+            RepeatabilityProfilier.FormMain = this;
         }
 
         // ==============================================================================================
@@ -15823,7 +15825,6 @@ namespace LitePlacer
         private void runCalibration_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            RepeatabilityProfilier.FormMain = this;
             repeatabilityProfilier.ExecuteProfiling(
                 new List<CalibrationProfile>()
                 {
@@ -15838,35 +15839,30 @@ namespace LitePlacer
         private void runCalibrationA_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            RepeatabilityProfilier.FormMain = this;
             repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionA });
         }
 
         private void runCalibrationB_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            RepeatabilityProfilier.FormMain = this;
             repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionB });
         }
 
         private void runCalibrationC_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            RepeatabilityProfilier.FormMain = this;
             repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionC });
         }
 
         private void runCalibrationD_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            RepeatabilityProfilier.FormMain = this;
             repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionD });
         }
 
         private void runCalibrationE_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            RepeatabilityProfilier.FormMain = this;
             repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionE });
         }
     }	// end of: 	public partial class FormMain : Form

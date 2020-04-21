@@ -293,8 +293,8 @@ namespace LitePlacer
             {
                 var measurementFunctions = new List<AForgeFunction>()
                 {
-                    new AForgeFunction() { func = ThresholdFunct, parameter_double = 100.0 },
-                    new AForgeFunction() { func = InvertFunct, parameter_int = 1 },
+                    new AForgeFunction() { func = ThresholdFunct, parameter_int = 100 },
+                    //new AForgeFunction() { func = InvertFunct, parameter_int = 1 },
                 };
 
                 return (measurementFunctions);
