@@ -15719,6 +15719,7 @@ namespace LitePlacer
             CNC_XY_m(
                 Setting.Calibration_A_Marker_X, 
                 Setting.Calibration_A_Marker_Y);
+            ProfileExecutor.Measure(out double X, out double Y);
         }
 
         private void topRight_Go_button_Click(object sender, EventArgs e)
@@ -15726,7 +15727,7 @@ namespace LitePlacer
             CNC_XY_m(
                 Setting.Calibration_B_Marker_X,
                 Setting.Calibration_B_Marker_Y);
-
+            ProfileExecutor.Measure(out double X, out double Y);
         }
 
         private void bottomLeft_Go_button_Click(object sender, EventArgs e)
@@ -15734,6 +15735,7 @@ namespace LitePlacer
             CNC_XY_m(
                 Setting.Calibration_C_Marker_X,
                 Setting.Calibration_C_Marker_Y);
+            ProfileExecutor.Measure(out double X, out double Y);
         }
 
         private void bottomRight_Go_button_Click(object sender, EventArgs e)
@@ -15741,6 +15743,7 @@ namespace LitePlacer
             CNC_XY_m(
                 Setting.Calibration_D_Marker_X,
                 Setting.Calibration_D_Marker_Y);
+            ProfileExecutor.Measure(out double X, out double Y);
         }
 
         private void centre_Go_button_Click(object sender, EventArgs e)
@@ -15748,6 +15751,7 @@ namespace LitePlacer
             CNC_XY_m(
                 Setting.Calibration_E_Marker_X,
                 Setting.Calibration_E_Marker_Y);
+            ProfileExecutor.Measure(out double X, out double Y);
         }
 
         private void goToCommon_button_Click(object sender, EventArgs e)
