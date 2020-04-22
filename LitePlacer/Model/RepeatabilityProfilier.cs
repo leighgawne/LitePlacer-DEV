@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Ubject.Core;
 
 namespace LitePlacer.Model
 {
@@ -45,6 +46,8 @@ namespace LitePlacer.Model
 
     public class CalibrationMeasurement
     {
+        public string SessionIdentifier { get; set; }
+        public string SessionDateTimeStamp { get; set; }
         public E_RPCalibrationPositionStates CalibrationPositionState { get; set; }
         public double MeasuredX { get; set; }
         public double MeasuredY { get; set; }
@@ -184,14 +187,23 @@ namespace LitePlacer.Model
 
         public static List<CalibrationMeasurement> CalibrationMeasurements { get; } = new List<CalibrationMeasurement>();
 
+        public static string CalibrationSessionIdentifier { get; set; }
+        public static string CalibrationSessionDateTimeStamp { get; set; }
+
+
         public void Execute()
         {
             CalibrationMeasurements.Clear();
+            CalibrationSessionIdentifier = Guid.NewGuid().ToString();
+            CalibrationSessionDateTimeStamp = DateTime.UtcNow.ToString();
 
             for (int actionIndex = 0; actionIndex < ActiveProfile.RPCalibrationActions.Count; actionIndex++)
             {
                 ActiveProfile.RPCalibrationActions[actionIndex](this);
             }
+
+            var ubjectStore = new UbjectStore("liteplacer");
+            CalibrationMeasurements.ForEach(x => ubjectStore.PersistObject(x));
         }
 
         public static void HomeToCommonPosition(ProfileExecutor profileExecutor)
@@ -310,6 +322,8 @@ namespace LitePlacer.Model
 
             var calibrationMeasurement = new CalibrationMeasurement()
             {
+                SessionIdentifier = CalibrationSessionIdentifier,
+                SessionDateTimeStamp = CalibrationSessionDateTimeStamp,
                 CalibrationPositionState = profileExecutor.ActiveProfile.RPCalibrationPosition,
                 MeasuredErrorX = X,
                 MeasuredErrorY = Y,

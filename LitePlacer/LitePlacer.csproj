@@ -277,6 +277,12 @@
     <Folder Include="Machine\" />
     <Folder Include="Mission\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ubject.core\ubject.core\Ubject.Core.csproj">
+      <Project>{97645959-ab5e-4e23-9113-cf47f6340de1}</Project>
+      <Name>Ubject.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
