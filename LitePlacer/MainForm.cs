@@ -15643,7 +15643,7 @@ namespace LitePlacer
             CameraToFirstComponent(0);
         }
 
-        private void LoadCalibrationSettingsToUI()
+        public void LoadCalibrationSettingsToUI()
         {
             topLeft_XPos_textBox.Text = Setting.Calibration_A_Marker_X.ToString();
             topLeft_YPos_textBox.Text = Setting.Calibration_A_Marker_Y.ToString();
