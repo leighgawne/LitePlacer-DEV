@@ -44,7 +44,7 @@ namespace LitePlacer.Model
         MoveFunctionOfQuantaNegXPosY
     }
 
-    [Ubject(tableName:"RPCalibration")]
+    [Ubject(tableName: "RPCalibration")]
     public class CalibrationMeasurement
     {
         public string SessionIdentifier { get; set; }
