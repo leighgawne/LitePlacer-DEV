@@ -15865,6 +15865,13 @@ namespace LitePlacer
             var repeatabilityProfilier = new RepeatabilityProfilier();
             repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionE });
         }
+
+        private void popCam_button_Click(object sender, EventArgs e)
+        {
+            CameraForm cameraForm = new CameraForm();
+            DownCamera.ImageBox2 = cameraForm.Cam_pictureBox;
+            cameraForm.Show(this);
+        }
     }	// end of: 	public partial class FormMain : Form
 
 

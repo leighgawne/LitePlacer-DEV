@@ -161,6 +161,12 @@
     <Compile Include="Calibration\Actions\HomeToCommonPosition.cs" />
     <Compile Include="Calibration\Actions\ICalibrationAction.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="CameraForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CameraForm.Designer.cs">
+      <DependentUpon>CameraForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CNC.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -203,6 +209,9 @@
     <Compile Include="TapeSelectionForm.Designer.cs">
       <DependentUpon>TapeSelectionForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CameraForm.resx">
+      <DependentUpon>CameraForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>

@@ -113,6 +113,24 @@ namespace LitePlacer
             }
         }
 
+        ProtectedPictureBox _imageBox2;
+        public ProtectedPictureBox ImageBox2
+        {
+            get
+            {
+                return (_imageBox2);
+            }
+            set
+            {
+                lock (_locker)
+                {
+                    _imageBox2 = value;
+                }
+            }
+        }
+
+
+
         public int FrameCenterX { get; set; }
         public int FrameCenterY { get; set; }
         public int FrameSizeX { get; set; }
@@ -841,6 +859,15 @@ namespace LitePlacer
                     ImageBox.Image.Dispose();
                 }
                 ImageBox.Image = (Bitmap)frame.Clone();
+            }
+
+            lock (_locker)
+            {
+                if (ImageBox2.Image != null)
+                {
+                    ImageBox2.Image.Dispose();
+                }
+                ImageBox2.Image = (Bitmap)frame.Clone();
             }
 
             frame.Dispose();
