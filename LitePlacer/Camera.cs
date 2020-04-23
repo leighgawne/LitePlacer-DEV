@@ -14,8 +14,7 @@ using AForge.Video.DirectShow;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
 using AForge.Math.Geometry;
-
-
+using System.Globalization;
 
 namespace LitePlacer
 {
@@ -112,6 +111,8 @@ namespace LitePlacer
                 }
             }
         }
+
+        public Label FeatureDetails { get; set; }
 
         ProtectedPictureBox _imageBox2;
         public ProtectedPictureBox ImageBox2
@@ -751,6 +752,7 @@ namespace LitePlacer
             {
                 frame = (Bitmap)eventArgs.Frame.Clone();
             }
+
             if (CopyFrame)
             {
                 if (TemporaryFrame != null)
@@ -878,9 +880,31 @@ namespace LitePlacer
                     }
                 }
 
-                DrawCirclesFunct(copiedFrame);
+                if (DrawCirclesFunct(copiedFrame))
+                {
+                    FeatureDetails.BackColor = Color.DarkGreen;
+                }
+                else
+                {
+                    FeatureDetails.BackColor = Color.Red;
+                }
+
+                DrawCrossFunct(ref copiedFrame);
                 ImageBox2.Image = (Bitmap)copiedFrame.Clone();
                 copiedFrame.Dispose();
+            }
+
+            UseCalibrationMeasurementFunctions();
+
+            if (GetClosestCircle(out double X, out double Y, 20.0 / MainForm.Setting.DownCam_XmmPerPixel) > 0)
+            {
+                X = X * MainForm.Setting.DownCam_XmmPerPixel;
+                Y = -Y * MainForm.Setting.DownCam_YmmPerPixel;
+
+                if (FeatureDetails != null)
+                {
+                    FeatureDetails.Text = "X: " + X.ToString() + " Y: " + Y.ToString();
+                }
             }
 
             frame.Dispose();
@@ -1399,13 +1423,13 @@ namespace LitePlacer
         }
 
         // =========================================================
-        private void DrawCirclesFunct(Bitmap bitmap)
+        private bool DrawCirclesFunct(Bitmap bitmap)
         {
             List<Shapes.Circle> Circles = FindCirclesFunct(bitmap);
 
             if (Circles.Count == 0)
             {
-                return;
+                return false;
             }
             // Find smallest
             int Smallest = FindSmallestCircle(Circles);
@@ -1450,6 +1474,8 @@ namespace LitePlacer
             AquaPen.Dispose();
             LimePen.Dispose();
             MagentaPen.Dispose();
+
+            return true;
         }
 
         // =========================================================
