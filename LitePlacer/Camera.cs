@@ -879,7 +879,7 @@ namespace LitePlacer
                         ImageBox2.Image.Dispose();
                     }
 
-                    Bitmap copiedFrame = (Bitmap)frame.Clone();
+                    Bitmap copiedFrame = (Bitmap)eventArgs.Frame.Clone();
 
                     if (CalibrationMeasurementFunctions != null)
                     {
