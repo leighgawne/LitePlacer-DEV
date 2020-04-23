@@ -15876,6 +15876,7 @@ namespace LitePlacer
         private void OpenSecondaryDownCameraForm()
         {
             CameraForm cameraForm = new CameraForm();
+            cameraForm.MainForm = this;
             DownCamera.ImageBox2 = cameraForm.Cam_pictureBox;
             DownCamera.FeatureDetails = cameraForm.FeatureDetails;
             cameraForm.Show(this);

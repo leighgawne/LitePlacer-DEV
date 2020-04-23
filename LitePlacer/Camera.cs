@@ -894,19 +894,6 @@ namespace LitePlacer
                 copiedFrame.Dispose();
             }
 
-            UseCalibrationMeasurementFunctions();
-
-            if (GetClosestCircle(out double X, out double Y, 20.0 / MainForm.Setting.DownCam_XmmPerPixel) > 0)
-            {
-                X = X * MainForm.Setting.DownCam_XmmPerPixel;
-                Y = -Y * MainForm.Setting.DownCam_YmmPerPixel;
-
-                if (FeatureDetails != null)
-                {
-                    FeatureDetails.Text = "X: " + X.ToString() + " Y: " + Y.ToString();
-                }
-            }
-
             frame.Dispose();
             if (CollectorCount>20)
             {
