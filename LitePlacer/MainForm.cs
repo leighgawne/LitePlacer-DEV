@@ -226,6 +226,8 @@ namespace LitePlacer
             CalibrationAction.CNC_XYZ_m = CNC_XYA_m;
 
             RepeatabilityProfilier.FormMain = this;
+
+            OpenSecondaryDownCameraForm();
         }
 
         // ==============================================================================================
@@ -15867,6 +15869,11 @@ namespace LitePlacer
         }
 
         private void popCam_button_Click(object sender, EventArgs e)
+        {
+            OpenSecondaryDownCameraForm();
+        }
+
+        private void OpenSecondaryDownCameraForm()
         {
             CameraForm cameraForm = new CameraForm();
             DownCamera.ImageBox2 = cameraForm.Cam_pictureBox;

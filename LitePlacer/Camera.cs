@@ -867,7 +867,20 @@ namespace LitePlacer
                 {
                     ImageBox2.Image.Dispose();
                 }
-                ImageBox2.Image = (Bitmap)frame.Clone();
+
+                Bitmap copiedFrame = (Bitmap)frame.Clone();
+
+                if (CalibrationMeasurementFunctions != null)
+                {
+                    foreach (AForgeFunction f in CalibrationMeasurementFunctions)
+                    {
+                        f.func(ref copiedFrame, f.parameter_int, f.parameter_double, f.R, f.B, f.G);
+                    }
+                }
+
+                DrawCirclesFunct(copiedFrame);
+                ImageBox2.Image = (Bitmap)copiedFrame.Clone();
+                copiedFrame.Dispose();
             }
 
             frame.Dispose();
