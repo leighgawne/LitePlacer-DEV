@@ -93,7 +93,7 @@ namespace LitePlacer.Model
 
         public CalibrationProfile PositionB = new CalibrationProfile()
         {
-            RPCalibrationPosition = E_RPCalibrationPositionStates.PositionA,
+            RPCalibrationPosition = E_RPCalibrationPositionStates.PositionB,
             RPCalibrationActions = new List<Action<ProfileExecutor>>()
             {
                 new Action<ProfileExecutor>(ProfileExecutor.HomeToCommonPosition),
@@ -111,7 +111,7 @@ namespace LitePlacer.Model
 
         public CalibrationProfile PositionC = new CalibrationProfile()
         {
-            RPCalibrationPosition = E_RPCalibrationPositionStates.PositionA,
+            RPCalibrationPosition = E_RPCalibrationPositionStates.PositionC,
             RPCalibrationActions = new List<Action<ProfileExecutor>>()
             {
                 new Action<ProfileExecutor>(ProfileExecutor.HomeToCommonPosition),
@@ -128,7 +128,7 @@ namespace LitePlacer.Model
 
         public CalibrationProfile PositionD = new CalibrationProfile()
         {
-            RPCalibrationPosition = E_RPCalibrationPositionStates.PositionA,
+            RPCalibrationPosition = E_RPCalibrationPositionStates.PositionD,
             RPCalibrationActions = new List<Action<ProfileExecutor>>()
             {
                 new Action<ProfileExecutor>(ProfileExecutor.HomeToCommonPosition),
@@ -145,7 +145,7 @@ namespace LitePlacer.Model
 
         public CalibrationProfile PositionE = new CalibrationProfile()
         {
-            RPCalibrationPosition = E_RPCalibrationPositionStates.PositionA,
+            RPCalibrationPosition = E_RPCalibrationPositionStates.PositionE,
             RPCalibrationActions = new List<Action<ProfileExecutor>>()
             {
                 new Action<ProfileExecutor>(ProfileExecutor.HomeToCommonPosition),
@@ -153,7 +153,7 @@ namespace LitePlacer.Model
                 new Action<ProfileExecutor>(ProfileExecutor.MoveFunctionOfQuantaNegXPosY),
                 new Action<ProfileExecutor>(ProfileExecutor.MoveFunctionOfQuantaPosXPosY),
                 new Action<ProfileExecutor>(ProfileExecutor.MoveFunctionOfQuantaNegXNegY),
-                new Action<ProfileExecutor>(ProfileExecutor.MoveFunctionOfQuantaNegXNegY)
+                new Action<ProfileExecutor>(ProfileExecutor.MoveFunctionOfQuantaPosXNegY)
             },
             Nominal_Pos_X = () => { return FormMain.Setting.Calibration_E_Marker_X; },
             Nominal_Pos_Y = () => { return FormMain.Setting.Calibration_E_Marker_Y; },
@@ -315,9 +315,9 @@ namespace LitePlacer.Model
         public static void ExecuteMove(ProfileExecutor profileExecutor, double posX, double posY)
         {
             FormMain.CNC_XY_m(posX, posY);
-            Thread.Sleep(400);
+            Thread.Sleep(100);
             HomeToNominalCalibrationPosition(profileExecutor);
-            Thread.Sleep(400);
+            Thread.Sleep(100);
 
             Measure(out double X, out double Y);
 
