@@ -83,7 +83,12 @@ namespace LitePlacer
             {
                 lock (_locker)
                 {
-                    base.OnPaint(e);
+                    // TODO REMOVE
+                    try
+                    {
+                        base.OnPaint(e);
+                    }
+                    catch { }
                 }
             }
         }
@@ -744,6 +749,8 @@ namespace LitePlacer
         Bitmap frame;
         int CollectorCount = 0;
 
+        private bool FoundPreviousCircle = false;
+
         private void Video_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             ReceivingFrames = true;
@@ -865,33 +872,42 @@ namespace LitePlacer
 
             lock (_locker)
             {
-                if (ImageBox2.Image != null)
+                if (ImageBox2 != null)
                 {
-                    ImageBox2.Image.Dispose();
-                }
-
-                Bitmap copiedFrame = (Bitmap)frame.Clone();
-
-                if (CalibrationMeasurementFunctions != null)
-                {
-                    foreach (AForgeFunction f in CalibrationMeasurementFunctions)
+                    if (ImageBox2.Image != null)
                     {
-                        f.func(ref copiedFrame, f.parameter_int, f.parameter_double, f.R, f.B, f.G);
+                        ImageBox2.Image.Dispose();
+                    }
+
+                    Bitmap copiedFrame = (Bitmap)frame.Clone();
+
+                    if (CalibrationMeasurementFunctions != null)
+                    {
+                        foreach (AForgeFunction f in CalibrationMeasurementFunctions)
+                        {
+                            f.func(ref copiedFrame, f.parameter_int, f.parameter_double, f.R, f.B, f.G);
+                        }
+                    }
+
+                    bool foundCircle = DrawCirclesFunct(copiedFrame);
+                    FoundPreviousCircle |= foundCircle;
+
+                    if (foundCircle)
+                    {
+                        FeatureDetails.BackColor = Color.DarkGreen;
+                    }
+                    else
+                    {
+                        FeatureDetails.BackColor = Color.Red;
+                    }
+
+                    if ((!FoundPreviousCircle) || (foundCircle))
+                    {
+                        DrawCrossFunct(ref copiedFrame);
+                        ImageBox2.Image = (Bitmap)copiedFrame.Clone();
+                        copiedFrame.Dispose();
                     }
                 }
-
-                if (DrawCirclesFunct(copiedFrame))
-                {
-                    FeatureDetails.BackColor = Color.DarkGreen;
-                }
-                else
-                {
-                    FeatureDetails.BackColor = Color.Red;
-                }
-
-                DrawCrossFunct(ref copiedFrame);
-                ImageBox2.Image = (Bitmap)copiedFrame.Clone();
-                copiedFrame.Dispose();
             }
 
             frame.Dispose();

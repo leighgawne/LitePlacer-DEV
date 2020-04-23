@@ -227,7 +227,7 @@ namespace LitePlacer
 
             RepeatabilityProfilier.FormMain = this;
 
-            OpenSecondaryDownCameraForm();
+            //OpenSecondaryDownCameraForm();
         }
 
         // ==============================================================================================
