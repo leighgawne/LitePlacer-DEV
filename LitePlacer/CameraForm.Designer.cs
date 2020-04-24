@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Cam_pictureBox = new LitePlacer.Camera.ProtectedPictureBox();
+            this.Cam_pictureBox = new Terpsichore.Machine.Sensors.ProtectedPictureBox();
             this.FeatureDetails = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Cam_pictureBox)).BeginInit();
             this.SuspendLayout();
@@ -74,7 +74,7 @@
 
         #endregion
 
-        public Camera.ProtectedPictureBox Cam_pictureBox;
+        public Terpsichore.Machine.Sensors.ProtectedPictureBox Cam_pictureBox;
         public System.Windows.Forms.Label FeatureDetails;
     }
 }

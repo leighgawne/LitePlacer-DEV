@@ -37,6 +37,8 @@ using Newtonsoft.Json;
 using LitePlacer.Calibration.Actions;
 using LitePlacer.Model;
 
+using Terpsichore.Machine.Sensors;
+
 namespace LitePlacer
 {
     // Note: For function success/failure, I use bool return code. (instead of C# exceptions; a philosophical debate, let's not go there.)
@@ -123,8 +125,8 @@ namespace LitePlacer
             Cnc = new CNC(this);
             Cnc_ReadyEvent = Cnc.ReadyEvent;
             CNC.SquareCorrection = Setting.CNC_SquareCorrection;
-            DownCamera = new Camera(this);
-            UpCamera = new Camera(this);
+            DownCamera = new Camera() { ReportInfoCallback = DisplayText };
+            UpCamera = new Camera() { ReportInfoCallback = DisplayText };
             Nozzle = new NozzleClass(UpCamera, Cnc, this);
             Tapes = new TapesClass(Tapes_dataGridView, Nozzle, DownCamera, Cnc, this);
             BoardSettings.MainForm = this;

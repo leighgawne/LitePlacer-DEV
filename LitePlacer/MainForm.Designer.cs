@@ -138,7 +138,7 @@
             this.LastX_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LastY_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RotationDirect_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Tapes_pictureBox = new LitePlacer.Camera.ProtectedPictureBox();
+            this.Tapes_pictureBox = new Terpsichore.Machine.Sensors.ProtectedPictureBox();
             this.Components_tabPage = new System.Windows.Forms.TabPage();
             this.ComponentData_dataGridView = new System.Windows.Forms.DataGridView();
             this.PartialName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -430,7 +430,7 @@
             this.label93 = new System.Windows.Forms.Label();
             this.label94 = new System.Windows.Forms.Label();
             this.ImageTest_checkBox = new System.Windows.Forms.CheckBox();
-            this.Cam_pictureBox = new LitePlacer.Camera.ProtectedPictureBox();
+            this.Cam_pictureBox = new Terpsichore.Machine.Sensors.ProtectedPictureBox();
             this.tabPageBasicSetup = new System.Windows.Forms.TabPage();
             this.Ato0_button = new System.Windows.Forms.Button();
             this.VacuumInvert_checkBox = new System.Windows.Forms.CheckBox();
@@ -633,7 +633,7 @@
             this.comboBoxSerialPorts = new System.Windows.Forms.ComboBox();
             this.RunJob_tabPage = new System.Windows.Forms.TabPage();
             this.ClearPlaced_button = new System.Windows.Forms.Button();
-            this.Placement_pictureBox = new LitePlacer.Camera.ProtectedPictureBox();
+            this.Placement_pictureBox = new Terpsichore.Machine.Sensors.ProtectedPictureBox();
             this.SkipMeasurements_checkBox = new System.Windows.Forms.CheckBox();
             this.OmitNozzleCalibration_checkBox = new System.Windows.Forms.CheckBox();
             this.MeasureZs_checkBox = new System.Windows.Forms.CheckBox();
@@ -10400,7 +10400,7 @@
 		private System.Windows.Forms.Button AddTape_button;
 		private System.Windows.Forms.Label label109;
 		private System.Windows.Forms.DataGridView Tapes_dataGridView;
-		private Camera.ProtectedPictureBox Tapes_pictureBox;
+		private Terpsichore.Machine.Sensors.ProtectedPictureBox Tapes_pictureBox;
 		private System.Windows.Forms.TabPage Components_tabPage;
 		private System.Windows.Forms.DataGridView ComponentData_dataGridView;
 		private System.Windows.Forms.DataGridViewTextBoxColumn PartialName;
@@ -10476,7 +10476,7 @@
 		private System.Windows.Forms.Label label94;
 		private System.Windows.Forms.Button DownCam_TakeSnapshot_button;
 		private System.Windows.Forms.CheckBox ImageTest_checkBox;
-		private Camera.ProtectedPictureBox Cam_pictureBox;
+		private Terpsichore.Machine.Sensors.ProtectedPictureBox Cam_pictureBox;
 		private System.Windows.Forms.TabPage tabPageBasicSetup;
 		private System.Windows.Forms.Label label152;
 		private System.Windows.Forms.CheckBox SlackCompensation_checkBox;
@@ -10663,7 +10663,7 @@
 		private System.Windows.Forms.Label label88;
 		private System.Windows.Forms.Label label86;
 		private System.Windows.Forms.Label label85;
-		private Camera.ProtectedPictureBox Placement_pictureBox;
+		private Terpsichore.Machine.Sensors.ProtectedPictureBox Placement_pictureBox;
 		private System.Windows.Forms.DataGridView JobData_GridView;
 		private System.Windows.Forms.CheckBox Bottom_checkBox;
 		private System.Windows.Forms.DataGridView CadData_GridView;

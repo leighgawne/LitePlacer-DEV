@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
 using System.Globalization;
+using Terpsichore.Machine.Sensors;
 
 namespace LitePlacer
 {

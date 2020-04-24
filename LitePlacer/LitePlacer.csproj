@@ -160,7 +160,6 @@
     <Compile Include="Calibration\Actions\CalibrationAction.cs" />
     <Compile Include="Calibration\Actions\HomeToCommonPosition.cs" />
     <Compile Include="Calibration\Actions\ICalibrationAction.cs" />
-    <Compile Include="Camera.cs" />
     <Compile Include="CameraForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,7 +179,6 @@
     <Compile Include="MethodSelectionForm.Designer.cs">
       <DependentUpon>MethodSelectionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model\Camera.cs" />
     <Compile Include="Model\RepeatabilityProfilier.cs" />
     <Compile Include="Model\Environment.cs" />
     <Compile Include="Model\Nozzle.cs" />
@@ -288,6 +286,10 @@
     <Folder Include="Mission\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\terpsichore.machine\Terpsichore.Machine\Terpsichore.Machine.csproj">
+      <Project>{5904a482-cb65-4acc-b210-a32aaa6d0a97}</Project>
+      <Name>Terpsichore.Machine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ubject.core\ubject.core\Ubject.Core.csproj">
       <Project>{97645959-ab5e-4e23-9113-cf47f6340de1}</Project>
       <Name>Ubject.Core</Name>
