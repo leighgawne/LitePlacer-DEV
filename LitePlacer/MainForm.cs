@@ -15879,8 +15879,8 @@ namespace LitePlacer
         {
             CameraForm cameraForm = new CameraForm();
             cameraForm.MainForm = this;
-            DownCamera.ImageBox2 = cameraForm.Cam_pictureBox;
-            DownCamera.FeatureDetails = cameraForm.FeatureDetails;
+            //DownCamera.ImageBox2 = cameraForm.Cam_pictureBox;
+            //DownCamera.FeatureDetails = cameraForm.FeatureDetails;
             cameraForm.Show(this);
         }
     }	// end of: 	public partial class FormMain : Form
