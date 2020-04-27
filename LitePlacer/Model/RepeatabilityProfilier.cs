@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Terpsichore.Machine.Vision;
 using Ubject.Core;
 
 namespace LitePlacer.Model
@@ -192,11 +194,22 @@ namespace LitePlacer.Model
         public static string CalibrationSessionDateTimeStamp { get; set; }
 
 
+        private static VisionPipeline visionPipeline = new VisionPipeline();
+        private static ImageProcessor imageProcessor;
+        private static ImageFilter imageFilter;
+        private static Guid JobGuid;
+        private static Bitmap receivedFrame;
+
+
         public void Execute()
         {
             CalibrationMeasurements.Clear();
             CalibrationSessionIdentifier = Guid.NewGuid().ToString();
             CalibrationSessionDateTimeStamp = DateTime.UtcNow.ToString();
+
+            imageFilter = new ImageFilter();
+            imageFilter.CreateFilter(E_ImageFilters.Threshold, true, 100);
+            imageProcessor = new ImageProcessor(FormMain.DownCamera, imageFilter);
 
             for (int actionIndex = 0; actionIndex < ActiveProfile.RPCalibrationActions.Count; actionIndex++)
             {
@@ -337,6 +350,9 @@ namespace LitePlacer.Model
             CalibrationMeasurements.Add(calibrationMeasurement);
         }
 
+        private static AutoResetEvent waitForSnapshot = new AutoResetEvent(true);
+        private static MeasureFeatures measureFeatures = new MeasureFeatures();
+
         public static void Measure(out double X, out double Y)
         {
             X = 0.0;
@@ -344,6 +360,21 @@ namespace LitePlacer.Model
 
             if (FormMain.DownCamera.IsRunning())
             {
+                JobGuid = visionPipeline.CreateJob(
+                    ImageReceived,
+                    imageProcessor,
+                    imageFilter);
+
+                waitForSnapshot.WaitOne();
+
+                if (receivedFrame != null)
+                {
+                    var closestCircle = measureFeatures.GetClosestCircle(receivedFrame, imageProcessor, 200);
+
+                }
+
+
+
                 FormMain.DownCamera.UseCalibrationMeasurementFunctions();
 
                 if (FormMain.DownCamera.GetClosestCircle(out X, out Y, 20.0 / FormMain.Setting.DownCam_XmmPerPixel) > 0)
@@ -354,6 +385,18 @@ namespace LitePlacer.Model
                     FormMain.DisplayText("Y: " + Y.ToString("0.000", CultureInfo.InvariantCulture));
                 }
             }
+        }
+
+        private static void ImageReceived(object sender, ProcessedFrameEventArgs e)
+        {
+            if (receivedFrame != null)
+            {
+                receivedFrame.Dispose();
+            }
+
+            receivedFrame = (Bitmap)e.Frame.Clone();
+
+            waitForSnapshot.Set();
         }
     }
     
@@ -374,6 +417,16 @@ namespace LitePlacer.Model
                 ProfileExecutor.FormMain = value;
             }
         }
+
+        public async Task ExecuteProfilingAsync(List<CalibrationProfile> calibrationProfiles)
+        {
+            await Task.Run(
+                () => 
+                {
+                    ExecuteProfiling(calibrationProfiles);
+                });
+        }
+
 
         public void ExecuteProfiling(List<CalibrationProfile> calibrationProfiles)
         {

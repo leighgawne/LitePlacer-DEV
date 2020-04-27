@@ -4483,7 +4483,11 @@ namespace LitePlacer
 
         public void DisplayTxt(string txt)
         {
-            if (InvokeRequired) { Invoke(new Action<string>(DisplayTxt), new [] { txt }); return; }
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string>(DisplayTxt), new [] { txt });
+                return;
+            }
 
             txt = txt.Replace("\n", "");
             txt = txt.Replace("\r", "");

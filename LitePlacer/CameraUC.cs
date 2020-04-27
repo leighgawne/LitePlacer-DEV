@@ -69,10 +69,6 @@ namespace LitePlacer
                     imageFilter = new ImageFilter();
                     imageFilter.CreateFilter(E_ImageFilters.Threshold, true, 100);
                     imageProcessor = new ImageProcessor(MainForm.DownCamera, imageFilter);
-                    /*{
-                        FindCircles = true,
-                        DrawCross = true
-                    };*/
 
                     JobGuid = visionPipeline.CreateJob(
                         ImageReceived,
