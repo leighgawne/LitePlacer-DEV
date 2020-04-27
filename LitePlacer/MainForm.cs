@@ -15830,10 +15830,10 @@ namespace LitePlacer
 
         CalibrationProfiles calibrationProfiles = new CalibrationProfiles();
 
-        private void runCalibration_button_Click(object sender, EventArgs e)
+        private async void runCalibration_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            repeatabilityProfilier.ExecuteProfiling(
+            await repeatabilityProfilier.ExecuteProfilingAsync(
                 new List<CalibrationProfile>()
                 {
                     calibrationProfiles.PositionA,
@@ -15844,34 +15844,34 @@ namespace LitePlacer
                 });
         }
 
-        private void runCalibrationA_button_Click(object sender, EventArgs e)
+        private async void runCalibrationA_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionA });
+            await repeatabilityProfilier.ExecuteProfilingAsync(new List<CalibrationProfile>() { calibrationProfiles.PositionA });
         }
 
-        private void runCalibrationB_button_Click(object sender, EventArgs e)
+        private async void runCalibrationB_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionB });
+            await repeatabilityProfilier.ExecuteProfilingAsync(new List<CalibrationProfile>() { calibrationProfiles.PositionB });
         }
 
-        private void runCalibrationC_button_Click(object sender, EventArgs e)
+        private async void runCalibrationC_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionC });
+            await repeatabilityProfilier.ExecuteProfilingAsync(new List<CalibrationProfile>() { calibrationProfiles.PositionC });
         }
 
-        private void runCalibrationD_button_Click(object sender, EventArgs e)
+        private async void runCalibrationD_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionD });
+            await repeatabilityProfilier.ExecuteProfilingAsync(new List<CalibrationProfile>() { calibrationProfiles.PositionD });
         }
 
-        private void runCalibrationE_button_Click(object sender, EventArgs e)
+        private async void runCalibrationE_button_Click(object sender, EventArgs e)
         {
             var repeatabilityProfilier = new RepeatabilityProfilier();
-            repeatabilityProfilier.ExecuteProfiling(new List<CalibrationProfile>() { calibrationProfiles.PositionE });
+            await repeatabilityProfilier.ExecuteProfilingAsync(new List<CalibrationProfile>() { calibrationProfiles.PositionE });
         }
 
         private void popCam_button_Click(object sender, EventArgs e)
@@ -15882,6 +15882,20 @@ namespace LitePlacer
         private void OpenSecondaryDownCameraForm()
         {
             CameraForm cameraForm = new CameraForm();
+            cameraForm.MainForm = this;
+            //DownCamera.ImageBox2 = cameraForm.Cam_pictureBox;
+            //DownCamera.FeatureDetails = cameraForm.FeatureDetails;
+            cameraForm.Show(this);
+        }
+
+        private void popMultiCam_button_Click(object sender, EventArgs e)
+        {
+            OpenSecondaryMultiDownCameraForm();
+        }
+
+        private void OpenSecondaryMultiDownCameraForm()
+        {
+            MultiCameraForm cameraForm = new MultiCameraForm();
             cameraForm.MainForm = this;
             //DownCamera.ImageBox2 = cameraForm.Cam_pictureBox;
             //DownCamera.FeatureDetails = cameraForm.FeatureDetails;

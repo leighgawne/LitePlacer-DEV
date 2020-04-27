@@ -14,6 +14,8 @@ namespace LitePlacer
 {
     public partial class CameraUC : UserControl
     {
+        public int FilterThreshold { set; get; } = 100;
+
         private VisionPipeline visionPipeline = new VisionPipeline();
         private ImageProcessor imageProcessor;
         private ImageFilter imageFilter;
@@ -67,7 +69,7 @@ namespace LitePlacer
                 if (!configCompleted)
                 {
                     imageFilter = new ImageFilter();
-                    imageFilter.CreateFilter(E_ImageFilters.Threshold, true, 100);
+                    imageFilter.CreateFilter(E_ImageFilters.Threshold, true, FilterThreshold);
                     imageProcessor = new ImageProcessor(MainForm.DownCamera, imageFilter);
 
                     JobGuid = visionPipeline.CreateJob(

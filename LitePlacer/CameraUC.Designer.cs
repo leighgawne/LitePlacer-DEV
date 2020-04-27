@@ -50,11 +50,11 @@
             this.FeatureDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.FeatureDetails.AutoSize = true;
             this.FeatureDetails.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.FeatureDetails.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FeatureDetails.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FeatureDetails.ForeColor = System.Drawing.Color.White;
-            this.FeatureDetails.Location = new System.Drawing.Point(512, 523);
+            this.FeatureDetails.Location = new System.Drawing.Point(572, 533);
             this.FeatureDetails.Name = "FeatureDetails";
-            this.FeatureDetails.Size = new System.Drawing.Size(163, 25);
+            this.FeatureDetails.Size = new System.Drawing.Size(96, 15);
             this.FeatureDetails.TabIndex = 13;
             this.FeatureDetails.Text = "X: ??? Y: ??? ";
             // 
@@ -63,11 +63,11 @@
             this.UpdateRate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.UpdateRate.AutoSize = true;
             this.UpdateRate.BackColor = System.Drawing.Color.Blue;
-            this.UpdateRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UpdateRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UpdateRate.ForeColor = System.Drawing.Color.White;
-            this.UpdateRate.Location = new System.Drawing.Point(13, 523);
+            this.UpdateRate.Location = new System.Drawing.Point(14, 533);
             this.UpdateRate.Name = "UpdateRate";
-            this.UpdateRate.Size = new System.Drawing.Size(102, 25);
+            this.UpdateRate.Size = new System.Drawing.Size(61, 15);
             this.UpdateRate.TabIndex = 14;
             this.UpdateRate.Text = "??? FPS";
             // 

@@ -367,15 +367,19 @@ namespace LitePlacer.Model
 
                 waitForSnapshot.WaitOne();
 
+                visionPipeline.CancelJob(JobGuid);
+
                 if (receivedFrame != null)
                 {
                     var closestCircle = measureFeatures.GetClosestCircle(receivedFrame, imageProcessor, 200);
 
+                    X = closestCircle.X * FormMain.Setting.DownCam_XmmPerPixel;
+                    Y = -closestCircle.Y * FormMain.Setting.DownCam_YmmPerPixel;
+                    FormMain.DisplayText("X: " + X.ToString("0.000", CultureInfo.InvariantCulture));
+                    FormMain.DisplayText("Y: " + Y.ToString("0.000", CultureInfo.InvariantCulture));
                 }
 
-
-
-                FormMain.DownCamera.UseCalibrationMeasurementFunctions();
+                /*FormMain.DownCamera.UseCalibrationMeasurementFunctions();
 
                 if (FormMain.DownCamera.GetClosestCircle(out X, out Y, 20.0 / FormMain.Setting.DownCam_XmmPerPixel) > 0)
                 {
@@ -383,7 +387,7 @@ namespace LitePlacer.Model
                     Y = -Y * FormMain.Setting.DownCam_YmmPerPixel;
                     FormMain.DisplayText("X: " + X.ToString("0.000", CultureInfo.InvariantCulture));
                     FormMain.DisplayText("Y: " + Y.ToString("0.000", CultureInfo.InvariantCulture));
-                }
+                }*/
             }
         }
 
@@ -427,7 +431,6 @@ namespace LitePlacer.Model
                 });
         }
 
-
         public void ExecuteProfiling(List<CalibrationProfile> calibrationProfiles)
         {
             foreach (var calibrationProfile in calibrationProfiles)
@@ -435,7 +438,6 @@ namespace LitePlacer.Model
                 var profileExecutor = new ProfileExecutor();
                 profileExecutor.ActiveProfile = calibrationProfile;
                 profileExecutor.Execute();
-                //ProfileExecutor.CalibrationMeasurements.ForEach()
             }        
         }
     }
