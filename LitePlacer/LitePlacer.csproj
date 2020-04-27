@@ -166,6 +166,12 @@
     <Compile Include="CameraForm.Designer.cs">
       <DependentUpon>CameraForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CameraUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CameraUC.Designer.cs">
+      <DependentUpon>CameraUC.cs</DependentUpon>
+    </Compile>
     <Compile Include="CNC.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -210,6 +216,9 @@
     <Compile Include="ThreadHelper.cs" />
     <EmbeddedResource Include="CameraForm.resx">
       <DependentUpon>CameraForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CameraUC.resx">
+      <DependentUpon>CameraUC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
