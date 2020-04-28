@@ -125,6 +125,8 @@ namespace LitePlacer
                 {
                     UpdateUIControlsThreadSafe(clonedFrame, closestCircle);
                 }
+
+                CalculateUpdateRate();
             }
         }
 
@@ -178,7 +180,10 @@ namespace LitePlacer
                 receivedFrame = (Bitmap)e.Frame.Clone();
                 imageReceivedUnprocessed = true;
             }
+        }
 
+        private void CalculateUpdateRate()
+        {
             if (stopwatch == null)
             {
                 stopwatch = Stopwatch.StartNew();
