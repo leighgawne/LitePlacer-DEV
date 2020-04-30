@@ -136,7 +136,9 @@ namespace LitePlacer
 
             if (closestCircle.Count > 0)
             {
-                FeatureDetails.Text = "X: " + closestCircle.X.ToString() + " Y: " + closestCircle.Y.ToString();
+                var X = closestCircle.X * MainForm.Setting.DownCam_XmmPerPixel;
+                var Y = -closestCircle.Y * MainForm.Setting.DownCam_YmmPerPixel;
+                FeatureDetails.Text = "X: " + X.ToString() + " Y: " + Y.ToString();
                 FeatureDetails.BackColor = Color.DarkGreen;
             }
             else

@@ -223,7 +223,7 @@ namespace LitePlacer
             Display_dataGridView.DataError += new
                 DataGridViewDataErrorEventHandler(Display_dataGridView_DataError);
 
-            LoadCalibrationSettingsToUI();
+            LoadCalibrationSettingsToUIThreadSafe();
 
             CalibrationAction.CNC_XYZ_m = CNC_XYA_m;
 
@@ -15651,6 +15651,23 @@ namespace LitePlacer
             CameraToFirstComponent(0);
         }
 
+
+
+        public void LoadCalibrationSettingsToUIThreadSafe()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new MethodInvoker(delegate
+                {
+                    LoadCalibrationSettingsToUI();
+                }));
+            }
+            else
+            {
+                LoadCalibrationSettingsToUI();
+            }
+        }
+
         public void LoadCalibrationSettingsToUI()
         {
             topLeft_XPos_textBox.Text = Setting.Calibration_A_Marker_X.ToString();
@@ -15680,35 +15697,35 @@ namespace LitePlacer
         {
             Setting.Calibration_A_Marker_X = Cnc.CurrentX;
             Setting.Calibration_A_Marker_Y = Cnc.CurrentY;
-            LoadCalibrationSettingsToUI();
+            LoadCalibrationSettingsToUIThreadSafe();
         }
 
         private void topRight_Set_button_Click(object sender, EventArgs e)
         {
             Setting.Calibration_B_Marker_X = Cnc.CurrentX;
             Setting.Calibration_B_Marker_Y = Cnc.CurrentY;
-            LoadCalibrationSettingsToUI();
+            LoadCalibrationSettingsToUIThreadSafe();
         }
 
         private void bottomLeft_Set_button_Click(object sender, EventArgs e)
         {
             Setting.Calibration_C_Marker_X = Cnc.CurrentX;
             Setting.Calibration_C_Marker_Y = Cnc.CurrentY;
-            LoadCalibrationSettingsToUI();
+            LoadCalibrationSettingsToUIThreadSafe();
         }
 
         private void bottomRight_Set_button_Click(object sender, EventArgs e)
         {
             Setting.Calibration_D_Marker_X = Cnc.CurrentX;
             Setting.Calibration_D_Marker_Y = Cnc.CurrentY;
-            LoadCalibrationSettingsToUI();
+            LoadCalibrationSettingsToUIThreadSafe();
         }
 
         private void centre_Set_button_Click(object sender, EventArgs e)
         {
             Setting.Calibration_E_Marker_X = Cnc.CurrentX;
             Setting.Calibration_E_Marker_Y = Cnc.CurrentY;
-            LoadCalibrationSettingsToUI();
+            LoadCalibrationSettingsToUIThreadSafe();
         }
 
         private void setQuantaSteps_button_Click(object sender, EventArgs e)
