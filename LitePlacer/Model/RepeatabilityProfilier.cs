@@ -96,8 +96,8 @@ namespace LitePlacer.Model
             },
             Nominal_Pos_X = () => { return FormMain.Setting.Calibration_A_Marker_X; },
             Nominal_Pos_Y = () => { return FormMain.Setting.Calibration_A_Marker_Y; },
-            Set_Nominal_Pos_X = (x) => { FormMain.Setting.Calibration_A_Marker_X = x; FormMain.LoadCalibrationSettingsToUI(); },
-            Set_Nominal_Pos_Y = (x) => { FormMain.Setting.Calibration_A_Marker_Y = x; FormMain.LoadCalibrationSettingsToUI(); }
+            Set_Nominal_Pos_X = (x) => { FormMain.Setting.Calibration_A_Marker_X = x; FormMain.LoadCalibrationSettingsToUIThreadSafe(); },
+            Set_Nominal_Pos_Y = (x) => { FormMain.Setting.Calibration_A_Marker_Y = x; FormMain.LoadCalibrationSettingsToUIThreadSafe(); }
         };
 
         public CalibrationProfile PositionB = new CalibrationProfile()
@@ -113,8 +113,8 @@ namespace LitePlacer.Model
             },
             Nominal_Pos_X = () => { return FormMain.Setting.Calibration_B_Marker_X; },
             Nominal_Pos_Y = () => { return FormMain.Setting.Calibration_B_Marker_Y; },
-            Set_Nominal_Pos_X = (x) => { FormMain.Setting.Calibration_B_Marker_X = x; FormMain.LoadCalibrationSettingsToUI(); },
-            Set_Nominal_Pos_Y = (x) => { FormMain.Setting.Calibration_B_Marker_Y = x; FormMain.LoadCalibrationSettingsToUI(); }
+            Set_Nominal_Pos_X = (x) => { FormMain.Setting.Calibration_B_Marker_X = x; FormMain.LoadCalibrationSettingsToUIThreadSafe(); },
+            Set_Nominal_Pos_Y = (x) => { FormMain.Setting.Calibration_B_Marker_Y = x; FormMain.LoadCalibrationSettingsToUIThreadSafe(); }
 
         };
 
@@ -131,8 +131,8 @@ namespace LitePlacer.Model
             },
             Nominal_Pos_X = () => { return FormMain.Setting.Calibration_C_Marker_X; },
             Nominal_Pos_Y = () => { return FormMain.Setting.Calibration_C_Marker_Y; },
-            Set_Nominal_Pos_X = (x) => { FormMain.Setting.Calibration_C_Marker_X = x; FormMain.LoadCalibrationSettingsToUI(); },
-            Set_Nominal_Pos_Y = (x) => { FormMain.Setting.Calibration_C_Marker_Y = x; FormMain.LoadCalibrationSettingsToUI(); }
+            Set_Nominal_Pos_X = (x) => { FormMain.Setting.Calibration_C_Marker_X = x; FormMain.LoadCalibrationSettingsToUIThreadSafe(); },
+            Set_Nominal_Pos_Y = (x) => { FormMain.Setting.Calibration_C_Marker_Y = x; FormMain.LoadCalibrationSettingsToUIThreadSafe(); }
         };
 
         public CalibrationProfile PositionD = new CalibrationProfile()
@@ -148,8 +148,8 @@ namespace LitePlacer.Model
             },
             Nominal_Pos_X = () => { return FormMain.Setting.Calibration_D_Marker_X; },
             Nominal_Pos_Y = () => { return FormMain.Setting.Calibration_D_Marker_Y; },
-            Set_Nominal_Pos_X = (x) => { FormMain.Setting.Calibration_D_Marker_X = x; FormMain.LoadCalibrationSettingsToUI(); },
-            Set_Nominal_Pos_Y = (x) => { FormMain.Setting.Calibration_D_Marker_Y = x; FormMain.LoadCalibrationSettingsToUI(); }
+            Set_Nominal_Pos_X = (x) => { FormMain.Setting.Calibration_D_Marker_X = x; FormMain.LoadCalibrationSettingsToUIThreadSafe(); },
+            Set_Nominal_Pos_Y = (x) => { FormMain.Setting.Calibration_D_Marker_Y = x; FormMain.LoadCalibrationSettingsToUIThreadSafe(); }
         };
 
         public CalibrationProfile PositionE = new CalibrationProfile()
@@ -166,8 +166,8 @@ namespace LitePlacer.Model
             },
             Nominal_Pos_X = () => { return FormMain.Setting.Calibration_E_Marker_X; },
             Nominal_Pos_Y = () => { return FormMain.Setting.Calibration_E_Marker_Y; },
-            Set_Nominal_Pos_X = (x) => { FormMain.Setting.Calibration_E_Marker_X = x; FormMain.LoadCalibrationSettingsToUI(); },
-            Set_Nominal_Pos_Y = (x) => { FormMain.Setting.Calibration_E_Marker_Y = x; FormMain.LoadCalibrationSettingsToUI(); }
+            Set_Nominal_Pos_X = (x) => { FormMain.Setting.Calibration_E_Marker_X = x; FormMain.LoadCalibrationSettingsToUIThreadSafe(); },
+            Set_Nominal_Pos_Y = (x) => { FormMain.Setting.Calibration_E_Marker_Y = x; FormMain.LoadCalibrationSettingsToUIThreadSafe(); }
         };
 
         public static int QuantisationStepCountX
@@ -213,10 +213,6 @@ namespace LitePlacer.Model
             ubjectStore.PersistObject(CalibrationMeasurementSession);
 
             CalibrationMeasurements.Clear();
-
-            imageFilter = new ImageFilter();
-            imageFilter.CreateFilter(E_ImageFilters.Threshold, true, 100);
-            imageProcessor = new ImageProcessor(FormMain.DownCamera, imageFilter);
 
             for (int actionIndex = 0; actionIndex < ActiveProfile.RPCalibrationActions.Count; actionIndex++)
             {
@@ -365,6 +361,13 @@ namespace LitePlacer.Model
 
             if (FormMain.DownCamera.IsRunning())
             {
+                if (imageFilter == null)
+                {
+                    imageFilter = new ImageFilter();
+                    imageFilter.CreateFilter(E_ImageFilters.Threshold, true, 100);
+                    imageProcessor = new ImageProcessor(FormMain.DownCamera, imageFilter);
+                }
+
                 JobGuid = visionPipeline.CreateJob(
                     ImageReceived,
                     imageProcessor,
