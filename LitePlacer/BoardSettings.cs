@@ -149,7 +149,7 @@ namespace LitePlacer
         }
 
 
-        public static FormMain MainForm;
+        public static dynamic MainForm;
 
         // Board settings file: Text file, starting with 8 characters board name and \n\r, 
         // then the setings in Json format

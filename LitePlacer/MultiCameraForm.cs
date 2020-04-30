@@ -12,7 +12,7 @@ namespace LitePlacer
 {
     public partial class MultiCameraForm : Form
     {
-        public FormMain MainForm
+        public dynamic MainForm
         {
             set
             {

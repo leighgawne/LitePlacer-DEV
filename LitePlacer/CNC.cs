@@ -24,7 +24,7 @@ namespace LitePlacer
 
         static ManualResetEventSlim _readyEvent = new ManualResetEventSlim(false);
 
-        public CNC(FormMain MainF)
+        public CNC(dynamic MainF)
         {
             MainForm = MainF;
             Com = new SerialComm(this, MainF);

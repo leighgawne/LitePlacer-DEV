@@ -24,7 +24,7 @@ namespace LitePlacer
 
         private Guid JobGuid;
         private bool configCompleted = false;
-        private const int THREAD_PERIOD_MS = 50;
+        private const int THREAD_PERIOD_MS = 100;
         private ThreadHelper threadHelper;
         public FormMain MainForm;
         private Stopwatch stopwatch;

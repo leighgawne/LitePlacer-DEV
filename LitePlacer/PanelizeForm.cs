@@ -28,7 +28,7 @@ namespace LitePlacer
         private double YIncrement = double.NaN;
         // =================================================================================
         
-        public PanelizeForm(FormMain MainF)
+        public PanelizeForm(dynamic MainF)
         {
             MainForm = MainF;
             InitializeComponent();

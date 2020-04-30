@@ -26,7 +26,7 @@ namespace LitePlacer
 
         private Size GridSizeSave= new Size();
 
-		public TapeSelectionForm(DataGridView grd, FormMain MainF)
+		public TapeSelectionForm(DataGridView grd, dynamic MainF)
 		{
             MainForm = MainF;
             InitializeComponent();

@@ -16,7 +16,7 @@ namespace LitePlacer
         public DataGridView TapesDataGrid;
         public DataGridViewRow Row;
         public int TapeRowNo;
-        public FormMain MainForm;
+        public dynamic MainForm;
         Camera Cam;
         CNC Cnc;
 

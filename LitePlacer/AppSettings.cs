@@ -179,7 +179,7 @@ namespace LitePlacer
     {
         static FormMain MainForm;
 
-        public AppSettings(FormMain MainF)
+        public AppSettings(dynamic MainF)
         {
             MainForm = MainF;
         }

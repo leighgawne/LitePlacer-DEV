@@ -17,7 +17,7 @@ namespace LitePlacer
 
         static FormMain MainForm;
 
-        public MethodSelectionForm(FormMain MainF)
+        public MethodSelectionForm(dynamic MainF)
 		{
 			InitializeComponent();
             MainForm = MainF;

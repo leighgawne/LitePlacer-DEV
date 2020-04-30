@@ -46,11 +46,18 @@ namespace LitePlacer.Model
         MoveFunctionOfQuantaNegXPosY
     }
 
+    [Ubject(tableName: "RPCalibrationSession")]
+    public class CalibrationMeasurementSession
+    {
+        public string SessionIdentifier { get; set; }
+        public string SessionDateTimeStamp { get; set; }
+    }
+
+
     [Ubject(tableName: "RPCalibration")]
     public class CalibrationMeasurement
     {
         public string SessionIdentifier { get; set; }
-        public string SessionDateTimeStamp { get; set; }
         public E_RPCalibrationPositionStates CalibrationPositionState { get; set; }
         public double MeasuredX { get; set; }
         public double MeasuredY { get; set; }
@@ -190,9 +197,7 @@ namespace LitePlacer.Model
 
         public static List<CalibrationMeasurement> CalibrationMeasurements { get; } = new List<CalibrationMeasurement>();
 
-        public static string CalibrationSessionIdentifier { get; set; }
-        public static string CalibrationSessionDateTimeStamp { get; set; }
-
+        public static CalibrationMeasurementSession CalibrationMeasurementSession { get; set; }
 
         private static VisionPipeline visionPipeline = new VisionPipeline();
         private static ImageProcessor imageProcessor;
@@ -201,11 +206,13 @@ namespace LitePlacer.Model
         private static Bitmap receivedFrame;
 
 
-        public void Execute()
+        public void Execute(CalibrationMeasurementSession calibrationMeasurementSession)
         {
+            var ubjectStore = new UbjectStore("liteplacer");
+            CalibrationMeasurementSession = calibrationMeasurementSession;
+            ubjectStore.PersistObject(CalibrationMeasurementSession);
+
             CalibrationMeasurements.Clear();
-            CalibrationSessionIdentifier = Guid.NewGuid().ToString();
-            CalibrationSessionDateTimeStamp = DateTime.UtcNow.ToString();
 
             imageFilter = new ImageFilter();
             imageFilter.CreateFilter(E_ImageFilters.Threshold, true, 100);
@@ -216,7 +223,6 @@ namespace LitePlacer.Model
                 ActiveProfile.RPCalibrationActions[actionIndex](this);
             }
 
-            var ubjectStore = new UbjectStore("liteplacer");
             CalibrationMeasurements.ForEach(x => ubjectStore.PersistObject(x));
         }
 
@@ -336,8 +342,7 @@ namespace LitePlacer.Model
 
             var calibrationMeasurement = new CalibrationMeasurement()
             {
-                SessionIdentifier = CalibrationSessionIdentifier,
-                SessionDateTimeStamp = CalibrationSessionDateTimeStamp,
+                SessionIdentifier = CalibrationMeasurementSession.SessionIdentifier,
                 CalibrationPositionState = profileExecutor.ActiveProfile.RPCalibrationPosition,
                 MeasuredErrorX = X,
                 MeasuredErrorY = Y,
@@ -408,7 +413,7 @@ namespace LitePlacer.Model
     {
         private static FormMain formMain;
 
-        public static FormMain FormMain
+        public static dynamic FormMain
         {
             get
             {
@@ -433,11 +438,17 @@ namespace LitePlacer.Model
 
         public void ExecuteProfiling(List<CalibrationProfile> calibrationProfiles)
         {
+            var calibrationMeasurementSession = new CalibrationMeasurementSession()
+            {
+                SessionIdentifier = Guid.NewGuid().ToString(),
+                SessionDateTimeStamp = DateTime.UtcNow.ToString()
+            };
+
             foreach (var calibrationProfile in calibrationProfiles)
             {
                 var profileExecutor = new ProfileExecutor();
                 profileExecutor.ActiveProfile = calibrationProfile;
-                profileExecutor.Execute();
+                profileExecutor.Execute(calibrationMeasurementSession);
             }        
         }
     }

@@ -173,6 +173,12 @@
       <DependentUpon>CameraUC.cs</DependentUpon>
     </Compile>
     <Compile Include="CNC.cs" />
+    <Compile Include="LiteplacerUC.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LiteplacerUC.Designer.cs">
+      <DependentUpon>LiteplacerUC.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -225,6 +231,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CameraUC.resx">
       <DependentUpon>CameraUC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LiteplacerUC.resx">
+      <DependentUpon>LiteplacerUC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
