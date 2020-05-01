@@ -64,24 +64,27 @@ namespace LitePlacer
 
         private void ImageProcessingThread()
         {
-            if (MainForm.DownCamera.IsRunning())
+            if (MainForm != null)
             {
-                if (!configCompleted)
+                if (MainForm.DownCamera.IsRunning())
                 {
-                    imageFilter = new ImageFilter();
-                    imageFilter.CreateFilter(E_ImageFilters.Threshold, true, FilterThreshold);
-                    imageProcessor = new ImageProcessor(MainForm.DownCamera, imageFilter);
+                    if (!configCompleted)
+                    {
+                        imageFilter = new ImageFilter();
+                        imageFilter.CreateFilter(E_ImageFilters.Threshold, true, FilterThreshold);
+                        imageProcessor = new ImageProcessor(MainForm.DownCamera, imageFilter);
 
-                    JobGuid = visionPipeline.CreateJob(
-                        ImageReceived,
-                        imageProcessor,
-                        imageFilter);
+                        JobGuid = visionPipeline.CreateJob(
+                            ImageReceived,
+                            imageProcessor,
+                            imageFilter);
 
-                    configCompleted = true;
-                }
-                else
-                {
-                    ProcessReceivedImage();
+                        configCompleted = true;
+                    }
+                    else
+                    {
+                        ProcessReceivedImage();
+                    }
                 }
             }
         }
