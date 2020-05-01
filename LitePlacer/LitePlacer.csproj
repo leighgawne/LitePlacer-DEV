@@ -174,7 +174,7 @@
     </Compile>
     <Compile Include="CNC.cs" />
     <Compile Include="LiteplacerUC.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="LiteplacerUC.Designer.cs">
       <DependentUpon>LiteplacerUC.cs</DependentUpon>

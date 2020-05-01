@@ -27,7 +27,7 @@ namespace LitePlacer
 
         private Camera Cam;
         private CNC Cnc;
-        private static FormMain MainForm;
+        private static dynamic MainForm;
 
         public NozzleClass(Camera MyCam, CNC MyCnc, dynamic MainF)
         {

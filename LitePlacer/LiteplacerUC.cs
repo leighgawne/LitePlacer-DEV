@@ -45,7 +45,7 @@ namespace LitePlacer
     // The naming convention is xxx_m() for functions that have already displayed an error message to user. If a function only
     // calls _m functions, it can consider itself a _m function.
 
-    public partial class LiteplacerUC : Form
+    public partial class LiteplacerUC : UserControl
     {
         public CNC Cnc;
         public Camera DownCamera;
@@ -104,7 +104,7 @@ namespace LitePlacer
         // =================================================================================
         public bool StartingUp = false; // we want to react to some changes, but not during startup data load (which is counts as a change)
 
-        private void Form1_Load(object sender, EventArgs e)
+        public void Form1_Load(object sender, EventArgs e)
         {
             StartingUp = true;
             this.Size = new Size(1280, 900);
@@ -136,7 +136,7 @@ namespace LitePlacer
             Tapes_dataGridView.DataError += new DataGridViewDataErrorEventHandler(Tapes_dataGridView_DataError);
             TapesOld_dataGridView.DataError += new DataGridViewDataErrorEventHandler(Tapes_dataGridView_DataError);
 
-            this.KeyPreview = true;
+            //this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(My_KeyDown);
             this.KeyUp += new KeyEventHandler(My_KeyUp);
 
@@ -15932,10 +15932,10 @@ namespace LitePlacer
 
     internal static class CenteredMessageBox2
     {
-        internal static void PrepToCenterMessageBoxOnForm(Form form)
+        internal static void PrepToCenterMessageBoxOnForm(UserControl userControl)
         {
             MessageBoxCenterHelper helper = new MessageBoxCenterHelper();
-            helper.Prep(form);
+            helper.Prep(userControl);
         }
 
         private class MessageBoxCenterHelper
@@ -15943,7 +15943,7 @@ namespace LitePlacer
             private int messageHook;
             private IntPtr parentFormHandle;
 
-            public void Prep(Form form)
+            public void Prep(UserControl form)
             {
                 NativeMethods.CenterMessageCallBackDelegate callBackDelegate = new NativeMethods.CenterMessageCallBackDelegate(CenterMessageCallBack);
                 GCHandle.Alloc(callBackDelegate);

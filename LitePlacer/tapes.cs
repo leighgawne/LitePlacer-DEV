@@ -14,7 +14,7 @@ namespace LitePlacer
 	{
         private DataGridView Grid;
         private NozzleClass Nozzle;
-		private FormMain MainForm;
+		private dynamic MainForm;
 		private Camera DownCamera;
 		private CNC Cnc;
 

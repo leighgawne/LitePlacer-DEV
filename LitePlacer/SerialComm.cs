@@ -17,9 +17,9 @@ namespace LitePlacer
         // To process data on the DataReceived thread, get reference of Cnc, so we can pass data to it.
         private CNC Cnc;
         // To show what we send, we need a reference to mainform.
-        private static FormMain MainForm;
+        private static dynamic MainForm;
 
-       public SerialComm(CNC caller, FormMain MainF)
+       public SerialComm(CNC caller, dynamic MainF)
         {
             Cnc = caller;
             Port.DataReceived += new SerialDataReceivedEventHandler(DataReceived);

@@ -16,7 +16,7 @@ namespace LitePlacer
 
     public class CNC
     {
-        static FormMain MainForm;
+        static dynamic MainForm;
         private SerialComm Com;
 
         public enum ControlBoardType { TinyG, qQuintic, other, unknown};

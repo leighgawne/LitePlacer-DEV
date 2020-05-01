@@ -81,7 +81,7 @@ namespace LitePlacer.Model
 
     public class CalibrationProfiles
     {
-        public static FormMain FormMain { get; set; }
+        public static dynamic FormMain { get; set; }
 
         public CalibrationProfile PositionA = new CalibrationProfile()
         {
@@ -191,7 +191,7 @@ namespace LitePlacer.Model
 
     public class ProfileExecutor
     {
-        public static FormMain FormMain { get; set; }
+        public static dynamic FormMain { get; set; }
 
         public CalibrationProfile ActiveProfile { get; set; }
 
@@ -414,7 +414,7 @@ namespace LitePlacer.Model
     
     public class RepeatabilityProfilier
     {
-        private static FormMain formMain;
+        private static dynamic formMain;
 
         public static dynamic FormMain
         {
