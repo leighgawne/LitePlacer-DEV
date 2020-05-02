@@ -38,6 +38,7 @@ using LitePlacer.Calibration.Actions;
 using LitePlacer.Model;
 
 using Terpsichore.Machine.Sensors;
+using Terpsichore.Machine.Interfaces;
 
 namespace LitePlacer
 {
@@ -48,11 +49,11 @@ namespace LitePlacer
     public partial class FormMain : Form
     {
         public CNC Cnc;
-        public Camera DownCamera;
-        Camera UpCamera;
+        public ICamera DownCamera;
+        ICamera UpCamera;
         NozzleClass Nozzle;
         TapesClass Tapes;
-        public MySettings Setting;
+        public IMySettings Setting;
         public BoardSettings.TinyG TinyGBoard = new BoardSettings.TinyG();
         public BoardSettings.qQuintic qQuinticBoard = new BoardSettings.qQuintic();
 
@@ -1724,7 +1725,7 @@ namespace LitePlacer
             int Yres = 0;
             int pol = 1;
 
-            Camera cam = DownCamera;
+            ICamera cam = DownCamera;
             if (DownCamera.Active)
             {
                 cam = DownCamera;
@@ -2828,7 +2829,7 @@ namespace LitePlacer
             {
                 ShowMessageBox(
                     "Attempt to find circle, downcamera is not running.",
-                    "Camera not running",
+                    "ICamera not running",
                     MessageBoxButtons.OK);
                 return false;
             }
@@ -3022,7 +3023,7 @@ namespace LitePlacer
         // =================================================================================
         // Up/Down camera setup page functions
         // =================================================================================
-        #region Camera setup pages functions
+        #region ICamera setup pages functions
 
         // =================================================================================
         // Common
@@ -3092,7 +3093,7 @@ namespace LitePlacer
         }
 
 
-        private void SelectCamera(Camera cam)
+        private void SelectCamera(ICamera cam)
         {
             if (KeepActive_checkBox.Checked)
             {
@@ -3172,7 +3173,7 @@ namespace LitePlacer
             {
                 ShowMessageBox(
                     "Up camera and Down camera point to same physical device.",
-                    "Camera selection isse",
+                    "ICamera selection isse",
                     MessageBoxButtons.OK
                 );
                 UpdateCameraCameraStatus_label();
@@ -3183,7 +3184,7 @@ namespace LitePlacer
             {
                 ShowMessageBox(
                     "Problem Starting down camera.",
-                    "Down Camera problem",
+                    "Down ICamera problem",
                     MessageBoxButtons.OK
                 );
                 CameraStatus_label.Text = "Not Connected";
@@ -3229,7 +3230,7 @@ namespace LitePlacer
             {
                 ShowMessageBox(
                     "Up camera and Down camera point to same physical device.",
-                    "Camera selection issue",
+                    "ICamera selection issue",
                     MessageBoxButtons.OK
                 );
                 UpdateCameraCameraStatus_label();
@@ -3519,7 +3520,7 @@ namespace LitePlacer
 
         private void SetCurrentCameraParameters()
         {
-            Camera CurrentCam;
+            ICamera CurrentCam;
             if (UpCamera.IsRunning())
             {
                 CurrentCam = UpCamera;
@@ -4213,7 +4214,7 @@ namespace LitePlacer
                     NozzleOffset_label.Visible = false;
                     NozzleOffset_label.Text = "   ";
                     ShowMessageBox(
-                        "Now, jog the Nozzle above the up camera,\n\rtake Nozzle down, jog it to the image center\n\rand set Up Camera location",
+                        "Now, jog the Nozzle above the up camera,\n\rtake Nozzle down, jog it to the image center\n\rand set Up ICamera location",
                         "Done here",
                         MessageBoxButtons.OK);
                     SelectCamera(UpCamera);
@@ -4288,7 +4289,7 @@ namespace LitePlacer
             CNC_XY_m(Setting.UpCam_PositionX, Setting.UpCam_PositionY);
         }
 
-        #endregion Up/Down Camera setup pages functions
+        #endregion Up/Down ICamera setup pages functions
 
         // =================================================================================
         // Basic setup page functions
@@ -6915,7 +6916,7 @@ namespace LitePlacer
             {
                 ShowMessageBox(
                     "Problem starting down camera. Please fix before continuing.",
-                    "Down Camera problem",
+                    "Down ICamera problem",
                     MessageBoxButtons.OK
                 );
             }
@@ -9210,7 +9211,7 @@ namespace LitePlacer
             return rot;
         }
 
-        private int MeasureClosestComponentInPx(out double X, out double Y, out double A, Camera Cam, double Tolerance, int averages)
+        private int MeasureClosestComponentInPx(out double X, out double Y, out double A, ICamera Cam, double Tolerance, int averages)
         {
             X = 0;
             double Xsum = 0;
@@ -12671,7 +12672,7 @@ namespace LitePlacer
         // ==========================================================================================================
         // Components:
 
-        private void DebugComponents_Camera(double Tolerance, Camera Cam, double mmPerPixel)
+        private void DebugComponents_Camera(double Tolerance, ICamera Cam, double mmPerPixel)
         {
             double X = 0;
             double Y = 0;
@@ -13117,7 +13118,7 @@ namespace LitePlacer
             {
                 return;
             }
-            Camera cam= DownCamera;
+            ICamera cam= DownCamera;
             switch (CamerasSetUp_tabControl.SelectedTab.Name)
             {
                 case "DownCamera_tabPage":
@@ -13328,7 +13329,7 @@ namespace LitePlacer
         {
             // To add a video processing fuction:
             // Add the name to here.
-            // Add the name to Camera.cs, BuildFunctionsList()
+            // Add the name to ICamera.cs, BuildFunctionsList()
             // Add the parameter handling to SetEditTargets() below
             // Add the actual function (take example of any function already referred from BuildFunctionsList()
 
@@ -15516,7 +15517,7 @@ namespace LitePlacer
             List<string> Monikers;
             ComboBox Box;
             string MonikerStr;
-            Camera Cam;
+            ICamera Cam;
             if (CamerasSetUp_tabControl.SelectedTab.Name== "DownCamera_tabPage")
             {
                 Monikers = DownCamera.GetMonikerStrings();
@@ -15899,9 +15900,6 @@ namespace LitePlacer
         private void OpenSecondaryDownCameraForm()
         {
             CameraForm cameraForm = new CameraForm();
-            cameraForm.MainForm = this;
-            //DownCamera.ImageBox2 = cameraForm.Cam_pictureBox;
-            //DownCamera.FeatureDetails = cameraForm.FeatureDetails;
             cameraForm.Show(this);
         }
 
@@ -15913,9 +15911,6 @@ namespace LitePlacer
         private void OpenSecondaryMultiDownCameraForm()
         {
             MultiCameraForm cameraForm = new MultiCameraForm();
-            cameraForm.MainForm = this;
-            //DownCamera.ImageBox2 = cameraForm.Cam_pictureBox;
-            //DownCamera.FeatureDetails = cameraForm.FeatureDetails;
             cameraForm.Show(this);
         }
     }	// end of: 	public partial class FormMain : Form

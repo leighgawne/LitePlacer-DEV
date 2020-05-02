@@ -2483,7 +2483,7 @@
             this.DownCamera_tabPage.Name = "DownCamera_tabPage";
             this.DownCamera_tabPage.Size = new System.Drawing.Size(579, 594);
             this.DownCamera_tabPage.TabIndex = 3;
-            this.DownCamera_tabPage.Text = "Down Looking Camera";
+            this.DownCamera_tabPage.Text = "Down Looking ICamera";
             this.DownCamera_tabPage.UseVisualStyleBackColor = true;
             // 
             // CamShowPixels_checkBox
@@ -2675,7 +2675,7 @@
             this.label135.Name = "label135";
             this.label135.Size = new System.Drawing.Size(78, 13);
             this.label135.TabIndex = 143;
-            this.label135.Text = "Camera switch:";
+            this.label135.Text = "ICamera switch:";
             this.toolTip1.SetToolTip(this.label135, resources.GetString("label135.ToolTip"));
             // 
             // DownCameraBoxX_textBox
@@ -3868,7 +3868,7 @@
             this.CameraStatus_label.Size = new System.Drawing.Size(113, 17);
             this.CameraStatus_label.TabIndex = 6;
             this.CameraStatus_label.Text = "Not connected";
-            this.toolTip1.SetToolTip(this.CameraStatus_label, "Camera conection status");
+            this.toolTip1.SetToolTip(this.CameraStatus_label, "ICamera conection status");
             // 
             // CamFunctionDown_button
             // 
@@ -4206,7 +4206,7 @@
             this.UpCamera_tabPage.Name = "UpCamera_tabPage";
             this.UpCamera_tabPage.Size = new System.Drawing.Size(579, 594);
             this.UpCamera_tabPage.TabIndex = 4;
-            this.UpCamera_tabPage.Text = "Up Looking Camera";
+            this.UpCamera_tabPage.Text = "Up Looking ICamera";
             this.UpCamera_tabPage.UseVisualStyleBackColor = true;
             // 
             // label105
@@ -4996,7 +4996,7 @@
             this.label55.Name = "label55";
             this.label55.Size = new System.Drawing.Size(79, 17);
             this.label55.TabIndex = 115;
-            this.label55.Text = "Up Camera";
+            this.label55.Text = "Up ICamera";
             // 
             // CameraSetupTest_button
             // 

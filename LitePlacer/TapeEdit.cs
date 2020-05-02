@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Terpsichore.Machine.Interfaces;
 using Terpsichore.Machine.Sensors;
 
 namespace LitePlacer
@@ -17,7 +18,7 @@ namespace LitePlacer
         public DataGridViewRow Row;
         public int TapeRowNo;
         public dynamic MainForm;
-        Camera Cam;
+        ICamera Cam;
         CNC Cnc;
 
         // The parameters of tapes, most taken care by this dialog
@@ -45,7 +46,7 @@ namespace LitePlacer
         // double PickupZ, PlacementZ: Z values used for pickup/place operation
         // bool PickupZvalid, PlacementZvalid: if the values are valid (if not, they are measured when used)
 
-        public TapeEditForm(CNC _cnc, Camera _cam)
+        public TapeEditForm(CNC _cnc, ICamera _cam)
         {
             InitializeComponent();
             Cnc = _cnc;

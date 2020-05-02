@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Terpsichore.Common;
+using Terpsichore.Machine.Interfaces;
 using Terpsichore.Machine.Vision;
 
 namespace LitePlacer
@@ -26,7 +28,6 @@ namespace LitePlacer
         private bool configCompleted = false;
         private const int THREAD_PERIOD_MS = 100;
         private ThreadHelper threadHelper;
-        public FormMain MainForm;
         private Stopwatch stopwatch;
 
         private object receivedFrameLock = new object();
@@ -39,7 +40,7 @@ namespace LitePlacer
             InitializeComponent();
 
             threadHelper = new ThreadHelper(
-                "Camera Form",
+                "ICamera Form",
                 THREAD_PERIOD_MS,
                 ImageProcessingThread,
                 ThreadExceptionHandler);
@@ -64,15 +65,17 @@ namespace LitePlacer
 
         private void ImageProcessingThread()
         {
-            if (MainForm != null)
+            var downCamera = DIBindings.Resolve<IDownCamera>();
+
+            if (downCamera != null)
             {
-                if (MainForm.DownCamera.IsRunning())
+                if (downCamera.IsRunning())
                 {
                     if (!configCompleted)
                     {
                         imageFilter = new ImageFilter();
                         imageFilter.CreateFilter(E_ImageFilters.Threshold, true, FilterThreshold);
-                        imageProcessor = new ImageProcessor(MainForm.DownCamera, imageFilter);
+                        imageProcessor = new ImageProcessor(downCamera, imageFilter);
 
                         JobGuid = visionPipeline.CreateJob(
                             ImageReceived,
@@ -139,8 +142,9 @@ namespace LitePlacer
 
             if (closestCircle.Count > 0)
             {
-                var X = closestCircle.X * MainForm.Setting.DownCam_XmmPerPixel;
-                var Y = -closestCircle.Y * MainForm.Setting.DownCam_YmmPerPixel;
+                var settings = DIBindings.Resolve<IMySettings>();
+                var X = closestCircle.X * settings.DownCam_XmmPerPixel;
+                var Y = -closestCircle.Y * settings.DownCam_YmmPerPixel;
                 FeatureDetails.Text = "X: " + X.ToString() + " Y: " + Y.ToString();
                 FeatureDetails.BackColor = Color.DarkGreen;
             }

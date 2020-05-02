@@ -138,6 +138,7 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -157,6 +158,7 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="BoardSettings.cs" />
+    <Compile Include="Bootstrap.cs" />
     <Compile Include="Calibration\Actions\CalibrationAction.cs" />
     <Compile Include="Calibration\Actions\HomeToCommonPosition.cs" />
     <Compile Include="Calibration\Actions\ICalibrationAction.cs" />
@@ -173,6 +175,7 @@
       <DependentUpon>CameraUC.cs</DependentUpon>
     </Compile>
     <Compile Include="CNC.cs" />
+    <Compile Include="IMySettings.cs" />
     <Compile Include="LiteplacerUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -313,6 +316,10 @@
     <Folder Include="Mission\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\terpsichore.common\Terpsichore.Common\Terpsichore.Common.csproj">
+      <Project>{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}</Project>
+      <Name>Terpsichore.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\terpsichore.machine\Terpsichore.Machine\Terpsichore.Machine.csproj">
       <Project>{5904a482-cb65-4acc-b210-a32aaa6d0a97}</Project>
       <Name>Terpsichore.Machine</Name>

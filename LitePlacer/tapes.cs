@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Terpsichore.Machine.Sensors;
+using Terpsichore.Machine.Interfaces;
 
 namespace LitePlacer
 {
@@ -15,10 +16,10 @@ namespace LitePlacer
         private DataGridView Grid;
         private NozzleClass Nozzle;
 		private dynamic MainForm;
-		private Camera DownCamera;
+		private ICamera DownCamera;
 		private CNC Cnc;
 
-        public TapesClass(DataGridView grd, NozzleClass ndl, Camera cam, CNC c, dynamic MainF)
+        public TapesClass(DataGridView grd, NozzleClass ndl, ICamera cam, CNC c, dynamic MainF)
 		{
             Grid = grd;
 			Nozzle = ndl;

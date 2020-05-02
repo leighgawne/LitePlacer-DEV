@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Globalization;
 using Terpsichore.Machine.Sensors;
+using Terpsichore.Machine.Interfaces;
 
 namespace LitePlacer
 {
@@ -25,11 +26,11 @@ namespace LitePlacer
         public List<NozzlePoint>[] CalibrationPointsArr;
         public bool[] CalibratedArr;
 
-        private Camera Cam;
+        private ICamera Cam;
         private CNC Cnc;
         private static dynamic MainForm;
 
-        public NozzleClass(Camera MyCam, CNC MyCnc, dynamic MainF)
+        public NozzleClass(ICamera MyCam, CNC MyCnc, dynamic MainF)
         {
             MainForm = MainF;
             Calibrated = false;
@@ -234,7 +235,7 @@ namespace LitePlacer
             {
                 MainForm.ShowMessageBox(
                     "Attempt to calibrate Nozzle, camera is not running.",
-                    "Camera not running",
+                    "ICamera not running",
                     MessageBoxButtons.OK);
                 return false;
             }

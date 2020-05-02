@@ -12,14 +12,6 @@ namespace LitePlacer
 {
     public partial class MultiCameraForm : Form
     {
-        public dynamic MainForm
-        {
-            set
-            {
-                cameraUCs.ForEach(x => x.MainForm = value);
-            }
-        }
-
         private List<CameraUC> cameraUCs = new List<CameraUC>();
 
         public MultiCameraForm()
