@@ -175,7 +175,6 @@
       <DependentUpon>CameraUC.cs</DependentUpon>
     </Compile>
     <Compile Include="CNC.cs" />
-    <Compile Include="IMySettings.cs" />
     <Compile Include="LiteplacerUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -228,7 +227,6 @@
     <Compile Include="TapeSelectionForm.Designer.cs">
       <DependentUpon>TapeSelectionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ThreadHelper.cs" />
     <EmbeddedResource Include="CameraForm.resx">
       <DependentUpon>CameraForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -39,6 +39,7 @@ using LitePlacer.Model;
 
 using Terpsichore.Machine.Sensors;
 using Terpsichore.Machine.Interfaces;
+using Terpsichore.Common;
 
 namespace LitePlacer
 {
