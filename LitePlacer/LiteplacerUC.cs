@@ -40,6 +40,7 @@ using Terpsichore.Machine.Sensors;
 using Terpsichore.Common;
 using Terpsichore.Machine.Interfaces;
 using Terpsichore.Machine;
+using Solvethirteen.Desktop.Workspace;
 
 namespace LitePlacer
 {
@@ -57,6 +58,9 @@ namespace LitePlacer
         public IMySettings Setting;
         public BoardSettings.TinyG TinyGBoard = new BoardSettings.TinyG();
         public BoardSettings.qQuintic qQuinticBoard = new BoardSettings.qQuintic();
+
+        public IAppLogger AppLogger = Terpsichore.Common.DIBindings.Resolve<IAppLogger>();
+
 
         AppSettings SettingsOps;
 
@@ -128,7 +132,7 @@ namespace LitePlacer
             Cnc_ReadyEvent = Cnc.ReadyEvent;
             CNC.SquareCorrection = Setting.CNC_SquareCorrection;
 
-            DownCamera = DIBindings.Resolve<IDownCamera>();
+            DownCamera = Terpsichore.Common.DIBindings.Resolve<IDownCamera>();
             DownCamera.ReportInfoCallback = DisplayText;
             //DownCamera = new ICamera() { ReportInfoCallback = DisplayText };
             UpCamera = new Camera() { ReportInfoCallback = DisplayText };
@@ -4488,7 +4492,16 @@ namespace LitePlacer
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<string>(DisplayTxt), new [] { txt });
+                BeginInvoke(new MethodInvoker(delegate
+                {
+                    DisplayTxt(txt);
+
+                    if (AppLogger != null)
+                    {
+                        AppLogger.Info(txt);
+                    }
+                }));
+
                 return;
             }
 
@@ -4503,6 +4516,11 @@ namespace LitePlacer
                 SerialMonitor_richTextBox.Text = SerialMonitor_richTextBox.Text.Substring(SerialMonitor_richTextBox.Text.Length - 10000);
             }
             SerialMonitor_richTextBox.AppendText(txt, DisplayTxtCol);
+
+            if (AppLogger != null)
+            {
+                AppLogger.Info(txt);
+            }
         }
 
         

@@ -281,6 +281,10 @@
     <Folder Include="Mission\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DesktopApp\Solvethirteen.Desktop.Workspace\Solvethirteen.Desktop.Workspace.csproj">
+      <Project>{14759D2A-5536-46EC-9267-D04DD6052AAB}</Project>
+      <Name>Solvethirteen.Desktop.Workspace</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\terpsichore.common\Terpsichore.Common\Terpsichore.Common.csproj">
       <Project>{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}</Project>
       <Name>Terpsichore.Common</Name>
