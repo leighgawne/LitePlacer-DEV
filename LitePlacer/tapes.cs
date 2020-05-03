@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Terpsichore.Machine.Sensors;
 using Terpsichore.Machine.Interfaces;
+using Terpsichore.Machine;
 
 namespace LitePlacer
 {

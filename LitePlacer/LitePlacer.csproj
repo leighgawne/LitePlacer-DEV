@@ -156,25 +156,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppSettings.cs" />
     <Compile Include="BoardSettings.cs" />
     <Compile Include="Bootstrap.cs" />
     <Compile Include="Calibration\Actions\CalibrationAction.cs" />
     <Compile Include="Calibration\Actions\HomeToCommonPosition.cs" />
     <Compile Include="Calibration\Actions\ICalibrationAction.cs" />
-    <Compile Include="CameraForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CameraForm.Designer.cs">
-      <DependentUpon>CameraForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CameraUC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CameraUC.Designer.cs">
-      <DependentUpon>CameraUC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CNC.cs" />
     <Compile Include="LiteplacerUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -193,15 +179,8 @@
     <Compile Include="MethodSelectionForm.Designer.cs">
       <DependentUpon>MethodSelectionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model\RepeatabilityProfilier.cs" />
     <Compile Include="Model\Environment.cs" />
     <Compile Include="Model\Nozzle.cs" />
-    <Compile Include="MultiCameraForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MultiCameraForm.Designer.cs">
-      <DependentUpon>MultiCameraForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Needle.cs" />
     <Compile Include="PanelizeForm.cs">
       <SubType>Form</SubType>
@@ -211,7 +190,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SerialComm.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="TapeEdit.cs">
@@ -227,12 +205,6 @@
     <Compile Include="TapeSelectionForm.Designer.cs">
       <DependentUpon>TapeSelectionForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="CameraForm.resx">
-      <DependentUpon>CameraForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CameraUC.resx">
-      <DependentUpon>CameraUC.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="LiteplacerUC.resx">
       <DependentUpon>LiteplacerUC.cs</DependentUpon>
     </EmbeddedResource>
@@ -242,9 +214,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MethodSelectionForm.resx">
       <DependentUpon>MethodSelectionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MultiCameraForm.resx">
-      <DependentUpon>MultiCameraForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PanelizeForm.resx">
       <DependentUpon>PanelizeForm.cs</DependentUpon>

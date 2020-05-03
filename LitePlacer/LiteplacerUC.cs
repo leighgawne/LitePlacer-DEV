@@ -40,6 +40,7 @@ using LitePlacer.Model;
 using Terpsichore.Machine.Sensors;
 using Terpsichore.Common;
 using Terpsichore.Machine.Interfaces;
+using Terpsichore.Machine;
 
 namespace LitePlacer
 {
@@ -114,7 +115,7 @@ namespace LitePlacer
             DisplayText("Application Start", KnownColor.Black, true);
             DisplayText("Version: " + Assembly.GetEntryAssembly().GetName().Version.ToString() + ", build date: " + BuildDate());
 
-            SettingsOps = new AppSettings(this);
+            SettingsOps = new AppSettings();
 
             //Do_Upgrade();
             string path = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
@@ -124,7 +125,7 @@ namespace LitePlacer
             Setting = SettingsOps.Load(path + "LitePlacer.Appsettings");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Cnc = new CNC(this);
+            Cnc = new CNC();
             Cnc_ReadyEvent = Cnc.ReadyEvent;
             CNC.SquareCorrection = Setting.CNC_SquareCorrection;
 
@@ -231,8 +232,6 @@ namespace LitePlacer
             LoadCalibrationSettingsToUI();
 
             CalibrationAction.CNC_XYZ_m = CNC_XYA_m;
-
-            RepeatabilityProfilier.FormMain = this;
 
             //OpenSecondaryDownCameraForm();
         }
@@ -15681,40 +15680,6 @@ namespace LitePlacer
             centre_Set_button.Enabled = PositionSetupEnable_checkBox.Checked;
         }
 
-        private void topLeft_Set_button_Click(object sender, EventArgs e)
-        {
-            Setting.Calibration_A_Marker_X = Cnc.CurrentX;
-            Setting.Calibration_A_Marker_Y = Cnc.CurrentY;
-            LoadCalibrationSettingsToUI();
-        }
-
-        private void topRight_Set_button_Click(object sender, EventArgs e)
-        {
-            Setting.Calibration_B_Marker_X = Cnc.CurrentX;
-            Setting.Calibration_B_Marker_Y = Cnc.CurrentY;
-            LoadCalibrationSettingsToUI();
-        }
-
-        private void bottomLeft_Set_button_Click(object sender, EventArgs e)
-        {
-            Setting.Calibration_C_Marker_X = Cnc.CurrentX;
-            Setting.Calibration_C_Marker_Y = Cnc.CurrentY;
-            LoadCalibrationSettingsToUI();
-        }
-
-        private void bottomRight_Set_button_Click(object sender, EventArgs e)
-        {
-            Setting.Calibration_D_Marker_X = Cnc.CurrentX;
-            Setting.Calibration_D_Marker_Y = Cnc.CurrentY;
-            LoadCalibrationSettingsToUI();
-        }
-
-        private void centre_Set_button_Click(object sender, EventArgs e)
-        {
-            Setting.Calibration_E_Marker_X = Cnc.CurrentX;
-            Setting.Calibration_E_Marker_Y = Cnc.CurrentY;
-            LoadCalibrationSettingsToUI();
-        }
 
         private void setQuantaSteps_button_Click(object sender, EventArgs e)
         {
@@ -15729,156 +15694,6 @@ namespace LitePlacer
             }
         }
 
-        private void topLeft_Go_button_Click(object sender, EventArgs e)
-        {
-            CNC_XY_m(
-                Setting.Calibration_A_Marker_X, 
-                Setting.Calibration_A_Marker_Y);
-            ProfileExecutor.Measure(out double X, out double Y);
-        }
-
-        private void topRight_Go_button_Click(object sender, EventArgs e)
-        {
-            CNC_XY_m(
-                Setting.Calibration_B_Marker_X,
-                Setting.Calibration_B_Marker_Y);
-            ProfileExecutor.Measure(out double X, out double Y);
-        }
-
-        private void bottomLeft_Go_button_Click(object sender, EventArgs e)
-        {
-            CNC_XY_m(
-                Setting.Calibration_C_Marker_X,
-                Setting.Calibration_C_Marker_Y);
-            ProfileExecutor.Measure(out double X, out double Y);
-        }
-
-        private void bottomRight_Go_button_Click(object sender, EventArgs e)
-        {
-            CNC_XY_m(
-                Setting.Calibration_D_Marker_X,
-                Setting.Calibration_D_Marker_Y);
-            ProfileExecutor.Measure(out double X, out double Y);
-        }
-
-        private void centre_Go_button_Click(object sender, EventArgs e)
-        {
-            CNC_XY_m(
-                Setting.Calibration_E_Marker_X,
-                Setting.Calibration_E_Marker_Y);
-            ProfileExecutor.Measure(out double X, out double Y);
-        }
-
-        private void goToCommon_button_Click(object sender, EventArgs e)
-        {
-            CNC_XY_m(
-                Setting.Calibration_Common_X,
-                Setting.Calibration_Common_Y);
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            CNC_XY_m(
-                Setting.Calibration_A_Marker_X,
-                Setting.Calibration_A_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_B_Marker_X,
-                Setting.Calibration_B_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_C_Marker_X,
-                Setting.Calibration_C_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_D_Marker_X,
-                Setting.Calibration_D_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_E_Marker_X,
-                Setting.Calibration_E_Marker_Y);
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            CNC_XY_m(
-                Setting.Calibration_A_Marker_X,
-                Setting.Calibration_A_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_C_Marker_X,
-                Setting.Calibration_C_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_B_Marker_X,
-                Setting.Calibration_B_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_D_Marker_X,
-                Setting.Calibration_D_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_E_Marker_X,
-                Setting.Calibration_E_Marker_Y);
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            CNC_XY_m(
-                Setting.Calibration_A_Marker_X,
-                Setting.Calibration_A_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_C_Marker_X,
-                Setting.Calibration_C_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_D_Marker_X,
-                Setting.Calibration_D_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_B_Marker_X,
-                Setting.Calibration_B_Marker_Y);
-            CNC_XY_m(
-                Setting.Calibration_E_Marker_X,
-                Setting.Calibration_E_Marker_Y);
-        }
-
-        CalibrationProfiles calibrationProfiles = new CalibrationProfiles();
-
-        private async void runCalibration_button_Click(object sender, EventArgs e)
-        {
-            var repeatabilityProfilier = new RepeatabilityProfilier();
-            await repeatabilityProfilier.ExecuteProfilingAsync(
-                new List<CalibrationProfile>()
-                {
-                    calibrationProfiles.PositionA,
-                    calibrationProfiles.PositionB,
-                    calibrationProfiles.PositionC,
-                    calibrationProfiles.PositionD,
-                    calibrationProfiles.PositionE
-                });
-        }
-
-        private async void runCalibrationA_button_Click(object sender, EventArgs e)
-        {
-            var repeatabilityProfilier = new RepeatabilityProfilier();
-            await repeatabilityProfilier.ExecuteProfilingAsync(new List<CalibrationProfile>() { calibrationProfiles.PositionA });
-        }
-
-        private async void runCalibrationB_button_Click(object sender, EventArgs e)
-        {
-            var repeatabilityProfilier = new RepeatabilityProfilier();
-            await repeatabilityProfilier.ExecuteProfilingAsync(new List<CalibrationProfile>() { calibrationProfiles.PositionB });
-        }
-
-        private async void runCalibrationC_button_Click(object sender, EventArgs e)
-        {
-            var repeatabilityProfilier = new RepeatabilityProfilier();
-            await repeatabilityProfilier.ExecuteProfilingAsync(new List<CalibrationProfile>() { calibrationProfiles.PositionC });
-        }
-
-        private async void runCalibrationD_button_Click(object sender, EventArgs e)
-        {
-            var repeatabilityProfilier = new RepeatabilityProfilier();
-            await repeatabilityProfilier.ExecuteProfilingAsync(new List<CalibrationProfile>() { calibrationProfiles.PositionD });
-        }
-
-        private async void runCalibrationE_button_Click(object sender, EventArgs e)
-        {
-            var repeatabilityProfilier = new RepeatabilityProfilier();
-            await repeatabilityProfilier.ExecuteProfilingAsync(new List<CalibrationProfile>() { calibrationProfiles.PositionE });
-        }
-
         private void popCam_button_Click(object sender, EventArgs e)
         {
             OpenSecondaryDownCameraForm();
@@ -15886,8 +15701,6 @@ namespace LitePlacer
 
         private void OpenSecondaryDownCameraForm()
         {
-            CameraForm cameraForm = new CameraForm();
-            cameraForm.Show(this);
         }
 
         private void popMultiCam_button_Click(object sender, EventArgs e)
@@ -15897,8 +15710,6 @@ namespace LitePlacer
 
         private void OpenSecondaryMultiDownCameraForm()
         {
-            MultiCameraForm cameraForm = new MultiCameraForm();
-            cameraForm.Show(this);
         }
     }	// end of: 	public partial class FormMain : Form
 

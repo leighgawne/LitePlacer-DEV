@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Globalization;
 using Terpsichore.Machine.Sensors;
 using Terpsichore.Machine.Interfaces;
+using Terpsichore.Machine;
 
 namespace LitePlacer
 {

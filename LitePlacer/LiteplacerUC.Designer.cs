@@ -9443,7 +9443,6 @@
             this.runCalibrationE_button.TabIndex = 48;
             this.runCalibrationE_button.Text = "Calibrate E";
             this.runCalibrationE_button.UseVisualStyleBackColor = true;
-            this.runCalibrationE_button.Click += new System.EventHandler(this.runCalibrationE_button_Click);
             // 
             // runCalibrationD_button
             // 
@@ -9454,7 +9453,6 @@
             this.runCalibrationD_button.TabIndex = 47;
             this.runCalibrationD_button.Text = "Calibrate D";
             this.runCalibrationD_button.UseVisualStyleBackColor = true;
-            this.runCalibrationD_button.Click += new System.EventHandler(this.runCalibrationD_button_Click);
             // 
             // runCalibrationC_button
             // 
@@ -9465,7 +9463,6 @@
             this.runCalibrationC_button.TabIndex = 46;
             this.runCalibrationC_button.Text = "Calibrate C";
             this.runCalibrationC_button.UseVisualStyleBackColor = true;
-            this.runCalibrationC_button.Click += new System.EventHandler(this.runCalibrationC_button_Click);
             // 
             // runCalibrationB_button
             // 
@@ -9476,7 +9473,6 @@
             this.runCalibrationB_button.TabIndex = 45;
             this.runCalibrationB_button.Text = "Calibrate B";
             this.runCalibrationB_button.UseVisualStyleBackColor = true;
-            this.runCalibrationB_button.Click += new System.EventHandler(this.runCalibrationB_button_Click);
             // 
             // runCalibrationA_button
             // 
@@ -9487,7 +9483,6 @@
             this.runCalibrationA_button.TabIndex = 44;
             this.runCalibrationA_button.Text = "Calibrate A";
             this.runCalibrationA_button.UseVisualStyleBackColor = true;
-            this.runCalibrationA_button.Click += new System.EventHandler(this.runCalibrationA_button_Click);
             // 
             // goToCommon_button
             // 
@@ -9498,7 +9493,6 @@
             this.goToCommon_button.TabIndex = 43;
             this.goToCommon_button.Text = "Go to Common";
             this.goToCommon_button.UseVisualStyleBackColor = true;
-            this.goToCommon_button.Click += new System.EventHandler(this.goToCommon_button_Click);
             // 
             // runCalibration_button
             // 
@@ -9509,7 +9503,6 @@
             this.runCalibration_button.TabIndex = 42;
             this.runCalibration_button.Text = "Calibrate All";
             this.runCalibration_button.UseVisualStyleBackColor = true;
-            this.runCalibration_button.Click += new System.EventHandler(this.runCalibration_button_Click);
             // 
             // setQuantaSteps_button
             // 
@@ -9540,7 +9533,6 @@
             this.centre_Set_button.TabIndex = 39;
             this.centre_Set_button.Text = "Set";
             this.centre_Set_button.UseVisualStyleBackColor = true;
-            this.centre_Set_button.Click += new System.EventHandler(this.centre_Set_button_Click);
             // 
             // PositionSetupEnable_checkBox
             // 
@@ -9562,7 +9554,6 @@
             this.bottomRight_Set_button.TabIndex = 37;
             this.bottomRight_Set_button.Text = "Set";
             this.bottomRight_Set_button.UseVisualStyleBackColor = true;
-            this.bottomRight_Set_button.Click += new System.EventHandler(this.bottomRight_Set_button_Click);
             // 
             // bottomLeft_Set_button
             // 
@@ -9573,7 +9564,6 @@
             this.bottomLeft_Set_button.TabIndex = 36;
             this.bottomLeft_Set_button.Text = "Set";
             this.bottomLeft_Set_button.UseVisualStyleBackColor = true;
-            this.bottomLeft_Set_button.Click += new System.EventHandler(this.bottomLeft_Set_button_Click);
             // 
             // topRight_Set_button
             // 
@@ -9584,7 +9574,6 @@
             this.topRight_Set_button.TabIndex = 35;
             this.topRight_Set_button.Text = "Set";
             this.topRight_Set_button.UseVisualStyleBackColor = true;
-            this.topRight_Set_button.Click += new System.EventHandler(this.topRight_Set_button_Click);
             // 
             // topLeft_Set_button
             // 
@@ -9595,7 +9584,6 @@
             this.topLeft_Set_button.TabIndex = 34;
             this.topLeft_Set_button.Text = "Set";
             this.topLeft_Set_button.UseVisualStyleBackColor = true;
-            this.topLeft_Set_button.Click += new System.EventHandler(this.topLeft_Set_button_Click);
             // 
             // label177
             // 
@@ -9642,7 +9630,6 @@
             this.button7.TabIndex = 29;
             this.button7.Text = "A > C > D > B > E";
             this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button6
             // 
@@ -9653,7 +9640,6 @@
             this.button6.TabIndex = 28;
             this.button6.Text = "A > C > B > D > E";
             this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button5
             // 
@@ -9664,7 +9650,6 @@
             this.button5.TabIndex = 27;
             this.button5.Text = "A > B > C > D > E";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // label176
             // 
@@ -9785,7 +9770,6 @@
             this.centre_Go_button.TabIndex = 15;
             this.centre_Go_button.Text = "Go";
             this.centre_Go_button.UseVisualStyleBackColor = true;
-            this.centre_Go_button.Click += new System.EventHandler(this.centre_Go_button_Click);
             // 
             // centre_YPos_textBox
             // 
@@ -9816,7 +9800,6 @@
             this.bottomRight_Go_button.TabIndex = 12;
             this.bottomRight_Go_button.Text = "Go";
             this.bottomRight_Go_button.UseVisualStyleBackColor = true;
-            this.bottomRight_Go_button.Click += new System.EventHandler(this.bottomRight_Go_button_Click);
             // 
             // topRight_Go_button
             // 
@@ -9826,7 +9809,6 @@
             this.topRight_Go_button.TabIndex = 11;
             this.topRight_Go_button.Text = "Go";
             this.topRight_Go_button.UseVisualStyleBackColor = true;
-            this.topRight_Go_button.Click += new System.EventHandler(this.topRight_Go_button_Click);
             // 
             // bottomLeft_Go_button
             // 
@@ -9837,7 +9819,6 @@
             this.bottomLeft_Go_button.TabIndex = 10;
             this.bottomLeft_Go_button.Text = "Go";
             this.bottomLeft_Go_button.UseVisualStyleBackColor = true;
-            this.bottomLeft_Go_button.Click += new System.EventHandler(this.bottomLeft_Go_button_Click);
             // 
             // topLeft_Go_button
             // 
@@ -9847,7 +9828,6 @@
             this.topLeft_Go_button.TabIndex = 9;
             this.topLeft_Go_button.Text = "Go";
             this.topLeft_Go_button.UseVisualStyleBackColor = true;
-            this.topLeft_Go_button.Click += new System.EventHandler(this.topLeft_Go_button_Click);
             // 
             // bottomRight_YPos_textBox
             // 
