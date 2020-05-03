@@ -179,8 +179,6 @@
     <Compile Include="MethodSelectionForm.Designer.cs">
       <DependentUpon>MethodSelectionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model\Environment.cs" />
-    <Compile Include="Model\Nozzle.cs" />
     <Compile Include="Needle.cs" />
     <Compile Include="PanelizeForm.cs">
       <SubType>Form</SubType>

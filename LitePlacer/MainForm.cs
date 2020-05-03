@@ -35,7 +35,6 @@ using AForge.Imaging.Filters;
 using AForge.Math.Geometry;
 using Newtonsoft.Json;
 using LitePlacer.Calibration.Actions;
-using LitePlacer.Model;
 
 using Terpsichore.Machine.Sensors;
 using Terpsichore.Machine.Interfaces;
