@@ -28,10 +28,10 @@ namespace LitePlacer
         public bool[] CalibratedArr;
 
         private ICamera Cam;
-        private CNC Cnc;
+        private ICNC Cnc;
         private static dynamic MainForm;
 
-        public NozzleClass(ICamera MyCam, CNC MyCnc, dynamic MainF)
+        public NozzleClass(ICamera MyCam, ICNC MyCnc, dynamic MainF)
         {
             MainForm = MainF;
             Calibrated = false;

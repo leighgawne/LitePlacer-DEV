@@ -20,7 +20,7 @@ namespace LitePlacer
         public int TapeRowNo;
         public dynamic MainForm;
         ICamera Cam;
-        CNC Cnc;
+        ICNC Cnc;
 
         // The parameters of tapes, most taken care by this dialog
 
@@ -47,7 +47,7 @@ namespace LitePlacer
         // double PickupZ, PlacementZ: Z values used for pickup/place operation
         // bool PickupZvalid, PlacementZvalid: if the values are valid (if not, they are measured when used)
 
-        public TapeEditForm(CNC _cnc, ICamera _cam)
+        public TapeEditForm(ICNC _cnc, ICamera _cam)
         {
             InitializeComponent();
             Cnc = _cnc;

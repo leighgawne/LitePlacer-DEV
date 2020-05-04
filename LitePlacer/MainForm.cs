@@ -49,7 +49,7 @@ namespace LitePlacer
 
     public partial class FormMain : Form
     {
-        public CNC Cnc;
+        public ICNC Cnc;
         public ICamera DownCamera;
         ICamera UpCamera;
         NozzleClass Nozzle;
@@ -124,7 +124,7 @@ namespace LitePlacer
             Setting = SettingsOps.Load(path + "LitePlacer.Appsettings");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Cnc = new CNC();
+            Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
             Cnc_ReadyEvent = Cnc.ReadyEvent;
             CNC.SquareCorrection = Setting.CNC_SquareCorrection;
             DownCamera = new Camera() { ReportInfoCallback = DisplayText };
@@ -4576,7 +4576,7 @@ namespace LitePlacer
                 return false;
             }
 
-            if (Cnc.Controlboard == CNC.ControlBoardType.TinyG)
+            if (Cnc.Controlboard == ControlBoardType.TinyG)
             {
                 CNC_RawWrite("\x11");  // Xon
                 Thread.Sleep(50);   // TinyG wakeup
@@ -4587,7 +4587,7 @@ namespace LitePlacer
             {
                 return false;
             }
-            if (Cnc.Controlboard == CNC.ControlBoardType.TinyG)
+            if (Cnc.Controlboard == ControlBoardType.TinyG)
             {
                 DisplayText("Reading TinyG settings:");
                 if (!LoopParameters(typeof(BoardSettings.TinyG)))
@@ -4595,7 +4595,7 @@ namespace LitePlacer
                     return false;
                 }
             }
-            else if (Cnc.Controlboard == CNC.ControlBoardType.qQuintic)
+            else if (Cnc.Controlboard == ControlBoardType.qQuintic)
             {
                 DisplayText("Writing qQuintic settings:");
                 if (!WriteqQuinticSettings())
@@ -5070,17 +5070,17 @@ namespace LitePlacer
 
             if (value=="1")
             {
-                Cnc.Controlboard = CNC.ControlBoardType.TinyG;
+                Cnc.Controlboard = ControlBoardType.TinyG;
                 DisplayText("TinyG board found.");
             }
             else if (value == "3")
             {
-                Cnc.Controlboard = CNC.ControlBoardType.qQuintic;
+                Cnc.Controlboard = ControlBoardType.qQuintic;
                 DisplayText("qQuintic board found.");
             }
             else
             {
-                Cnc.Controlboard = CNC.ControlBoardType.other;
+                Cnc.Controlboard = ControlBoardType.other;
                 DisplayText("Unknown control board.");
             }
         }
@@ -5763,7 +5763,7 @@ namespace LitePlacer
             if (e.KeyChar == '\r')
             {
                 List<String> GoodValues = new List<string> { "1", "2", "4", "8" };
-                if (Cnc.Controlboard == CNC.ControlBoardType.qQuintic)
+                if (Cnc.Controlboard == ControlBoardType.qQuintic)
                 {
                     GoodValues.Add("16");
                     GoodValues.Add("32");
@@ -15249,7 +15249,7 @@ namespace LitePlacer
         {
             bool res = true;
             DialogResult dialogResult;
-            if (Cnc.Controlboard == CNC.ControlBoardType.TinyG)
+            if (Cnc.Controlboard == ControlBoardType.TinyG)
             {
                 dialogResult = ShowMessageBox(
                    "Settings currently stored on board of your TinyG will be permanently lost,\n" +

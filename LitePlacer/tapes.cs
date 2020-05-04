@@ -18,9 +18,9 @@ namespace LitePlacer
         private NozzleClass Nozzle;
 		private dynamic MainForm;
 		private ICamera DownCamera;
-		private CNC Cnc;
+		private ICNC Cnc;
 
-        public TapesClass(DataGridView grd, NozzleClass ndl, ICamera cam, CNC c, dynamic MainF)
+        public TapesClass(DataGridView grd, NozzleClass ndl, ICamera cam, ICNC c, dynamic MainF)
 		{
             Grid = grd;
 			Nozzle = ndl;
