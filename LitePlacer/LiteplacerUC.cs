@@ -96,9 +96,6 @@ namespace LitePlacer
         // We need "goto" to different features, currently circles, rectangles or both
         public enum FeatureType { Circle, Rectangle, Both };
 
-        private static ManualResetEventSlim Cnc_ReadyEvent = new ManualResetEventSlim(false);
-        // This event is raised in the CNC class, and we'll wait for it when we want to continue only after TinyG has stabilized
-
         public LiteplacerUC()
         {
             Font = new Font(Font.Name, 8.25f * 96f / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
@@ -127,9 +124,9 @@ namespace LitePlacer
 
             Setting = SettingsOps.Load(path + "LitePlacer.Appsettings");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
-            System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
-            Cnc_ReadyEvent = Cnc.ReadyEvent;
+            Cnc.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
 
             DownCamera = Terpsichore.Common.DIBindings.Resolve<IDownCamera>();
             DownCamera.ReportInfoCallback = DisplayText;
@@ -139,8 +136,8 @@ namespace LitePlacer
             Tapes = new TapesClass(Tapes_dataGridView, Nozzle, DownCamera, Cnc, this);
             BoardSettings.MainForm = this;
 
-        // Setup error handling for Tapes_dataGridViews
-        // This is necessary, because programmatically changing a combobox cell value raises this error. (@MS: booooo!)
+            // Setup error handling for Tapes_dataGridViews
+            // This is necessary, because programmatically changing a combobox cell value raises this error. (@MS: booooo!)
             Tapes_dataGridView.DataError += new DataGridViewDataErrorEventHandler(Tapes_dataGridView_DataError);
             TapesOld_dataGridView.DataError += new DataGridViewDataErrorEventHandler(Tapes_dataGridView_DataError);
 
@@ -233,7 +230,7 @@ namespace LitePlacer
 
             LoadCalibrationSettingsToUI();
 
-            CalibrationAction.CNC_XYZ_m = CNC_XYA_m;
+            CalibrationAction.CNC_XYZ_m = Cnc.CNC_XYA_m;
 
             //OpenSecondaryDownCameraForm();
         }
@@ -546,7 +543,7 @@ namespace LitePlacer
                 Cnc.PumpIsOn = true;        // so it will be turned off, no matter what we think the status
                 Cnc.PumpOff_NoWorkaround();
                 Cnc.VacuumDefaultSetting();
-                CNC_Write_m("{\"md\":\"\"}");  // motor power off
+                Cnc.CNC_Write_m("{\"md\":\"\"}");  // motor power off
             }
             Cnc.Close();
 
@@ -1327,8 +1324,8 @@ namespace LitePlacer
                 Mag = Mag / 10.0;
             }
 
-            JoggingBusy = true;
-            CNC_A_m(Cnc.CurrentA + Mag);
+            Cnc.JoggingBusy = true;
+            Cnc.CNC_A_m(Cnc.CurrentA + Mag);
             if (DownCamera.Draw_Snapshot)
             {
                 DownCamera.RotateSnapshot(Cnc.CurrentA);
@@ -1337,11 +1334,11 @@ namespace LitePlacer
                     Thread.Sleep(10);
                 }
             }
-            JoggingBusy = false;
+            Cnc.JoggingBusy = false;
         }
 
 
-        public bool JoggingBusy = false;
+        
         List<Keys> JoggingKeys = new List<Keys>()
 	    {
 	        Keys.NumPad1,   // down + left
@@ -1381,7 +1378,7 @@ namespace LitePlacer
                 {
                     return;
                 };
-                JoggingBusy = false;
+                Cnc.JoggingBusy = false;
                 e.Handled = true;
                 e.SuppressKeyPress = true;
                 Cnc.RawWrite("!%");
@@ -1405,8 +1402,8 @@ namespace LitePlacer
             // In some situations this is much faster then using the mouse
             if (e.KeyCode == Keys.Escape) 
             {
-                AbortPlacement = true;
-                AbortPlacementShown = false;
+                Cnc.AbortPlacement = true;
+                Cnc.AbortPlacementShown = false;
             }
 
             if ( (e.KeyCode == Keys.F4) &&
@@ -1467,7 +1464,7 @@ namespace LitePlacer
 
             e.Handled  = true;
 
-            if (JoggingBusy)
+            if (Cnc.JoggingBusy)
             {
                 return;
             }
@@ -1479,52 +1476,52 @@ namespace LitePlacer
 
             if (e.KeyCode == Keys.NumPad1)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 //DisplayText("up");
                 //return;
                 Cnc.RawWrite(Movestr + "X0 Y0\"}");
             }
             else if (e.KeyCode == Keys.NumPad2)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 //DisplayText("down");
                 //return;
                 Cnc.RawWrite(Movestr + "Y0\"}");
             }
             else if (e.KeyCode == Keys.NumPad3)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 Cnc.RawWrite(Movestr + "Y0" + "X" + Setting.General_MachineSizeX.ToString() + "\"}");
             }
             else if (e.KeyCode == Keys.NumPad4)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 Cnc.RawWrite(Movestr + "X0\"}");
             }
             else if (e.KeyCode == Keys.NumPad6)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 Cnc.RawWrite(Movestr + "X" + Setting.General_MachineSizeX.ToString() + "\"}");
             }
             else if (e.KeyCode == Keys.NumPad7)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 Cnc.RawWrite(Movestr + "X0" + "Y" + Setting.General_MachineSizeY.ToString() + "\"}");
             }
             else if (e.KeyCode == Keys.NumPad8)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 Cnc.RawWrite(Movestr + "Y" + Setting.General_MachineSizeY.ToString() + "\"}");
             }
             else if (e.KeyCode == Keys.NumPad9)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 Cnc.RawWrite(Movestr + "X" + Setting.General_MachineSizeX.ToString() + "Y" + Setting.General_MachineSizeY.ToString() + "\"}");
             }
            //     (e.KeyCode == Keys.Add) || (e.KeyCode == Keys.Subtract) || (e.KeyCode == Keys.Divide) || (e.KeyCode == Keys.Multiply))
             else if (e.KeyCode == Keys.Add)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 double Ztarget;
                 if (!double.TryParse(Setting.General_ZtoPCB.ToString().Replace(',', '.'), out Ztarget))
                 {
@@ -1542,17 +1539,17 @@ namespace LitePlacer
             }
             else if (e.KeyCode == Keys.Subtract)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 Cnc.RawWrite(Movestr + "Z0\"}");
             }
             else if (e.KeyCode == Keys.Divide)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 Cnc.RawWrite(Movestr + "A0\"}");
             }
             else if (e.KeyCode == Keys.Multiply)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 Cnc.RawWrite(Movestr + "A10000\"}");  // should be enough
             }
             else
@@ -1568,7 +1565,7 @@ namespace LitePlacer
         private void Jog(object sender, KeyEventArgs e)
         {
 
-            if (JoggingBusy)
+            if (Cnc.JoggingBusy)
             {
                 return;
             }
@@ -1607,52 +1604,52 @@ namespace LitePlacer
             // move right
             if (e.KeyCode == Keys.F5)
             {
-                JoggingBusy = true;
-                CNC_XY_m(Cnc.CurrentX - Mag, Cnc.CurrentY);
+                Cnc.JoggingBusy = true;
+                Cnc.CNC_XY_m(Cnc.CurrentX - Mag, Cnc.CurrentY);
                 e.Handled = true;
-                JoggingBusy = false;
+                Cnc.JoggingBusy = false;
                 return;
             }
 
             // move left
             if (e.KeyCode == Keys.F6)
             {
-                JoggingBusy = true;
-                CNC_XY_m(Cnc.CurrentX + Mag, Cnc.CurrentY);
+                Cnc.JoggingBusy = true;
+                Cnc.CNC_XY_m(Cnc.CurrentX + Mag, Cnc.CurrentY);
                 e.Handled = true;
-                JoggingBusy = false;
+                Cnc.JoggingBusy = false;
                 return;
             }
 
             // move away
             if (e.KeyCode == Keys.F7)
             {
-                JoggingBusy = true;
-                CNC_XY_m(Cnc.CurrentX, Cnc.CurrentY + Mag);
+                Cnc.JoggingBusy = true;
+                Cnc.CNC_XY_m(Cnc.CurrentX, Cnc.CurrentY + Mag);
                 e.Handled = true;
-                JoggingBusy = false;
+                Cnc.JoggingBusy = false;
                 return;
             }
 
             // move closer
             if (e.KeyCode == Keys.F8)
             {
-                JoggingBusy = true;
-                CNC_XY_m(Cnc.CurrentX, Cnc.CurrentY - Mag);
+                Cnc.JoggingBusy = true;
+                Cnc.CNC_XY_m(Cnc.CurrentX, Cnc.CurrentY - Mag);
                 e.Handled = true;
-                JoggingBusy = false;
+                Cnc.JoggingBusy = false;
                 return;
             };
 
             // rotate ccw
             if (e.KeyCode == Keys.F9)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 if ((Mag > 99) && (Mag < 101))
                 {
                     Mag = 90.0;
                 }
-                CNC_A_m(Cnc.CurrentA + Mag);
+                Cnc.CNC_A_m(Cnc.CurrentA + Mag);
                 if (DownCamera.Draw_Snapshot)
                 {
                     DownCamera.RotateSnapshot(Cnc.CurrentA);
@@ -1662,19 +1659,19 @@ namespace LitePlacer
                     }
                 }
                 e.Handled = true;
-                JoggingBusy = false;
+                Cnc.JoggingBusy = false;
                 return;
             }
 
             // rotate cw
             if (e.KeyCode == Keys.F10)
             {
-                JoggingBusy = true;
+                Cnc.JoggingBusy = true;
                 if ((Mag > 99) && (Mag < 101))
                 {
                     Mag = 90.0;
                 }
-                CNC_A_m(Cnc.CurrentA - Mag);
+                Cnc.CNC_A_m(Cnc.CurrentA - Mag);
                 if (DownCamera.Draw_Snapshot)
                 {
                     DownCamera.RotateSnapshot(Cnc.CurrentA);
@@ -1684,26 +1681,26 @@ namespace LitePlacer
                     }
                 }
                 e.Handled = true;
-                JoggingBusy = false;
+                Cnc.JoggingBusy = false;
                 return;
             }
 
             // move up
             if (e.KeyCode == Keys.F11)
             {
-                JoggingBusy = true;
-                CNC_Z_m(Cnc.CurrentZ - Mag);
+                Cnc.JoggingBusy = true;
+                Cnc.CNC_Z_m(Cnc.CurrentZ - Mag);
                 e.Handled = true;
-                JoggingBusy = false;
+                Cnc.JoggingBusy = false;
                 return;
             }
 
             // move down
             if ((e.KeyCode == Keys.F12) && (Mag < 50))
             {
-                JoggingBusy = true;
-                CNC_Z_m(Cnc.CurrentZ + Mag);
-                JoggingBusy = false;
+                Cnc.JoggingBusy = true;
+                Cnc.CNC_Z_m(Cnc.CurrentZ + Mag);
+                Cnc.JoggingBusy = false;
                 e.Handled = true;
                 return;
             }
@@ -1806,13 +1803,13 @@ namespace LitePlacer
                 X = X * Setting.General_MachineSizeX;
                 double Y = Convert.ToDouble(Box.Size.Height - MouseY) / Convert.ToDouble(Box.Size.Height);
                 Y = Y * Setting.General_MachineSizeY;
-                CNC_XY_m(X, Y);
+                Cnc.CNC_XY_m(X, Y);
             }
 
             else
             {
                 BoxTo_mms(out Xmm, out Ymm, MouseX, MouseY, Box);
-                CNC_XY_m(Cnc.CurrentX + Xmm, Cnc.CurrentY - Ymm);
+                Cnc.CNC_XY_m(Cnc.CurrentX + Xmm, Cnc.CurrentY - Ymm);
             }
         }
 
@@ -1831,7 +1828,7 @@ namespace LitePlacer
             {
                 X += Cnc.CurrentX;
             }
-            CNC_XYA_m(X, Y, A);
+            Cnc.CNC_XYA_m(X, Y, A);
         }
 
         private void GoY_button_Click(object sender, EventArgs e)
@@ -1847,7 +1844,7 @@ namespace LitePlacer
             {
                 Y += Cnc.CurrentY;
             }
-            CNC_XYA_m(X, Y, A);
+            Cnc.CNC_XYA_m(X, Y, A);
         }
 
         private void GoZ_button_Click(object sender, EventArgs e)
@@ -1861,7 +1858,7 @@ namespace LitePlacer
             {
                 Z += Cnc.CurrentZ;
             }
-            CNC_Z_m(Z);
+            Cnc.CNC_Z_m(Z);
         }
 
         private void GoA_button_Click(object sender, EventArgs e)
@@ -1877,7 +1874,7 @@ namespace LitePlacer
             {
                 A += Cnc.CurrentA;
             }
-            CNC_XYA_m(X, Y, A);
+            Cnc.CNC_XYA_m(X, Y, A);
         }
 
         private void Goto_button_Click(object sender, EventArgs e)
@@ -1912,7 +1909,7 @@ namespace LitePlacer
             }
             if (Math.Abs(Z) < 0.01)  // allow raising Z and move at one go
             {
-                if (!CNC_Z_m(Z))
+                if (!Cnc.CNC_Z_m(Z))
                 {
                     return;
                 }
@@ -1923,18 +1920,18 @@ namespace LitePlacer
                 // Allow raise Z, goto and low Z:
                 if (!(Math.Abs(Z) < 0.01))
                 {
-                    if (!CNC_Z_m(0))
+                    if (!Cnc.CNC_Z_m(0))
                     {
                         return;
                     }
                 }
-                if (!CNC_XYA_m(X, Y, A))
+                if (!Cnc.CNC_XYA_m(X, Y, A))
                 {
                     return;
                 }
                 if (!(Math.Abs(Z - Cnc.CurrentZ) < 0.01))
                 {
-                    if (!CNC_Z_m(Z))
+                    if (!Cnc.CNC_Z_m(Z))
                     {
                         return;
                     }
@@ -1943,7 +1940,7 @@ namespace LitePlacer
             // move Z if needed
             if (!(Math.Abs(Z - Cnc.CurrentZ) < 0.01))
             {
-                if (!CNC_Z_m(Z))
+                if (!Cnc.CNC_Z_m(Z))
                 {
                     return;
                 }
@@ -2004,7 +2001,7 @@ namespace LitePlacer
                 DisplayText("A value error", KnownColor.Red, true);
                 return;
             }
-            CNC_RawWrite("{\"gc\":\"G28.3 X" + Xstr + " Y" + Ystr + " Z" + Zstr + " A" + Astr + "\"}");
+            Cnc.CNC_RawWrite("{\"gc\":\"G28.3 X" + Xstr + " Y" + Ystr + " Z" + Zstr + " A" + Astr + "\"}");
             Thread.Sleep(50);
         }
 
@@ -2022,7 +2019,7 @@ namespace LitePlacer
         private bool UpdateCNCBoardType_m()
         {
             DisplayText("Finding board type:");
-            if (!CNC_Write_m("{\"hp\":\"\"}"))
+            if (!Cnc.CNC_Write_m("{\"hp\":\"\"}"))
             {
                 return false;
             };
@@ -2151,14 +2148,14 @@ namespace LitePlacer
             int[] y = new int[] { 250, 50, 150, 50, 150,0 };
             for (int i = 0; i < x.Length; i++)
             {
-                if (!CNC_XY_m(x[i], y[i]))
+                if (!Cnc.CNC_XY_m(x[i], y[i]))
                 {
                     return false;
                 }
             }
             for (int i = 0; i < x.Length; i++)
             {
-                if (!CNC_XY_m(x[i], y[i]))
+                if (!Cnc.CNC_XY_m(x[i], y[i]))
                 {
                     return false;
                 }
@@ -2168,16 +2165,20 @@ namespace LitePlacer
 
         private bool Nozzle_ProbeDown_m()
         {
-            if (!HomingTimeout_m(out CNC_HomingTimeout, "Z"))
+            int homingTimeout;
+
+            if (!Cnc.HomingTimeout_m(out homingTimeout, "Z"))
             {
                 return false;
             }
 
-            DisplayText("Probing Z, timeout value: " + CNC_HomingTimeout.ToString());
+            Cnc.CNC_HomingTimeout = homingTimeout;
+
+            DisplayText("Probing Z, timeout value: " + Cnc.CNC_HomingTimeout.ToString());
 
             Cnc.ProbingMode(true);
             Cnc.Homing = true;
-            if (!CNC_Write_m("{\"gc\":\"G28.4 Z0\"}", 4000))
+            if (!Cnc.CNC_Write_m("{\"gc\":\"G28.4 Z0\"}", 4000))
             {
                 Cnc.Homing = false;
                 Cnc.ProbingMode(false);
@@ -2219,11 +2220,11 @@ namespace LitePlacer
 
             // take Nozzle up
             bool result = true;
-            result &= CNC_Z_m(0.0);
+            result &= Cnc.CNC_Z_m(0.0);
 
             // take Nozzle to camera
-            result &= CNC_XY_m(Setting.UpCam_PositionX, Setting.UpCam_PositionY);
-            result &= CNC_Z_m(Setting.General_ZtoPCB - 0.5); // Average small component height 0.5mm (?)
+            result &= Cnc.CNC_XY_m(Setting.UpCam_PositionX, Setting.UpCam_PositionY);
+            result &= Cnc.CNC_Z_m(Setting.General_ZtoPCB - 0.5); // Average small component height 0.5mm (?)
 
 
             // measure the values
@@ -2279,7 +2280,7 @@ namespace LitePlacer
             result &= Nozzle.Calibrate();  
 
             // take Nozzle up
-            result &= CNC_Z_m(0.0);
+            result &= Cnc.CNC_Z_m(0.0);
 
             UpCamera.PauseProcessing = false;
             if (!UpCamWasRunning)
@@ -2304,514 +2305,6 @@ namespace LitePlacer
             }
             UpCamera.SizeLimited = false;
             return (result);
-        }
-
-        private void CNC_Park()
-        {
-            CNC_Z_m(0);
-            CNC_XY_m(Setting.General_ParkX, Setting.General_ParkY);
-        }
-
-        private bool HomingTimeout_m(out int TimeOut, string axis)
-        {
-            string speed = "0";
-            double size;
-            TimeOut = 0;
-            switch (axis)
-            {
-                case "X":
-                    speed = xsv_maskedTextBox.Text;
-                    size = Setting.General_MachineSizeX;
-                    break;
-
-                case "Y":
-                    speed = ysv_maskedTextBox.Text;
-                    size = Setting.General_MachineSizeY;
-                    break;
-
-                case "Z":
-                    speed = zsv_maskedTextBox.Text;
-                    size = 100.0;
-                    break;
-
-                default:
-                    return false;
-            }
-
-            double MaxTime;
-            if (!double.TryParse(speed.Replace(',', '.'), out MaxTime))
-            {
-                ShowMessageBox(
-                    "Bad data in " + axis + " homing speed",
-                    "Data error",
-                    MessageBoxButtons.OK);
-                return false;
-            }
-
-            MaxTime = MaxTime / 60;  // Now in seconds/mm
-            MaxTime = (size / MaxTime) * 1.2 + 8; 
-            // in seconds for the machine size and some (1.2 to allow acceleration, + 8 for the operarations at end stop
-            TimeOut = (int)MaxTime;
-            return true;
-        }
-
-        private bool CNC_Home_m(string axis)
-        {
-            if (!HomingTimeout_m(out CNC_HomingTimeout, axis))
-            {
-                return false;
-            }
-            DisplayText("Homing axis " + axis + ", timeout value: " + CNC_HomingTimeout.ToString());
-
-            Cnc.Homing = true;
-            if (!CNC_Write_m("{\"gc\":\"G28.2 " + axis + "0\"}"))
-            {
-                ShowMessageBox(
-                    "Homing operation mechanical step failed, CNC issue",
-                    "Homing failed",
-                    MessageBoxButtons.OK);
-                Cnc.Homing = false;
-                return false;
-            }
-            Cnc.Homing = false;
-            DisplayText("Homing " + axis + " done.");
-            return true;
-        }
-
-        // =================================================================================
-        // CNC_Write_m
-        // Sends a command to CNC, doesn't return until the response is handled
-        // by the CNC class. (See _readyEvent )
-        // =================================================================================
-        private int _cnc_Timeout = 3000; // timeout for X,Y,Z,A movements; 2x ms. (3000= 6s timeout)
-        private int CNC_timeout
-        {
-            get
-            {
-                return _cnc_Timeout / 500;
-            }
-            set
-            {
-                _cnc_Timeout = value * 500;
-            }
-        }
-        public int CNC_HomingTimeout = 20;  // in seconds
-
-        private bool CNC_RawWrite(string s)
-        {
-            // This for operations that cause conflicts with event firings. Caller does waiting, if needed.
-            return Cnc.RawWrite(s);
-        }
-
-        bool CNC_BlockingWriteDone = false;
-        bool CNC_WriteOk = true;
-        private void CNC_BlockingWrite_thread(string cmd)
-        {
-            Cnc_ReadyEvent.Reset();
-            CNC_WriteOk = Cnc.Write(cmd);
-            Cnc_ReadyEvent.Wait();
-            CNC_BlockingWriteDone = true;
-        }
-
-        public bool CNC_Write_m(string s, int Timeout = 250)
-        {
-            if (Cnc.ErrorState)
-            {
-                DisplayText("### " + s + " ignored, cnc is in error state", KnownColor.DarkRed);
-                return false;
-            };
-
-            CNC_BlockingWriteDone = false;
-            Thread t = new Thread(() => CNC_BlockingWrite_thread(s));
-            t.IsBackground = true;
-            t.Start();
-            int i = 0;
-            if (Cnc.Homing)
-            {
-                Timeout = CNC_HomingTimeout * 1000 / 2;
-            };
-            while (!CNC_BlockingWriteDone)
-            {
-                Thread.Sleep(2);
-                Application.DoEvents();
-                i++;
-                if (i > Timeout)
-                {
-                    Cnc_ReadyEvent.Set();  // terminates the CNC_BlockingWrite_thread
-                    ShowMessageBox(
-                        "Debug: CNC_BlockingWrite: Timeout on command " + s,
-                        "Timeout",
-                        MessageBoxButtons.OK);
-                    CNC_BlockingWriteDone = true;
-                    JoggingBusy = false;
-                    Cnc.Error();
-                    ValidMeasurement_checkBox.Checked = false;
-                    return false;
-                }
-            }
-            if (!CNC_WriteOk)
-            {
-                ValidMeasurement_checkBox.Checked = false;
-            }
-            return (CNC_WriteOk);
-        }
-
-        private bool CNC_MoveIsSafeX_m(double X)
-        {
-            if ((X < -3.0) || (X > Setting.General_MachineSizeX))
-            {
-                ShowMessageBox(
-                    "Attempt to Move outside safe limits (X " + X.ToString("0.000", CultureInfo.InvariantCulture) + ")",
-                    "Limits corossed",
-                    MessageBoxButtons.OK);
-                return false;
-            }
-            return true;
-        }
-
-        private bool CNC_MoveIsSafeY_m(double Y)
-        {
-            if ((Y < -3.0) || (Y > Setting.General_MachineSizeY))
-            {
-                ShowMessageBox(
-                    "Attempt to Move outside safe limits (Y " + Y.ToString("0.000", CultureInfo.InvariantCulture) + ")",
-                    "Limits corssed",
-                    MessageBoxButtons.OK);
-                return false;
-            }
-            return true;
-        }
-
-        private bool _Zguard = true;
-        private void ZGuardOn()
-        {
-            _Zguard = true;
-        }
-        private void ZGuardOff()
-        {
-            _Zguard = false;
-        }
-
-        private bool CNC_NozzleIsDown_m()
-        {
-            if ((Cnc.CurrentZ > 5) && _Zguard)
-            {
-                DisplayText("Nozzle down error.");
-                ShowMessageBox(
-                   "Attempt to Move while Nozzle is down.",
-                   "Danger to Nozzle",
-                   MessageBoxButtons.OK);
-                return true;
-            }
-            return false;
-        }
-
-        private void CNC_BlockingXY_thread(double X, double Y)
-        {
-            Cnc_ReadyEvent.Reset();
-            Cnc.XY(X, Y);
-            Cnc_ReadyEvent.Wait();
-            CNC_BlockingWriteDone = true;
-        }
-
-        private void CNC_BlockingXYA_thread(double X, double Y, double A)
-        {
-            Cnc_ReadyEvent.Reset();
-            Cnc.XYA(X, Y, A);
-            Cnc_ReadyEvent.Wait();
-            CNC_BlockingWriteDone = true;
-        }
-
-        public bool CNC_XY_m(double X, double Y)
-        {
-            DisplayText("CNC_XY_m, x: " + X.ToString() + ", y: " + Y.ToString());
-            if (CNC_NozzleIsDown_m())
-            {
-                return false;
-            }
-            if (Cnc.ErrorState)
-            {
-                DisplayText("### Cnc in error state, ignored", KnownColor.DarkRed);
-                return false;
-            }
-            if (AbortPlacement)
-            {
-                if (!AbortPlacementShown)
-                {
-                    AbortPlacementShown = true;
-                    ShowMessageBox(
-                               "Operation aborted",
-                               "Operation aborted",
-                               MessageBoxButtons.OK);
-                }
-                AbortPlacement = false;
-                if ( Math.Abs(Cnc.CurrentZ) > 0.01)
-                {
-                    CNC_Z_m(0.0);
-                }
-                return false;
-            }
-
-            if (!CNC_MoveIsSafeX_m(X))
-            {
-                return false;
-            }
-
-            if (!CNC_MoveIsSafeY_m(Y))
-            {
-                return false;
-            }
-
-            if (!Cnc.Connected)
-            {
-                ShowMessageBox(
-                    "CNC_XY: Cnc not connected",
-                    "Cnc not connected",
-                    MessageBoxButtons.OK);
-                return false;
-            }
-            CNC_BlockingWriteDone = false;
-            Thread t = new Thread(() => CNC_BlockingXY_thread(X, Y));
-            t.IsBackground = true;
-            t.Start();
-            int i = 0;
-
-            while (!CNC_BlockingWriteDone)
-            {
-                Thread.Sleep(2);
-                Application.DoEvents();
-                i++;
-                if (i > _cnc_Timeout)
-                {
-                    Cnc_ReadyEvent.Set();   // causes CNC_Blocking_thread to exit
-                }
-            }
-
-            CNC_BlockingWriteDone = true;
-            if ((i > _cnc_Timeout) && Cnc.Connected)
-            {
-                ShowMessageBox(
-                           "CNC_XY: Timeout / Cnc connection cut!",
-                           "Timeout",
-                           MessageBoxButtons.OK);
-                CncError();
-            }
-            DisplayText("CNC_XY_m ok");
-            return (!Cnc.ErrorState);
-        }
-
-        public bool CNC_XYA_m(double X, double Y, double A)
-        {
-            DisplayText("CNC_XYA_m, x: " + X.ToString() + ", y: " + Y.ToString() + ", a: " + A.ToString());
-            if (CNC_NozzleIsDown_m())
-            {
-                return false;
-            }
-            if (Cnc.ErrorState)
-            {
-                DisplayText("### Cnc in error state, ignored", KnownColor.DarkRed);
-                return false;
-            }
-            if (AbortPlacement)
-            {
-                if (!AbortPlacementShown)
-                {
-                    AbortPlacementShown = true;
-                    ShowMessageBox(
-                               "Operation aborted",
-                               "Operation aborted",
-                               MessageBoxButtons.OK);
-                }
-                AbortPlacement = false;
-                if (Math.Abs(Cnc.CurrentZ) > 0.01)
-                {
-                    CNC_Z_m(0.0);
-                }
-                return false;
-            }
-
-            if (!CNC_MoveIsSafeX_m(X))
-            {
-                return false;
-            }
-
-            if (!CNC_MoveIsSafeY_m(Y))
-            {
-                return false;
-            }
-
-            if (!Cnc.Connected)
-            {
-                ShowMessageBox(
-                    "CNC_XYA: Cnc not connected",
-                    "Cnc not connected",
-                    MessageBoxButtons.OK);
-                return false;
-            }
-
-            CNC_BlockingWriteDone = false;
-            Thread t = new Thread(() => CNC_BlockingXYA_thread(X, Y, A));
-            t.IsBackground = true;
-            t.Start();
-            int i = 0;
-
-            while (!CNC_BlockingWriteDone)
-            {
-                Thread.Sleep(2);
-                Application.DoEvents();
-                i++;
-                if (i > _cnc_Timeout)
-                {
-                    Cnc_ReadyEvent.Set();   // causes CNC_Blocking_thread to exit
-                }
-            }
-
-            CNC_BlockingWriteDone = true;
-            if ((i > _cnc_Timeout) && Cnc.Connected)
-            {
-                ShowMessageBox(
-                           "CNC_XYA: Timeout / Cnc connection cut!",
-                           "Timeout",
-                           MessageBoxButtons.OK);
-                CncError();
-            }
-            return (Cnc.Connected);
-        }
-
-
-        private void CNC_BlockingZ_thread(double Z)
-        {
-            Cnc_ReadyEvent.Reset();
-            Cnc.Z(Z);
-            Cnc_ReadyEvent.Wait();
-            CNC_BlockingWriteDone = true;
-        }
-
-        public bool CNC_Z_m(double Z)
-        {
-            if (AbortPlacement)
-            {
-                if (!AbortPlacementShown)
-                {
-                    AbortPlacementShown = true;
-                    ShowMessageBox(
-                               "Operation aborted",
-                               "Operation aborted",
-                               MessageBoxButtons.OK);
-                }
-                AbortPlacement = false;
-                if (Math.Abs(Cnc.CurrentZ) > 0.01)
-                {
-                    CNC_Z_m(0.0);
-                }
-                return false;
-            }
-            if (!Cnc.Connected)
-            {
-                ShowMessageBox(
-                    "CNC_Z: Cnc not connected",
-                    "Cnc not connected",
-                    MessageBoxButtons.OK);
-                return false;
-            }
-
-            if (Cnc.ErrorState)
-            {
-                ShowMessageBox(
-                    "CNC_Z: Cnc in error state",
-                    "Cncin error state",
-                    MessageBoxButtons.OK);
-                return false;
-            }
-
-            if (Z > (Setting.General_ZtoPCB + Setting.General_BelowPCB_Allowance))
-            {
-                DialogResult dialogResult = ShowMessageBox(
-                    "The operation seems to take the Nozzle below safe level. Continue?",
-                    "Z below table", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.No)
-                {
-                    return false;
-                };
-
-            }
-
-            CNC_BlockingWriteDone = false;
-            Thread t = new Thread(() => CNC_BlockingZ_thread(Z));
-            t.IsBackground = true;
-            t.Start();
-            int i = 0;
-            while (!CNC_BlockingWriteDone)
-            {
-                Thread.Sleep(2);
-                Application.DoEvents();
-                i++;
-                if (i > _cnc_Timeout)
-                {
-                    Cnc_ReadyEvent.Set();   // causes CNC_Blocking_thread to exit
-                }
-            }
-            if ((i > _cnc_Timeout) || !Cnc.Connected)
-            {
-                ShowMessageBox(
-                           "CNC_Z: Timeout / Cnc connection cut!",
-                           "Timeout",
-                           MessageBoxButtons.OK);
-                CncError();
-            }
-            return (Cnc.Connected);
-        }
-
-        private void CNC_BlockingA_thread(double A)
-        {
-            Cnc_ReadyEvent.Reset();
-            Cnc.A(A);
-            Cnc_ReadyEvent.Wait();
-            CNC_BlockingWriteDone = true;
-        }
-
-        public bool CNC_A_m(double A)
-        {
-            DisplayText("CNC_A_m, a: " + A.ToString());
-            if (Cnc.ErrorState)
-            {
-                DisplayText("### Cnc in error state, ignored", KnownColor.DarkRed);
-                return false;
-            }
-            if (!Cnc.Connected)
-            {
-                ShowMessageBox(
-                    "CNC_A: Cnc not connected",
-                    "Cnc not connected",
-                    MessageBoxButtons.OK);
-                return false;
-            }
-            CNC_BlockingWriteDone = false;
-            Thread t = new Thread(() => CNC_BlockingA_thread(A));
-            t.IsBackground = true;
-            t.Start();
-            int i = 0;
-            while (!CNC_BlockingWriteDone)
-            {
-                Thread.Sleep(2);
-                Application.DoEvents();
-                i++;
-                if (i > _cnc_Timeout)
-                {
-                    Cnc_ReadyEvent.Set();   // causes CNC_Blocking_thread to exit
-                }
-            }
-
-            CNC_BlockingWriteDone = true;
-            if ((i > _cnc_Timeout) && Cnc.Connected)
-            {
-                ShowMessageBox(
-                           "CNC_A: Timeout / Cnc connection cut!",
-                           "Timeout",
-                           MessageBoxButtons.OK);
-                CncError();
-            }
-            return (Cnc.Connected);
         }
 
 
@@ -2895,7 +2388,7 @@ namespace LitePlacer
                 // If we are further than move tolerance, go there
                 if ((Math.Abs(X) > MoveTolerance) || (Math.Abs(Y) > MoveTolerance))
                 {
-                    if (!CNC_XY_m(Cnc.CurrentX + X, Cnc.CurrentY + Y))
+                    if (!Cnc.CNC_XY_m(Cnc.CurrentX + X, Cnc.CurrentY + Y))
                     {
                         return false;
                     }
@@ -2963,7 +2456,7 @@ namespace LitePlacer
             X = Xlist[3];
             Y = Ylist[3];
             // CNC_RawWrite("G28.3 X" + X.ToString("0.000") + " Y" + Y.ToString("0.000"));
-            CNC_RawWrite("{\"gc\":\"G28.3 X" + X.ToString("0.000") + " Y" + Y.ToString("0.000") + "\"}");
+            Cnc.CNC_RawWrite("{\"gc\":\"G28.3 X" + X.ToString("0.000") + " Y" + Y.ToString("0.000") + "\"}");
             Thread.Sleep(50);
             Cnc.CurrentX = 0.0;
             Cnc.CurrentY = 0.0;
@@ -2976,43 +2469,43 @@ namespace LitePlacer
         private bool MechanicalHoming_m()
         {
             Cnc.ProbingMode(false);
-            if (!CNC_Home_m("Z"))
+            if (!Cnc.CNC_Home_m("Z"))
             {
                 return false;
             };
             // DisplayText("move Z");
-            if (!CNC_Z_m(Setting.General_ShadeGuard_mm))		// make room for shade
+            if (!Cnc.CNC_Z_m(Setting.General_ShadeGuard_mm))		// make room for shade
             {
                 return false;
             };
-            if (!CNC_Home_m("Y"))
+            if (!Cnc.CNC_Home_m("Y"))
             {
                 return false;
             };
-            if (!CNC_Home_m("X"))
+            if (!Cnc.CNC_Home_m("X"))
             {
                 return false;
             };
             // DisplayText("move A");
-            if (!CNC_A_m(0))
+            if (!Cnc.CNC_A_m(0))
             {
                 return false;
             };
             if (Setting.General_ShadeGuard_mm > 0.0)
             {
-                ZGuardOff();
-                if (!CNC_XY_m(10, 10))
+                Cnc.ZGuardOff();
+                if (!Cnc.CNC_XY_m(10, 10))
                 {
-                    ZGuardOn();
+                    Cnc.ZGuardOn();
                     return false;
                 };
                 DisplayText("Z back up Z");  // Z back up
-                if (!CNC_Z_m(0))
+                if (!Cnc.CNC_Z_m(0))
                 {
-                    ZGuardOn();
+                    Cnc.ZGuardOn();
                     return false;
                 };
-                ZGuardOn();
+                Cnc.ZGuardOn();
             };
 
             return true;
@@ -3506,7 +2999,7 @@ namespace LitePlacer
         private void tabPageSetupCameras_End()
         {
             DownCamera.DrawGrid = false;
-            ZGuardOn();
+            Cnc.ZGuardOn();
         }
 
         // =================================================================================
@@ -4041,7 +3534,7 @@ namespace LitePlacer
         // =================================================================================
         private void GotoPCB0_button_Click(object sender, EventArgs e)
         {
-            CNC_XY_m(Setting.General_JigOffsetX, Setting.General_JigOffsetY);
+            Cnc.CNC_XY_m(Setting.General_JigOffsetX, Setting.General_JigOffsetY);
         }
 
         // =================================================================================
@@ -4108,7 +3601,7 @@ namespace LitePlacer
         // =================================================================================
         private void GotoPickupCenter_button_Click(object sender, EventArgs e)
         {
-            CNC_XY_m(Setting.General_PickupCenterX, Setting.General_PickupCenterY);
+            Cnc.CNC_XY_m(Setting.General_PickupCenterX, Setting.General_PickupCenterY);
         }
 
         // =================================================================================
@@ -4131,14 +3624,14 @@ namespace LitePlacer
 
         private void ZDown_button_Click(object sender, EventArgs e)
         {
-            ZGuardOff();
-            CNC_Z_m(Setting.General_ZtoPCB);
+            Cnc.ZGuardOff();
+            Cnc.CNC_Z_m(Setting.General_ZtoPCB);
         }
 
         private void ZUp_button_Click(object sender, EventArgs e)
         {
-            ZGuardOn();
-            CNC_Z_m(0);
+            Cnc.ZGuardOn();
+            Cnc.CNC_Z_m(0);
         }
 
         private void NozzleOffsetX_textBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -4187,7 +3680,7 @@ namespace LitePlacer
         private void Offset2Method_button_Click(object sender, EventArgs e)
         {
             // Nozzle calibration button
-            ZGuardOff();
+            Cnc.ZGuardOff();
             SelectCamera(DownCamera);
             SetCurrentCameraParameters();
             switch (SetNozzleOffset_stage)
@@ -4195,7 +3688,7 @@ namespace LitePlacer
                 case 0:
                     SetNozzleOffset_stage = 1;
                     Offset2Method_button.Text = "Next";
-                    CNC_A_m(0.0);
+                    Cnc.CNC_A_m(0.0);
                     NozzleOffset_label.Visible = true;
                     NozzleOffset_label.Text = "Jog Nozzle to a point on a PCB, then click \"Next\"";
                     break;
@@ -4204,8 +3697,8 @@ namespace LitePlacer
                     SetNozzleOffset_stage = 2;
                     NozzleOffsetMarkX = Cnc.CurrentX;
                     NozzleOffsetMarkY = Cnc.CurrentY;
-                    CNC_Z_m(0);
-                    CNC_XY_m(Cnc.CurrentX - 75.0, Cnc.CurrentY - 29.0);
+                    Cnc.CNC_Z_m(0);
+                    Cnc.CNC_XY_m(Cnc.CurrentX - 75.0, Cnc.CurrentY - 29.0);
                     DownCamera.DrawCross = true;
                     NozzleOffset_label.Text = "Jog camera above the same point, \n\rthen click \"Next\"";
                     break;
@@ -4225,8 +3718,8 @@ namespace LitePlacer
                     SelectCamera(UpCamera);
                     // SetNozzleMeasurement();
                     Offset2Method_button.Text = "Start";
-                    CNC_Z_m(0.0);
-                    ZGuardOn();
+                    Cnc.CNC_Z_m(0.0);
+                    Cnc.ZGuardOn();
                     break;
             }
         }
@@ -4291,7 +3784,7 @@ namespace LitePlacer
 
         private void GotoUpCamPosition_button_Click(object sender, EventArgs e)
         {
-            CNC_XY_m(Setting.UpCam_PositionX, Setting.UpCam_PositionY);
+            Cnc.CNC_XY_m(Setting.UpCam_PositionX, Setting.UpCam_PositionY);
         }
 
         #endregion Up/Down ICamera setup pages functions
@@ -4358,7 +3851,7 @@ namespace LitePlacer
 
         private void BasicSetupTab_End()
         {
-            ZGuardOn();
+            Cnc.ZGuardOn();
         }
 
         private void buttonRefreshPortList_Click(object sender, EventArgs e)
@@ -4385,11 +3878,6 @@ namespace LitePlacer
             }
         }
 
-        public void CncError()
-        {
-            Cnc.ErrorState = true;
-            UpdateCncConnectionStatus();
-        }
 
         public void UpdateCncConnectionStatus()
         {
@@ -4453,7 +3941,7 @@ namespace LitePlacer
                     }
                     else
                     {
-                        CncError();
+                        Cnc.CncError();
                     }
                 }
             }
@@ -4573,7 +4061,7 @@ namespace LitePlacer
                 {
                     Name = Name.Substring(5);
                 }
-                if (!CNC_Write_m("{\"" + Name + "\":\"\"}"))
+                if (!Cnc.CNC_Write_m("{\"" + Name + "\":\"\"}"))
                 {
                     return false;
                 };
@@ -4598,12 +4086,12 @@ namespace LitePlacer
 
             if (Cnc.Controlboard == ControlBoardType.TinyG)
             {
-                CNC_RawWrite("\x11");  // Xon
+                Cnc.CNC_RawWrite("\x11");  // Xon
                 Thread.Sleep(50);   // TinyG wakeup
 
             }
             // initial position
-            if (!CNC_Write_m("{sr:n}"))
+            if (!Cnc.CNC_Write_m("{sr:n}"))
             {
                 return false;
             }
@@ -4637,7 +4125,7 @@ namespace LitePlacer
             //Thread.Sleep(100);
             //Vacuum_checkBox.Checked = true;
             //Cnc.IgnoreError = false;
-            CNC_Write_m("{\"me\":\"\"}");  // motor power on
+            Cnc.CNC_Write_m("{\"me\":\"\"}");  // motor power on
             MotorPower_checkBox.Checked = true;
             return true;
         }
@@ -5167,7 +4655,7 @@ namespace LitePlacer
             {
 
 #if (TINYG_SHORTUNITS)
-                CNC_Write_m("{\"xjm\":" + xjm_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"xjm\":" + xjm_maskedTextBox.Text + "}");
 #else
                 CNC_Write_m("{\"xjm\":" + xjm_maskedTextBox.Text + "000000}");
 #endif
@@ -5183,7 +4671,7 @@ namespace LitePlacer
             {
 
 #if (TINYG_SHORTUNITS)
-                CNC_Write_m("{\"yjm\":" + yjm_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"yjm\":" + yjm_maskedTextBox.Text + "}");
 #else
                 CNC_Write_m("{\"yjm\":" + yjm_maskedTextBox.Text + "000000}");
 #endif
@@ -5199,7 +4687,7 @@ namespace LitePlacer
             {
 
 #if (TINYG_SHORTUNITS)
-                CNC_Write_m("{\"zjm\":" + zjm_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"zjm\":" + zjm_maskedTextBox.Text + "}");
 #else
                 CNC_Write_m("{\"zjm\":" + zjm_maskedTextBox.Text + "000000}");
 #endif
@@ -5215,7 +4703,7 @@ namespace LitePlacer
             {
 
 #if (TINYG_SHORTUNITS)
-                CNC_Write_m("{\"ajm\":" + ajm_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"ajm\":" + ajm_maskedTextBox.Text + "}");
 #else
                 CNC_Write_m("{\"ajm\":" + ajm_maskedTextBox.Text + "000000}");
 #endif
@@ -5276,7 +4764,7 @@ namespace LitePlacer
             {
 
 #if (TINYG_SHORTUNITS)
-                CNC_Write_m("{\"xjh\":" + xjh_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"xjh\":" + xjh_maskedTextBox.Text + "}");
 #else
                 CNC_Write_m("{\"xjh\":" + xjh_maskedTextBox.Text + "000000}");
 #endif
@@ -5291,7 +4779,7 @@ namespace LitePlacer
             if (e.KeyChar == '\r')
             {
 #if (TINYG_SHORTUNITS)
-                CNC_Write_m("{\"yjh\":" + yjh_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"yjh\":" + yjh_maskedTextBox.Text + "}");
 #else
                 CNC_Write_m("{\"yjh\":" + yjh_maskedTextBox.Text + "000000}");
 #endif
@@ -5306,7 +4794,7 @@ namespace LitePlacer
             if (e.KeyChar == '\r')
             {
 #if (TINYG_SHORTUNITS)
-                CNC_Write_m("{\"zjh\":" + zjh_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"zjh\":" + zjh_maskedTextBox.Text + "}");
 #else
                 CNC_Write_m("{\"zjh\":" + zjh_maskedTextBox.Text + "000000}");
 #endif
@@ -5331,6 +4819,7 @@ namespace LitePlacer
                 value = value.Substring(0, ind);
             };
             double val = Convert.ToDouble(value);
+            Cnc.HomingSpeedX = val;
             xsv_maskedTextBox.Text = val.ToString();
         }
 
@@ -5344,6 +4833,7 @@ namespace LitePlacer
                 value = value.Substring(0, ind);
             };
             double val = Convert.ToDouble(value);
+            Cnc.HomingSpeedY = val;
             ysv_maskedTextBox.Text = val.ToString();
         }
 
@@ -5357,6 +4847,7 @@ namespace LitePlacer
                 value = value.Substring(0, ind);
             };
             double val = Convert.ToDouble(value);
+            Cnc.HomingSpeedY = val;
             zsv_maskedTextBox.Text = val.ToString();
         }
 
@@ -5368,7 +4859,7 @@ namespace LitePlacer
             xsv_maskedTextBox.ForeColor = Color.Red;
             if (e.KeyChar == '\r')
             {
-                CNC_Write_m("{\"xsv\":" + xsv_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"xsv\":" + xsv_maskedTextBox.Text + "}");
                 Thread.Sleep(50);
                 xsv_maskedTextBox.ForeColor = Color.Black;
             }
@@ -5379,7 +4870,7 @@ namespace LitePlacer
             ysv_maskedTextBox.ForeColor = Color.Red;
             if (e.KeyChar == '\r')
             {
-                CNC_Write_m("{\"ysv\":" + ysv_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"ysv\":" + ysv_maskedTextBox.Text + "}");
                 Thread.Sleep(50);
                 ysv_maskedTextBox.ForeColor = Color.Black;
             }
@@ -5390,7 +4881,7 @@ namespace LitePlacer
             zsv_maskedTextBox.ForeColor = Color.Red;
             if (e.KeyChar == '\r')
             {
-                CNC_Write_m("{\"zsv\":" + zsv_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"zsv\":" + zsv_maskedTextBox.Text + "}");
                 Thread.Sleep(50);
                 zsv_maskedTextBox.ForeColor = Color.Black;
             }
@@ -5479,7 +4970,7 @@ namespace LitePlacer
             int i = 0;
             if (Xlim_checkBox.Checked) i = 2;
             if (Xhome_checkBox.Checked) i++;
-            CNC_Write_m("{\"xsn\":" + i.ToString() + "}");
+            Cnc.CNC_Write_m("{\"xsn\":" + i.ToString() + "}");
             Thread.Sleep(50);
         }
 
@@ -5488,7 +4979,7 @@ namespace LitePlacer
             int i = 0;
             if (Xlim_checkBox.Checked) i = 2;
             if (Xhome_checkBox.Checked) i++;
-            CNC_Write_m("{\"xsn\":" + i.ToString() + "}");
+            Cnc.CNC_Write_m("{\"xsn\":" + i.ToString() + "}");
             Thread.Sleep(50);
         }
 
@@ -5497,7 +4988,7 @@ namespace LitePlacer
             int i = 0;
             if (Ylim_checkBox.Checked) i = 2;
             if (Yhome_checkBox.Checked) i++;
-            CNC_Write_m("{\"ysn\":" + i.ToString() + "}");
+            Cnc.CNC_Write_m("{\"ysn\":" + i.ToString() + "}");
             Thread.Sleep(50);
         }
 
@@ -5506,7 +4997,7 @@ namespace LitePlacer
             int i = 0;
             if (Ylim_checkBox.Checked) i = 2;
             if (Yhome_checkBox.Checked) i++;
-            CNC_Write_m("{\"ysn\":" + i.ToString() + "}");
+            Cnc.CNC_Write_m("{\"ysn\":" + i.ToString() + "}");
             Thread.Sleep(50);
         }
 
@@ -5515,7 +5006,7 @@ namespace LitePlacer
             int i = 0;
             if (Zlim_checkBox.Checked) i = 2;
             if (Zhome_checkBox.Checked) i++;
-            CNC_Write_m("{\"zsn\":" + i.ToString() + "}");
+            Cnc.CNC_Write_m("{\"zsn\":" + i.ToString() + "}");
             Thread.Sleep(50);
         }
 
@@ -5524,7 +5015,7 @@ namespace LitePlacer
             int i = 0;
             if (Zlim_checkBox.Checked) i = 2;
             if (Zhome_checkBox.Checked) i++;
-            CNC_Write_m("{\"zsn\":" + i.ToString() + "}");
+            Cnc.CNC_Write_m("{\"zsn\":" + i.ToString() + "}");
             Thread.Sleep(50);
         }
 
@@ -5577,12 +5068,12 @@ namespace LitePlacer
         {
             if (Xmax_checkBox.Checked)
             {
-                CNC_Write_m("{\"xsx\":2}");
+                Cnc.CNC_Write_m("{\"xsx\":2}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"xsx\":0}");
+                Cnc.CNC_Write_m("{\"xsx\":0}");
                 Thread.Sleep(50);
             }
         }
@@ -5591,12 +5082,12 @@ namespace LitePlacer
         {
             if (Ymax_checkBox.Checked)
             {
-                CNC_Write_m("{\"ysx\":2}");
+                Cnc.CNC_Write_m("{\"ysx\":2}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"ysx\":0}");
+                Cnc.CNC_Write_m("{\"ysx\":0}");
                 Thread.Sleep(50);
             }
         }
@@ -5605,12 +5096,12 @@ namespace LitePlacer
         {
             if (Zmax_checkBox.Checked)
             {
-                CNC_Write_m("{\"zsx\":2}");
+                Cnc.CNC_Write_m("{\"zsx\":2}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"zsx\":0}");
+                Cnc.CNC_Write_m("{\"zsx\":0}");
                 Thread.Sleep(50);
             }
         }
@@ -5685,9 +5176,9 @@ namespace LitePlacer
             xvm_maskedTextBox.ForeColor = Color.Red;
             if (e.KeyChar == '\r')
             {
-                CNC_Write_m("{\"xvm\":" + xvm_maskedTextBox.Text + "000}");
+                Cnc.CNC_Write_m("{\"xvm\":" + xvm_maskedTextBox.Text + "000}");
                 Thread.Sleep(50);
-                CNC_Write_m("{\"xfr\":" + xvm_maskedTextBox.Text + "000}");
+                Cnc.CNC_Write_m("{\"xfr\":" + xvm_maskedTextBox.Text + "000}");
                 Thread.Sleep(50);
                 xvm_maskedTextBox.ForeColor = Color.Black;
             }
@@ -5698,9 +5189,9 @@ namespace LitePlacer
             yvm_maskedTextBox.ForeColor = Color.Red;
             if (e.KeyChar == '\r')
             {
-                CNC_Write_m("{\"yvm\":" + yvm_maskedTextBox.Text + "000}");
+                Cnc.CNC_Write_m("{\"yvm\":" + yvm_maskedTextBox.Text + "000}");
                 Thread.Sleep(50);
-                CNC_Write_m("{\"yfr\":" + yvm_maskedTextBox.Text + "000}");
+                Cnc.CNC_Write_m("{\"yfr\":" + yvm_maskedTextBox.Text + "000}");
                 Thread.Sleep(50);
                 yvm_maskedTextBox.ForeColor = Color.Black;
             }
@@ -5711,9 +5202,9 @@ namespace LitePlacer
             zvm_maskedTextBox.ForeColor = Color.Red;
             if (e.KeyChar == '\r')
             {
-                CNC_Write_m("{\"zvm\":" + zvm_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"zvm\":" + zvm_maskedTextBox.Text + "}");
                 Thread.Sleep(50);
-                CNC_Write_m("{\"zfr\":" + zvm_maskedTextBox.Text + "}");
+                Cnc.CNC_Write_m("{\"zfr\":" + zvm_maskedTextBox.Text + "}");
                 Thread.Sleep(50);
                 zvm_maskedTextBox.ForeColor = Color.Black;
                 int peek = Convert.ToInt32(zvm_maskedTextBox.Text);
@@ -5726,9 +5217,9 @@ namespace LitePlacer
             avm_maskedTextBox.ForeColor = Color.Red;
             if (e.KeyChar == '\r')
             {
-                CNC_Write_m("{\"avm\":" + avm_maskedTextBox.Text + "000}");
+                Cnc.CNC_Write_m("{\"avm\":" + avm_maskedTextBox.Text + "000}");
                 Thread.Sleep(50);
-                CNC_Write_m("{\"afr\":" + avm_maskedTextBox.Text + "000}");
+                Cnc.CNC_Write_m("{\"afr\":" + avm_maskedTextBox.Text + "000}");
                 Thread.Sleep(50);
                 avm_maskedTextBox.ForeColor = Color.Black;
                 int peek = Convert.ToInt32(avm_maskedTextBox.Text);
@@ -5790,7 +5281,7 @@ namespace LitePlacer
                 }
                 if (GoodValues.Contains(box.Text))
                 {
-                    CNC_Write_m("{\"" + BoxNo.ToString() + "mi\":" + box.Text + "}");
+                    Cnc.CNC_Write_m("{\"" + BoxNo.ToString() + "mi\":" + box.Text + "}");
                     Thread.Sleep(50);
                     box.ForeColor = Color.Black;
                 }
@@ -5854,7 +5345,7 @@ namespace LitePlacer
             {
                 if (double.TryParse(tr1_textBox.Text.Replace(',', '.'), out val))
                 {
-                    CNC_Write_m("{\"1tr\":" + tr1_textBox.Text + "}");
+                    Cnc.CNC_Write_m("{\"1tr\":" + tr1_textBox.Text + "}");
                     Thread.Sleep(50);
                     tr1_textBox.ForeColor = Color.Black;
                 }
@@ -5869,7 +5360,7 @@ namespace LitePlacer
             {
                 if (double.TryParse(tr2_textBox.Text.Replace(',', '.'), out val))
                 {
-                    CNC_Write_m("{\"2tr\":" + tr2_textBox.Text + "}");
+                    Cnc.CNC_Write_m("{\"2tr\":" + tr2_textBox.Text + "}");
                     Thread.Sleep(50);
                     tr2_textBox.ForeColor = Color.Black;
                 }
@@ -5884,7 +5375,7 @@ namespace LitePlacer
             {
                 if (double.TryParse(tr3_textBox.Text.Replace(',', '.'), out val))
                 {
-                    CNC_Write_m("{\"3tr\":" + tr3_textBox.Text + "}");
+                    Cnc.CNC_Write_m("{\"3tr\":" + tr3_textBox.Text + "}");
                     Thread.Sleep(50);
                     tr3_textBox.ForeColor = Color.Black;
                 }
@@ -5899,7 +5390,7 @@ namespace LitePlacer
             {
                 if (double.TryParse(tr1_textBox.Text.Replace(',', '.'), out val))
                 {
-                    CNC_Write_m("{\"4tr\":" + tr4_textBox.Text + "}");
+                    Cnc.CNC_Write_m("{\"4tr\":" + tr4_textBox.Text + "}");
                     Thread.Sleep(50);
                     tr4_textBox.ForeColor = Color.Black;
                 }
@@ -5975,12 +5466,12 @@ namespace LitePlacer
         {
             if (m1deg09_radioButton.Checked)
             {
-                CNC_Write_m("{\"1sa\":0.9}");
+                Cnc.CNC_Write_m("{\"1sa\":0.9}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"1sa\":1.8}");
+                Cnc.CNC_Write_m("{\"1sa\":1.8}");
                 Thread.Sleep(50);
             }
         }
@@ -5989,12 +5480,12 @@ namespace LitePlacer
         {
             if (m1deg09_radioButton.Checked)
             {
-                CNC_Write_m("{\"1sa\":0.9}");
+                Cnc.CNC_Write_m("{\"1sa\":0.9}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"1sa\":1.8}");
+                Cnc.CNC_Write_m("{\"1sa\":1.8}");
                 Thread.Sleep(50);
             }
         }
@@ -6004,12 +5495,12 @@ namespace LitePlacer
         {
             if (m2deg09_radioButton.Checked)
             {
-                CNC_Write_m("{\"2sa\":0.9}");
+                Cnc.CNC_Write_m("{\"2sa\":0.9}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"2sa\":1.8}");
+                Cnc.CNC_Write_m("{\"2sa\":1.8}");
                 Thread.Sleep(50);
             }
         }
@@ -6018,12 +5509,12 @@ namespace LitePlacer
         {
             if (m2deg09_radioButton.Checked)
             {
-                CNC_Write_m("{\"2sa\":0.9}");
+                Cnc.CNC_Write_m("{\"2sa\":0.9}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"2sa\":1.8}");
+                Cnc.CNC_Write_m("{\"2sa\":1.8}");
                 Thread.Sleep(50);
             }
         }
@@ -6032,12 +5523,12 @@ namespace LitePlacer
         {
             if (m3deg09_radioButton.Checked)
             {
-                CNC_Write_m("{\"3sa\":0.9}");
+                Cnc.CNC_Write_m("{\"3sa\":0.9}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"3sa\":1.8}");
+                Cnc.CNC_Write_m("{\"3sa\":1.8}");
                 Thread.Sleep(50);
             }
         }
@@ -6046,12 +5537,12 @@ namespace LitePlacer
         {
             if (m3deg09_radioButton.Checked)
             {
-                CNC_Write_m("{\"3sa\":0.9}");
+                Cnc.CNC_Write_m("{\"3sa\":0.9}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"3sa\":1.8}");
+                Cnc.CNC_Write_m("{\"3sa\":1.8}");
                 Thread.Sleep(50);
             }
         }
@@ -6060,12 +5551,12 @@ namespace LitePlacer
         {
             if (m4deg09_radioButton.Checked)
             {
-                CNC_Write_m("{\"4sa\":0.9}");
+                Cnc.CNC_Write_m("{\"4sa\":0.9}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"4sa\":1.8}");
+                Cnc.CNC_Write_m("{\"4sa\":1.8}");
                 Thread.Sleep(50);
             }
         }
@@ -6074,12 +5565,12 @@ namespace LitePlacer
         {
             if (m4deg09_radioButton.Checked)
             {
-                CNC_Write_m("{\"4sa\":0.9}");
+                Cnc.CNC_Write_m("{\"4sa\":0.9}");
                 Thread.Sleep(50);
             }
             else
             {
-                CNC_Write_m("{\"4sa\":1.8}");
+                Cnc.CNC_Write_m("{\"4sa\":1.8}");
                 Thread.Sleep(50);
             }
         }
@@ -6225,7 +5716,7 @@ namespace LitePlacer
 
         private void Park_button_Click(object sender, EventArgs e)
         {
-            CNC_Park();
+            Cnc.CNC_Park();
         }
 
         #endregion
@@ -6249,11 +5740,11 @@ namespace LitePlacer
 
         private void TestX_button_Click(object sender, EventArgs e)
         {
-            if (!CNC_XY_m(0.0, Cnc.CurrentY))
+            if (!Cnc.CNC_XY_m(0.0, Cnc.CurrentY))
                 return;
-            if (!CNC_XY_m(Setting.General_MachineSizeX, Cnc.CurrentY))
+            if (!Cnc.CNC_XY_m(Setting.General_MachineSizeX, Cnc.CurrentY))
                 return;
-            if (!CNC_XY_m(0.0, Cnc.CurrentY))
+            if (!Cnc.CNC_XY_m(0.0, Cnc.CurrentY))
                 return;
             //Thread t = new Thread(() => TestX_thread());
             //t.IsBackground = true;
@@ -6262,11 +5753,11 @@ namespace LitePlacer
 
         private void TestY_thread()
         {
-            if (!CNC_XY_m(Cnc.CurrentX, 0))
+            if (!Cnc.CNC_XY_m(Cnc.CurrentX, 0))
                 return;
-            if (!CNC_XY_m(Cnc.CurrentX, Setting.General_MachineSizeY))
+            if (!Cnc.CNC_XY_m(Cnc.CurrentX, Setting.General_MachineSizeY))
                 return;
-            if (!CNC_XY_m(Cnc.CurrentX, 0))
+            if (!Cnc.CNC_XY_m(Cnc.CurrentX, 0))
                 return;
         }
 
@@ -6279,11 +5770,11 @@ namespace LitePlacer
 
         private void TestXYA_thread()
         {
-            if (!CNC_XYA_m(0, 0, 0))
+            if (!Cnc.CNC_XYA_m(0, 0, 0))
                 return;
-            if (!CNC_XYA_m(Setting.General_MachineSizeX, Setting.General_MachineSizeY, 360.0))
+            if (!Cnc.CNC_XYA_m(Setting.General_MachineSizeX, Setting.General_MachineSizeY, 360.0))
                 return;
-            if (!CNC_XYA_m(0, 0, 0))
+            if (!Cnc.CNC_XYA_m(0, 0, 0))
                 return;
         }
 
@@ -6296,11 +5787,11 @@ namespace LitePlacer
 
         private void TestXY_thread()
         {
-            if (!CNC_XY_m(0, 0))
+            if (!Cnc.CNC_XY_m(0, 0))
                 return;
-            if (!CNC_XY_m(Setting.General_MachineSizeX, Setting.General_MachineSizeY))
+            if (!Cnc.CNC_XY_m(Setting.General_MachineSizeX, Setting.General_MachineSizeY))
                 return;
-            if (!CNC_XY_m(0, 0))
+            if (!Cnc.CNC_XY_m(0, 0))
                 return;
         }
 
@@ -6313,11 +5804,11 @@ namespace LitePlacer
 
         private void TestYX_thread()
         {
-            if (!CNC_XY_m(Setting.General_MachineSizeX, 0))
+            if (!Cnc.CNC_XY_m(Setting.General_MachineSizeX, 0))
                 return;
-            if (!CNC_XY_m(0, Setting.General_MachineSizeY))
+            if (!Cnc.CNC_XY_m(0, Setting.General_MachineSizeY))
                 return;
-            if (!CNC_XY_m(Setting.General_MachineSizeX, 0))
+            if (!Cnc.CNC_XY_m(Setting.General_MachineSizeX, 0))
                 return;
         }
 
@@ -6330,34 +5821,34 @@ namespace LitePlacer
 
         private void HomeX_button_Click(object sender, EventArgs e)
         {
-            CNC_Home_m("X");
+            Cnc.CNC_Home_m("X");
         }
 
         private void HomeXY_button_Click(object sender, EventArgs e)
         {
-            if (!CNC_Home_m("X"))
+            if (!Cnc.CNC_Home_m("X"))
                 return;
-            CNC_Home_m("Y");
+            Cnc.CNC_Home_m("Y");
         }
 
         private void HomeY_button_Click(object sender, EventArgs e)
         {
-            CNC_Home_m("Y");
+            Cnc.CNC_Home_m("Y");
         }
 
         private void HomeZ_button_Click(object sender, EventArgs e)
         {
             Cnc.ProbingMode(false);
-            CNC_Home_m("Z");
+            Cnc.CNC_Home_m("Z");
         }
 
         private void TestZ_thread()
         {
-            if (!CNC_Z_m(0))
+            if (!Cnc.CNC_Z_m(0))
                 return;
-            if (!CNC_Z_m(Setting.General_ZTestTravel))
+            if (!Cnc.CNC_Z_m(Setting.General_ZTestTravel))
                 return;
-            if (!CNC_Z_m(0))
+            if (!Cnc.CNC_Z_m(0))
                 return;
         }
 
@@ -6398,11 +5889,11 @@ namespace LitePlacer
 
         private void TestA_thread()
         {
-            if (!CNC_A_m(0))
+            if (!Cnc.CNC_A_m(0))
                 return;
-            if (!CNC_A_m(360))
+            if (!Cnc.CNC_A_m(360))
                 return;
-            if (!CNC_A_m(0))
+            if (!Cnc.CNC_A_m(0))
                 return;
         }
 
@@ -6415,13 +5906,13 @@ namespace LitePlacer
 
         private void Homebutton_Click(object sender, EventArgs e)
         {
-            if (!CNC_Home_m("Z"))
+            if (!Cnc.CNC_Home_m("Z"))
                 return;
-            if (!CNC_Home_m("X"))
+            if (!Cnc.CNC_Home_m("X"))
                 return;
-            if (!CNC_Home_m("Y"))
+            if (!Cnc.CNC_Home_m("Y"))
                 return;
-            CNC_A_m(0);
+            Cnc.CNC_A_m(0);
         }
 
         private void MotorPower_checkBox_Click(object sender, EventArgs e)
@@ -6542,11 +6033,11 @@ namespace LitePlacer
             SetProbing_button.Text = "Start";
             SetProbing_button.Enabled = false;
             SetProbing_stage = 0;
-            ZGuardOn();
+            Cnc.ZGuardOn();
             CancelProbing_button.Visible = false;
             Zlb_label.Visible = false;
             Cnc.ProbingMode(false);
-            CNC_Home_m("Z");
+            Cnc.CNC_Home_m("Z");
             SetProbing_button.Enabled = true;
         }
 
@@ -6557,7 +6048,7 @@ namespace LitePlacer
 
         private void SetProbing_button_Click(object sender, EventArgs e)
         {
-            ZGuardOff();
+            Cnc.ZGuardOff();
             switch (SetProbing_stage)
             {
                 case 0:
@@ -6593,8 +6084,8 @@ namespace LitePlacer
                     Zlb_label.Visible = false;
                     CancelProbing_button.Visible = false;
                     SetProbing_button.Enabled = false;
-                    CNC_Home_m("Z");
-                    ZGuardOn();
+                    Cnc.CNC_Home_m("Z");
+                    Cnc.ZGuardOn();
                     SetProbing_button.Enabled = true;
                     ShowMessageBox(
                        "Probing Backoff set successfully.\n" +
@@ -6706,7 +6197,7 @@ namespace LitePlacer
                 Setting.General_Mark1A = Cnc.CurrentA;
                 return;
             };
-            CNC_XYA_m(Setting.General_Mark1X, Setting.General_Mark1Y, Setting.General_Mark1A);
+            Cnc.CNC_XYA_m(Setting.General_Mark1X, Setting.General_Mark1Y, Setting.General_Mark1A);
         }
 
         private void Bookmark2_button_Click(object sender, EventArgs e)
@@ -6718,7 +6209,7 @@ namespace LitePlacer
                 Setting.General_Mark2A = Cnc.CurrentA;
                 return;
             };
-            CNC_XYA_m(Setting.General_Mark2X, Setting.General_Mark2Y, Setting.General_Mark2A);
+            Cnc.CNC_XYA_m(Setting.General_Mark2X, Setting.General_Mark2Y, Setting.General_Mark2A);
         }
 
         private void Bookmark3_button_Click(object sender, EventArgs e)
@@ -6730,7 +6221,7 @@ namespace LitePlacer
                 Setting.General_Mark3A = Cnc.CurrentA;
                 return;
             };
-            CNC_XYA_m(Setting.General_Mark3X, Setting.General_Mark3Y, Setting.General_Mark3A);
+            Cnc.CNC_XYA_m(Setting.General_Mark3X, Setting.General_Mark3Y, Setting.General_Mark3A);
         }
 
         private void Bookmark4_button_Click(object sender, EventArgs e)
@@ -6742,7 +6233,7 @@ namespace LitePlacer
                 Setting.General_Mark4A = Cnc.CurrentA;
                 return;
             };
-            CNC_XYA_m(Setting.General_Mark4X, Setting.General_Mark4Y, Setting.General_Mark4A);
+            Cnc.CNC_XYA_m(Setting.General_Mark4X, Setting.General_Mark4Y, Setting.General_Mark4A);
         }
 
         private void Bookmark5_button_Click(object sender, EventArgs e)
@@ -6754,7 +6245,7 @@ namespace LitePlacer
                 Setting.General_Mark5A = Cnc.CurrentA;
                 return;
             };
-            CNC_XYA_m(Setting.General_Mark5X, Setting.General_Mark5Y, Setting.General_Mark5A);
+            Cnc.CNC_XYA_m(Setting.General_Mark5X, Setting.General_Mark5Y, Setting.General_Mark5A);
         }
 
         private void Bookmark6_button_Click(object sender, EventArgs e)
@@ -6766,7 +6257,7 @@ namespace LitePlacer
                 Setting.General_Mark6A = Cnc.CurrentA;
                 return;
             };
-            CNC_XYA_m(Setting.General_Mark6X, Setting.General_Mark6Y, Setting.General_Mark6A);
+            Cnc.CNC_XYA_m(Setting.General_Mark6X, Setting.General_Mark6Y, Setting.General_Mark6A);
         }
 
         private void SmallMovement_numericUpDown_ValueChanged(object sender, EventArgs e)
@@ -8035,8 +7526,8 @@ namespace LitePlacer
                         {
                             NewMethod = "Ignore";
                             NewID = "";
-                            AbortPlacement = true;
-                            AbortPlacementShown = true;
+                            Cnc.AbortPlacement = true;
+                            Cnc.AbortPlacementShown = true;
                             RestoreRow = true;		// something went astray, keep method at "?"
                         }
                     }
@@ -8448,17 +7939,17 @@ namespace LitePlacer
                 MachineCoords_label.Update();
             };
 
-            if (AbortPlacement)
+            if (Cnc.AbortPlacement)
             {
-                if (!AbortPlacementShown)
+                if (!Cnc.AbortPlacementShown)
                 {
-                    AbortPlacementShown = true;
+                    Cnc.AbortPlacementShown = true;
                     ShowMessageBox(
                                "Operation aborted",
                                "Operation aborted",
                                MessageBoxButtons.OK);
                 }
-                AbortPlacement = false;
+                Cnc.AbortPlacement = false;
                 return false;
             }
 
@@ -8549,7 +8040,7 @@ namespace LitePlacer
                 // Used this for debugging, but is unreachable now
                 case "Locate":
                     // Shows the component and its footprint(if known)...
-                    CNC_XY_m(X_machine, Y_machine);
+                    Cnc.CNC_XY_m(X_machine, Y_machine);
                     if (!ShowFootPrint_m(CADdataRow))
                         return false;
 
@@ -8584,15 +8075,12 @@ namespace LitePlacer
             return true;
         }
 
-        public bool AbortPlacement = false;
-        public bool AbortPlacementShown = false;
-
         // =================================================================================
         private bool ChangeNozzleManually_m()
         {
-            CNC_Write_m("{\"zsn\":0}");
+            Cnc.CNC_Write_m("{\"zsn\":0}");
             Thread.Sleep(50);
-            CNC_Write_m("{\"zsx\":0}");
+            Cnc.CNC_Write_m("{\"zsx\":0}");
             Thread.Sleep(50);
             Cnc.PumpOff();
             Cnc.MotorPowerOff();
@@ -8605,9 +8093,9 @@ namespace LitePlacer
             Zhome_checkBox.Checked = true;
             Nozzle.Calibrated = false;
             ValidMeasurement_checkBox.Checked = false;
-            CNC_Write_m("{\"zsn\":3}");
+            Cnc.CNC_Write_m("{\"zsn\":3}");
             Thread.Sleep(50);
-            CNC_Write_m("{\"zsx\":2}");
+            Cnc.CNC_Write_m("{\"zsx\":2}");
             Thread.Sleep(50);
             if (!MechanicalHoming_m())
             {
@@ -8674,8 +8162,8 @@ namespace LitePlacer
                 }
             }
 
-            AbortPlacement = false;
-            AbortPlacementShown = false;
+            Cnc.AbortPlacement = false;
+            Cnc.AbortPlacementShown = false;
             PlaceThese_button.Capture = false;
             PlaceAll_button.Capture = false;
             JobData_GridView.ReadOnly = true;
@@ -8701,7 +8189,7 @@ namespace LitePlacer
             Cnc.PumpDefaultSetting();
             if (success)
             {
-                CNC_Park();  // if fail, it helps debugging if machine stays still
+                Cnc.CNC_Park();  // if fail, it helps debugging if machine stays still
             }
             Cnc.VacuumDefaultSetting();
         }
@@ -8736,14 +8224,14 @@ namespace LitePlacer
                 };
                 // Z += 0.5;
                 DisplayText("PickUpPart_m(): Part pickup, Z" + Z.ToString(), KnownColor.Blue);
-                if (!CNC_Z_m(Z))
+                if (!Cnc.CNC_Z_m(Z))
                 {
                     return false;
                 }
             }
             Cnc.VacuumOn();
             DisplayText("PickUpPart_m(): Nozzle up");
-            if (!CNC_Z_m(0))
+            if (!Cnc.CNC_Z_m(0))
             {
                 return false;
             }
@@ -8797,17 +8285,17 @@ namespace LitePlacer
                 return false;
             }
 
-            if (AbortPlacement)
+            if (Cnc.AbortPlacement)
             {
-                if (!AbortPlacementShown)
+                if (!Cnc.AbortPlacementShown)
                 {
-                    AbortPlacementShown = true;
+                    Cnc.AbortPlacementShown = true;
                     ShowMessageBox(
                                "Operation aborted",
                                "Operation aborted",
                                MessageBoxButtons.OK);
                 }
-                AbortPlacement = false;
+                Cnc.AbortPlacement = false;
                 return false;
             }
             return true;
@@ -8837,7 +8325,7 @@ namespace LitePlacer
                 );
             }
 
-            CNC_XY_m(PartX, PartY);
+            Cnc.CNC_XY_m(PartX, PartY);
         }
 
         // =================================================================================
@@ -8870,17 +8358,17 @@ namespace LitePlacer
                 return false;
             }
 
-            if (AbortPlacement)
+            if (Cnc.AbortPlacement)
             {
-                if (!AbortPlacementShown)
+                if (!Cnc.AbortPlacementShown)
                 {
-                    AbortPlacementShown = true;
+                    Cnc.AbortPlacementShown = true;
                     ShowMessageBox(
                                "Operation aborted",
                                "Operation aborted",
                                MessageBoxButtons.OK);
                 }
-                AbortPlacement = false;
+                Cnc.AbortPlacement = false;
                 return false;
             }
             return true;
@@ -9062,7 +8550,7 @@ namespace LitePlacer
                     return false;
                 };
                 DisplayText("PlacePart_m(): Part down, Z" + Z.ToString(), KnownColor.Blue);
-                if (!CNC_Z_m(Z))
+                if (!Cnc.CNC_Z_m(Z))
                 {
                     return false;
                 }
@@ -9073,7 +8561,7 @@ namespace LitePlacer
             //    MessageBoxButtons.OK);
             DisplayText("PlacePart_m(): Nozzle up.");
             Cnc.VacuumOff();
-            if (!CNC_Z_m(0))  // back up
+            if (!Cnc.CNC_Z_m(0))  // back up
             {
                 return false;
             }
@@ -9101,14 +8589,14 @@ namespace LitePlacer
             }
             else
             {
-                if (!CNC_Z_m(LoosePartPlaceZ))
+                if (!Cnc.CNC_Z_m(LoosePartPlaceZ))
                 {
                     return false;
                 }
             }
             DisplayText("PutLoosePartDown_m(): Nozzle up.");
             Cnc.VacuumOff();
-            if (!CNC_Z_m(0))  // back up
+            if (!Cnc.CNC_Z_m(0))  // back up
             {
                 return false;
             }
@@ -9142,7 +8630,7 @@ namespace LitePlacer
                 distance2pcb = 2.0;
             };
 
-            if (!CNC_Z_m(Setting.General_ZtoPCB - distance2pcb))
+            if (!Cnc.CNC_Z_m(Setting.General_ZtoPCB - distance2pcb))
             {
                 return false;
             }
@@ -9157,7 +8645,7 @@ namespace LitePlacer
             Cnc.SlackCompensation = false;
             Cnc.SlackCompensationA = false;
 
-            ZGuardOff(); // Allow nozzle movment while nozzle is down
+            Cnc.ZGuardOff(); // Allow nozzle movment while nozzle is down
 
             // Wait for enter key pressed. 
             EnterKeyHit = false;
@@ -9165,21 +8653,21 @@ namespace LitePlacer
             {
                 Application.DoEvents();
                 Thread.Sleep(10);
-                if (AbortPlacement)
+                if (Cnc.AbortPlacement)
                 {
                     ShowMessageBox(
                         "Operation aborted.",
                         "Operation aborted.",
                         MessageBoxButtons.OK);
+
+                    Cnc.AbortPlacement = false;                    
                     
-                    AbortPlacement = false;                    
-                    
-                    if (!CNC_Z_m(0))  // move nozzle to zero position
+                    if (!Cnc.CNC_Z_m(0))  // move nozzle to zero position
                     {
                         return false;
                     }
 
-                    ZGuardOn();
+                    Cnc.ZGuardOn();
 
                     //Restore Slack Compensation state
                     Cnc.SlackCompensation = SaveSlackCompState;
@@ -9196,9 +8684,9 @@ namespace LitePlacer
             }
 
             Cnc.VacuumOff();
-            ZGuardOn();
+            Cnc.ZGuardOn();
 
-            if (!CNC_Z_m(0))  // move nozzle to zero position
+            if (!Cnc.CNC_Z_m(0))  // move nozzle to zero position
             {
                 return false;
             }
@@ -9264,7 +8752,7 @@ namespace LitePlacer
         private bool PickUpLoosePart_m(bool Probe, bool Snapshot, int CADdataRow, string Component)
         {
             DisplayText("PickUpLoosePart_m: " + Probe.ToString() + ", " + Snapshot.ToString() + ", " + CADdataRow.ToString() + ", " + Component, KnownColor.Blue);
-            if (!CNC_XY_m(Setting.General_PickupCenterX, Setting.General_PickupCenterY))
+            if (!Cnc.CNC_XY_m(Setting.General_PickupCenterX, Setting.General_PickupCenterY))
             {
                 return false;
             }
@@ -9307,7 +8795,7 @@ namespace LitePlacer
                 }
                 else
                 {
-                    if (!CNC_XY_m(Cnc.CurrentX + X, Cnc.CurrentY + Y))
+                    if (!Cnc.CNC_XY_m(Cnc.CurrentX + X, Cnc.CurrentY + Y))
                     {
                         return false;
                     }
@@ -9316,7 +8804,7 @@ namespace LitePlacer
             // go exactly on top of component for user confidence and for snapshot to be at right place
             if (Snapshot)
             {
-                if (!CNC_XY_m(Cnc.CurrentX + X, Cnc.CurrentY + Y))
+                if (!Cnc.CNC_XY_m(Cnc.CurrentX + X, Cnc.CurrentY + Y))
                 {
                     return false;
                 }
@@ -9348,7 +8836,7 @@ namespace LitePlacer
             else
             {
                 DisplayText("PickUpLoosePart_m(): Part pickup, Z" + LoosePartPickupZ.ToString());
-                if (!CNC_Z_m(LoosePartPickupZ))
+                if (!Cnc.CNC_Z_m(LoosePartPickupZ))
                 {
                     DownCamera.Draw_Snapshot = true;
                     return false;
@@ -9356,22 +8844,22 @@ namespace LitePlacer
             }
             Cnc.VacuumOn();
             DisplayText("PickUpLoosePart_m(): Nozzle up");
-            if (!CNC_Z_m(0))
+            if (!Cnc.CNC_Z_m(0))
             {
                 DownCamera.Draw_Snapshot = true;
                 return false;
             }
-            if (AbortPlacement)
+            if (Cnc.AbortPlacement)
             {
-                if (!AbortPlacementShown)
+                if (!Cnc.AbortPlacementShown)
                 {
-                    AbortPlacementShown = true;
+                    Cnc.AbortPlacementShown = true;
                     ShowMessageBox(
                                "Operation aborted",
                                "Operation aborted",
                                MessageBoxButtons.OK);
                 }
-                AbortPlacement = false;
+                Cnc.AbortPlacement = false;
                 return false;
             }
             return true;
@@ -9386,17 +8874,17 @@ namespace LitePlacer
 
         private bool PlacePart_m(int CADdataRow, int JobDataRow, double X, double Y, double A, bool FirstInRow)
         {
-            if (AbortPlacement)
+            if (Cnc.AbortPlacement)
             {
-                if (!AbortPlacementShown)
+                if (!Cnc.AbortPlacementShown)
                 {
-                    AbortPlacementShown = true;
+                    Cnc.AbortPlacementShown = true;
                     ShowMessageBox(
                                "Operation aborted",
                                "Operation aborted",
                                MessageBoxButtons.OK);
                 }
-                AbortPlacement = false;
+                Cnc.AbortPlacement = false;
                 return false;
             };
             string id = JobData_GridView.Rows[JobDataRow].Cells["MethodParamAllComponents"].Value.ToString();
@@ -9479,11 +8967,11 @@ namespace LitePlacer
             {
                 DisplayText("PlacePart_m: take Upcam snapshot");
                 // Take part to upcam
-                if (!CNC_XYA_m(Setting.UpCam_PositionX, Setting.UpCam_PositionY, 0.0))
+                if (!Cnc.CNC_XYA_m(Setting.UpCam_PositionX, Setting.UpCam_PositionY, 0.0))
                 {
                     return false;
                 };
-                if (!CNC_Z_m(LoosePartPickupZ))
+                if (!Cnc.CNC_Z_m(LoosePartPickupZ))
                 {
                     return false;
                 };
@@ -9491,7 +8979,7 @@ namespace LitePlacer
                 SelectCamera(UpCamera);
                 UpCam_TakeSnapshot();
                 SelectCamera(DownCamera);
-                if (!CNC_Z_m(0.0))
+                if (!Cnc.CNC_Z_m(0.0))
                 {
                     DownCamera.Draw_Snapshot = false;
                     return false;
@@ -9503,7 +8991,7 @@ namespace LitePlacer
                 DisplayText("PlacePart_m: Snapshot place");
                 // Take cam to where we think part is going. This might not be exactly right.
                 DownCamera.RotateSnapshot(A);
-                if (!CNC_XYA_m(X, Y, A))
+                if (!Cnc.CNC_XYA_m(X, Y, A))
                 {
                     // VacuumOff();  if the above failed CNC seems to be down; low chances that VacuumOff() would go thru either. 
                     DownCamera.Draw_Snapshot = false;
@@ -9515,17 +9003,17 @@ namespace LitePlacer
                 {
                     Application.DoEvents();
                     Thread.Sleep(10);
-                    if (AbortPlacement)
+                    if (Cnc.AbortPlacement)
                     {
-                        if (!AbortPlacementShown)
+                        if (!Cnc.AbortPlacementShown)
                         {
-                            AbortPlacementShown = true;
+                            Cnc.AbortPlacementShown = true;
                             ShowMessageBox(
                                        "Operation aborted",
                                        "Operation aborted",
                                        MessageBoxButtons.OK);
                         }
-                        AbortPlacement = false;
+                        Cnc.AbortPlacement = false;
                         return false;
                     }
                 } while (!EnterKeyHit);
@@ -9546,11 +9034,11 @@ namespace LitePlacer
             }
 
             // Place it:
-            if (AbortPlacement)
+            if (Cnc.AbortPlacement)
             {
-                if (!AbortPlacementShown)
+                if (!Cnc.AbortPlacementShown)
                 {
-                    AbortPlacementShown = true;
+                    Cnc.AbortPlacementShown = true;
                     ShowMessageBox(
                                "Operation aborted",
                                "Operation aborted",
@@ -9558,7 +9046,7 @@ namespace LitePlacer
                 }
                 DownCamera.Draw_Snapshot = false;
                 UpCamera.Draw_Snapshot = false;
-                AbortPlacement = false;
+                Cnc.AbortPlacement = false;
                 return false;
             }
 
@@ -9601,11 +9089,11 @@ namespace LitePlacer
                     }
                     break;
             };
-            if (AbortPlacement)
+            if (Cnc.AbortPlacement)
             {
-                if (!AbortPlacementShown)
+                if (!Cnc.AbortPlacementShown)
                 {
-                    AbortPlacementShown = true;
+                    Cnc.AbortPlacementShown = true;
                     ShowMessageBox(
                                "Operation aborted",
                                "Operation aborted",
@@ -9613,7 +9101,7 @@ namespace LitePlacer
                 }
                 DownCamera.Draw_Snapshot = false;
                 UpCamera.Draw_Snapshot = false;
-                AbortPlacement = false;
+                Cnc.AbortPlacement = false;
                 return false;
             }
             return true;
@@ -9654,8 +9142,8 @@ namespace LitePlacer
                     );
                     if (dialogResult == DialogResult.Abort)
                     {
-                        AbortPlacement = true;
-                        AbortPlacementShown = true;
+                        Cnc.AbortPlacement = true;
+                        Cnc.AbortPlacementShown = true;
                         result = false;
                         GoOn = true;
                     }
@@ -9809,7 +9297,7 @@ namespace LitePlacer
 
         private bool MeasureFiducial_m(ref PhysicalComponent fid)
         {
-            if (!CNC_XY_m(fid.X_nominal + Setting.Job_Xoffset + Setting.General_JigOffsetX,
+            if (!Cnc.CNC_XY_m(fid.X_nominal + Setting.Job_Xoffset + Setting.General_JigOffsetX,
                      fid.Y_nominal + Setting.Job_Yoffset + Setting.General_JigOffsetY))
             {
                 return false;
@@ -10158,8 +9646,8 @@ namespace LitePlacer
             );
             if (dialogResult == DialogResult.Cancel)
             {
-                AbortPlacement = true;
-                AbortPlacementShown = true;
+                Cnc.AbortPlacement = true;
+                Cnc.AbortPlacementShown = true;
             }
 
         }
@@ -10173,8 +9661,8 @@ namespace LitePlacer
         // =================================================================================
         private void AbortPlacement_button_Click(object sender, EventArgs e)
         {
-            AbortPlacement = true;
-            AbortPlacementShown = false;
+            Cnc.AbortPlacement = true;
+            Cnc.AbortPlacementShown = false;
         }
 
 
@@ -10265,7 +9753,7 @@ namespace LitePlacer
                 return;
             }
 
-            CNC_XY_m(X + Setting.Job_Xoffset + Setting.General_JigOffsetX,
+            Cnc.CNC_XY_m(X + Setting.Job_Xoffset + Setting.General_JigOffsetX,
                 Y + Setting.Job_Yoffset + Setting.General_JigOffsetY);
             DownCamera.ArrowAngle = A;
             DownCamera.DrawArrow = true;
@@ -10345,7 +9833,7 @@ namespace LitePlacer
             {
                 return;
             }
-            CNC_XY_m(X, Y);
+            Cnc.CNC_XY_m(X, Y);
             if (!double.TryParse(CadData_GridView.CurrentCell.OwningRow.Cells["Rotation_machine"].Value.ToString().Replace(',', '.'), out A))
             {
                 ShowMessageBox(
@@ -10460,7 +9948,7 @@ namespace LitePlacer
             };
 
             // go there
-            CNC_XY_m(X_shortest, Y_shortest);
+            Cnc.CNC_XY_m(X_shortest, Y_shortest);
             SetFiducialsMeasurement();
 
             for (int tries = 0; tries < 5; tries++)
@@ -10499,7 +9987,7 @@ namespace LitePlacer
             double X = Cnc.CurrentX;
             double Y = Cnc.CurrentY;
             CalibrateNozzle_m();
-            CNC_XYA_m(X, Y, 0.0);
+            Cnc.CNC_XYA_m(X, Y, 0.0);
         }
 
 
@@ -10565,7 +10053,7 @@ namespace LitePlacer
         {
             DemoThread = new Thread(() => DemoWork());
             DemoRunning = true;
-            CNC_Z_m(0.0);
+            Cnc.CNC_Z_m(0.0);
             DemoThread.IsBackground = true;
             DemoThread.Start();
         }
@@ -10614,11 +10102,11 @@ namespace LitePlacer
             }
             */
             // vacuum off, no UI update because of threading
-            CNC_RawWrite("{\"gc\":\"M09\"}");
+            Cnc.CNC_RawWrite("{\"gc\":\"M09\"}");
             Thread.Sleep(Setting.General_PickupReleaseTime);
 
             // PumpOn, off main thread
-            CNC_RawWrite("{\"gc\":\"M03\"}");
+            Cnc.CNC_RawWrite("{\"gc\":\"M03\"}");
             Thread.Sleep(500);  // this much to develop vacuum
 
             // BugWorkaround();
@@ -10667,10 +10155,10 @@ namespace LitePlacer
         demoend:
             DemoRunning = false;
             // vacuum off, no UI update because of threading
-            CNC_RawWrite("{\"gc\":\"M09\"}");
+            Cnc.CNC_RawWrite("{\"gc\":\"M09\"}");
             Thread.Sleep(Setting.General_PickupReleaseTime);
             // pump off, off thread
-            CNC_RawWrite("{\"gc\":\"M05\"}");
+            Cnc.CNC_RawWrite("{\"gc\":\"M05\"}");
             Thread.Sleep(50);
         }
 
@@ -10678,22 +10166,22 @@ namespace LitePlacer
         private bool Demo_Pickup(double X, double Y, double A, double Z)
         {
             if (!Nozzle.Move_m(X, Y, A)) return false;
-            if (!CNC_Z_m(Z)) return false;
+            if (!Cnc.CNC_Z_m(Z)) return false;
             // vacuum on, no UI update because of threading
-            CNC_RawWrite("{\"gc\":\"M08\"}");
+            Cnc.CNC_RawWrite("{\"gc\":\"M08\"}");
             Thread.Sleep(Setting.General_PickupVacuumTime);
-            if (!CNC_Z_m(0)) return false;
+            if (!Cnc.CNC_Z_m(0)) return false;
             return true;
         }
 
         private bool Demo_Place(double X, double Y, double A, double Z)
         {
             if (!Nozzle.Move_m(X, Y, A)) return false;
-            if (!CNC_Z_m(Z)) return false;
+            if (!Cnc.CNC_Z_m(Z)) return false;
             // vacuum off, no UI update because of threading
-            CNC_RawWrite("{\"gc\":\"M09\"}");
+            Cnc.CNC_RawWrite("{\"gc\":\"M09\"}");
             Thread.Sleep(Setting.General_PickupReleaseTime);
-            if (!CNC_Z_m(0)) return false;
+            if (!Cnc.CNC_Z_m(0)) return false;
             return true;
         }
 
@@ -11389,7 +10877,7 @@ namespace LitePlacer
 
         private void Tapes_tabPage_End()
         {
-            ZGuardOn();
+            Cnc.ZGuardOn();
         }
 
         // =================================================================================
@@ -11643,7 +11131,7 @@ namespace LitePlacer
             {
                 return;
             }
-            CNC_XY_m(X, Y);
+            Cnc.CNC_XY_m(X, Y);
         }
 
         private void TapeSet1_button_Click(object sender, EventArgs e)
@@ -11780,7 +11268,7 @@ namespace LitePlacer
             {
                 return;
             }
-            CNC_XY_m(X, Y);
+            Cnc.CNC_XY_m(X, Y);
         }
 
         private void Tape_resetZs_button_Click(object sender, EventArgs e)
@@ -11878,7 +11366,7 @@ namespace LitePlacer
             }
             if (Tapes.GetPartHole_m(TapeNum, PartNum, out X, out Y))
             {
-                CNC_XY_m(X, Y);
+                Cnc.CNC_XY_m(X, Y);
             }
         }
 
@@ -11892,7 +11380,7 @@ namespace LitePlacer
             {
                 return;
             }
-            CNC_XY_m(X, Y);
+            Cnc.CNC_XY_m(X, Y);
             DownCamera.ArrowAngle = A;
             DownCamera.DrawArrow = true;
         }
@@ -11938,7 +11426,7 @@ namespace LitePlacer
             double A = 0.0;
             if (Tapes.GetPartLocationFromHolePosition_m(TapeNum, X, Y, out pX, out pY, out A))
             {
-                CNC_XY_m(pX, pY);
+                Cnc.CNC_XY_m(pX, pY);
             }
             DownCamera.ArrowAngle = A;
             DownCamera.DrawArrow = true;
@@ -12270,8 +11758,8 @@ namespace LitePlacer
                 return;
             }
             Cnc.VacuumOn();
-            CNC_Z_m(0);  // pick up
-            CNC_XY_m(Xmark, Ymark);
+            Cnc.CNC_Z_m(0);  // pick up
+            Cnc.CNC_XY_m(Xmark, Ymark);
         }
 
         // =================================================================================
@@ -12289,8 +11777,8 @@ namespace LitePlacer
             }
             Nozzle_ProbeDown_m();
             Cnc.VacuumOff();
-            CNC_Z_m(0);  // back up
-            CNC_XY_m(Xmark, Ymark);  // show results
+            Cnc.CNC_Z_m(0);  // back up
+            Cnc.CNC_XY_m(Xmark, Ymark);  // show results
         }
 
         // =================================================================================
@@ -12300,7 +11788,7 @@ namespace LitePlacer
         {
             Xmark = Cnc.CurrentX;
             Ymark = Cnc.CurrentY;
-            CNC_XY_m((Cnc.CurrentX + Setting.DownCam_NozzleOffsetX), (Cnc.CurrentY + Setting.DownCam_NozzleOffsetY));
+            Cnc.CNC_XY_m((Cnc.CurrentX + Setting.DownCam_NozzleOffsetX), (Cnc.CurrentY + Setting.DownCam_NozzleOffsetY));
             Nozzle_ProbeDown_m();
         }
 
@@ -12339,8 +11827,8 @@ namespace LitePlacer
         private void Test6_button_Click(object sender, EventArgs e)
         {
             DisplayText("test 6: Nozzle up");
-            CNC_Z_m(0);  // go up
-            CNC_XY_m(Xmark, Ymark);
+            Cnc.CNC_Z_m(0);  // go up
+            Cnc.CNC_XY_m(Xmark, Ymark);
         }
 
 
@@ -12369,7 +11857,7 @@ namespace LitePlacer
                     MessageBoxButtons.OK);
                 return;
             }
-            CNC_XY_m(Cnc.CurrentX - (dist / 2.0), Cnc.CurrentY - (dist / 2.0));
+            Cnc.CNC_XY_m(Cnc.CurrentX - (dist / 2.0), Cnc.CurrentY - (dist / 2.0));
             Thread.Sleep(500);
             if (DownCamera.GetClosestCircle(out X1, out Y1, 250.0) <= 0)
             {
@@ -12380,7 +11868,7 @@ namespace LitePlacer
                 return;
             }
             double X2, Y2;
-            CNC_XY_m(Cnc.CurrentX + dist, Cnc.CurrentY + dist);
+            Cnc.CNC_XY_m(Cnc.CurrentX + dist, Cnc.CurrentY + dist);
             Thread.Sleep(500);
             if (DownCamera.GetClosestCircle(out X2, out Y2, 250.0) <= 0)
             {
@@ -12392,7 +11880,7 @@ namespace LitePlacer
             }
             // sanity check
             double X3, Y3;
-            CNC_XY_m(Cnc.CurrentX - (dist / 2.0), Cnc.CurrentY - (dist / 2.0));
+            Cnc.CNC_XY_m(Cnc.CurrentX - (dist / 2.0), Cnc.CurrentY - (dist / 2.0));
             Thread.Sleep(500);
             if (DownCamera.GetClosestCircle(out X3, out Y3, 10.0) <= 0)
             {
@@ -14117,17 +13605,17 @@ namespace LitePlacer
         {
             if (NozzleZGuard_checkBox.Checked)
             {
-                ZGuardOff();
+                Cnc.ZGuardOff();
             }
             else
             {
-                ZGuardOn();
+                Cnc.ZGuardOn();
             }
             // disable z switches, otherwise you can't do setup 
-            ZGuardOff();
-            CNC_Write_m("{\"zsn\":0}");
+            Cnc.ZGuardOff();
+            Cnc.CNC_Write_m("{\"zsn\":0}");
             Thread.Sleep(50);
-            CNC_Write_m("{\"zsx\":0}");
+            Cnc.CNC_Write_m("{\"zsx\":0}");
             Thread.Sleep(50);
 
             NozzleChangeEnable_checkBox.Checked = Setting.Nozzles_Enabled;
@@ -14154,7 +13642,7 @@ namespace LitePlacer
             NozzletabStore_XYspeed = Cnc.SlowSpeedXY;
             NozzletabStore_Zspeed = Cnc.SlowSpeedZ;
             NozzletabStore_Aspeed = Cnc.SlowSpeedA;
-            NozzletabStore_timeout = CNC_timeout;
+            NozzletabStore_timeout = Cnc.CNC_timeout;
             NozzletabStore_slack = Cnc.SlackCompensation;
             NozzletabStore_slackA = Cnc.SlackCompensationA;
 
@@ -14165,7 +13653,7 @@ namespace LitePlacer
             Cnc.SlowSpeedXY = Setting.Nozzles_XYspeed;
             Cnc.SlowSpeedZ = Setting.Nozzles_Zspeed;
             Cnc.SlowSpeedA = Setting.Nozzles_Aspeed;
-            CNC_timeout = Setting.Nozzles_Timeout;
+            Cnc.CNC_timeout = Setting.Nozzles_Timeout;
             Cnc.SlackCompensation = false;  // nozzle changes without slack compensation
             Cnc.SlackCompensationA = false;
 
@@ -14175,11 +13663,11 @@ namespace LitePlacer
 
         private void Nozzles_tabPage_End()
         {
-            ZGuardOn();
+            Cnc.ZGuardOn();
             // enable switches
-            CNC_Write_m("{\"zsn\":3}");
+            Cnc.CNC_Write_m("{\"zsn\":3}");
             Thread.Sleep(50);
-            CNC_Write_m("{\"zsx\":2}");
+            Cnc.CNC_Write_m("{\"zsx\":2}");
             Thread.Sleep(50);
             // restore settings
             Cnc.SlowXY = NozzletabStore_slowXY;
@@ -14188,7 +13676,7 @@ namespace LitePlacer
             Cnc.SlowSpeedXY = NozzletabStore_XYspeed;
             Cnc.SlowSpeedZ = NozzletabStore_Zspeed;
             Cnc.SlowSpeedA = NozzletabStore_Aspeed;
-            CNC_timeout = NozzletabStore_timeout;
+            Cnc.CNC_timeout = NozzletabStore_timeout;
             Cnc.SlackCompensation = NozzletabStore_slack;
             Cnc.SlackCompensationA = NozzletabStore_slackA;
 
@@ -14532,7 +14020,7 @@ namespace LitePlacer
             double XYspeed = Cnc.SlowSpeedXY;
             double Zspeed = Cnc.SlowSpeedZ;
             double Aspeed = Cnc.SlowSpeedA;
-            int timeout = CNC_timeout;
+            int timeout = Cnc.CNC_timeout;
 
             // replace with nozzle speed settings
             Cnc.SlowXY = !Setting.Nozzles_XYfullSpeed;
@@ -14541,14 +14029,14 @@ namespace LitePlacer
             Cnc.SlowSpeedXY = Setting.Nozzles_XYspeed;
             Cnc.SlowSpeedZ = Setting.Nozzles_Zspeed;
             Cnc.SlowSpeedA = Setting.Nozzles_Aspeed;
-            CNC_timeout = Setting.Nozzles_Timeout;
+            Cnc.CNC_timeout = Setting.Nozzles_Timeout;
 
             bool ok = true;
             // disable z switches 
-            ZGuardOff();
-            CNC_Write_m("{\"zsn\":0}");
+            Cnc.ZGuardOff();
+            Cnc.CNC_Write_m("{\"zsn\":0}");
             Thread.Sleep(50);
-            CNC_Write_m("{\"zsx\":0}");
+            Cnc.CNC_Write_m("{\"zsx\":0}");
             Thread.Sleep(50);
 
             // Unload if needed
@@ -14580,10 +14068,10 @@ namespace LitePlacer
             if (!AtNozzlesTab)
             {
                 // enable switches
-                ZGuardOn();
-                CNC_Write_m("{\"zsn\":3}");
+                Cnc.ZGuardOn();
+                Cnc.CNC_Write_m("{\"zsn\":3}");
                 Thread.Sleep(50);
-                CNC_Write_m("{\"zsx\":2}");
+                Cnc.CNC_Write_m("{\"zsx\":2}");
                 Thread.Sleep(50);
             }
 
@@ -14594,7 +14082,7 @@ namespace LitePlacer
             Cnc.SlowSpeedXY = XYspeed;
             Cnc.SlowSpeedZ = Zspeed;
             Cnc.SlowSpeedA = Aspeed;
-            CNC_timeout = timeout;
+            Cnc.CNC_timeout = timeout;
 
             if (Nozzle > 0)
             {
@@ -14609,7 +14097,7 @@ namespace LitePlacer
         // actual moves
         private void GotoZ0_button_Click(object sender, EventArgs e)
         {
-            CNC_Z_m(0.0);
+            Cnc.CNC_Z_m(0.0);
         }
 
 
@@ -14629,13 +14117,13 @@ namespace LitePlacer
                 Cnc.SlowZ = false;
                 Cnc.SlowA = false;
             }
-            CNC_Z_m(0.0);
+            Cnc.CNC_Z_m(0.0);
             if (Setting.Nozzles_FirstMoveSlackCompensation)
             {
-                CNC_XYA_m(X-1, Y-1, -5.0);
+                Cnc.CNC_XYA_m(X-1, Y-1, -5.0);
             }
-            CNC_XYA_m(X, Y, 0.0);
-            CNC_Z_m(Z);
+            Cnc.CNC_XYA_m(X, Y, 0.0);
+            Cnc.CNC_Z_m(Z);
             Cnc.SlowXY = !Setting.Nozzles_XYfullSpeed;
             Cnc.SlowZ = !Setting.Nozzles_ZfullSpeed;
             Cnc.SlowA = !Setting.Nozzles_AfullSpeed;
@@ -14743,7 +14231,7 @@ namespace LitePlacer
 
             if (axis=="Z")
             {
-                if (!CNC_Z_m(Cnc.CurrentZ + val))
+                if (!Cnc.CNC_Z_m(Cnc.CurrentZ + val))
                 {
                     return false;
                 }
@@ -14770,7 +14258,7 @@ namespace LitePlacer
                         return false;
                         //break;
                 }
-                if (!CNC_XY_m(X, Y))
+                if (!Cnc.CNC_XY_m(X, Y))
                 {
                     return false;
                 }
@@ -14786,11 +14274,11 @@ namespace LitePlacer
         {
             if ( NozzleZGuard_checkBox.Checked)
             {
-                ZGuardOff();
+                Cnc.ZGuardOff();
             }
             else
             {
-                ZGuardOn();
+                Cnc.ZGuardOn();
             }
         }
 
@@ -14862,7 +14350,7 @@ namespace LitePlacer
             if (int.TryParse(NozzleTimeout_textBox.Text, out val))
             {
                 Setting.Nozzles_Timeout = val;
-                CNC_timeout = val;
+                Cnc.CNC_timeout = val;
                 NozzleTimeout_textBox.ForeColor = Color.Black;
             }
             else
@@ -15302,7 +14790,7 @@ namespace LitePlacer
             string dbg = "{\"" + setting + "\":" + value + "}";
             //string dbg = "$" + setting + "=" + value;
             DisplayText("write: " + dbg);
-            if (!CNC_Write_m(dbg))
+            if (!Cnc.CNC_Write_m(dbg))
             {
                 return false;
             };
@@ -15524,7 +15012,7 @@ namespace LitePlacer
             if (!WriteSetting("bhi", qQuinticBoard.bhi, false)) return false;
 
             // setup status message:
-            if (!CNC_Write_m("{sr:{posx:t,posy:t,posz:t,posa:t,stat:t,vel:t}}")) return false;
+            if (!Cnc.CNC_Write_m("{sr:{posx:t,posy:t,posz:t,posa:t,stat:t,vel:t}}")) return false;
 
             return true;
         }
@@ -15651,7 +15139,7 @@ namespace LitePlacer
 
         private void Ato0_button_Click(object sender, EventArgs e)
         {
-            CNC_RawWrite("{\"gc\":\"G28.3 A0\"}");
+            Cnc.CNC_RawWrite("{\"gc\":\"G28.3 A0\"}");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -15663,7 +15151,7 @@ namespace LitePlacer
         {
             double xo = Setting.DownCam_NozzleOffsetX;
             double yo = Setting.DownCam_NozzleOffsetY;
-            CNC_XY_m(Cnc.CurrentX - xo, Cnc.CurrentY - yo);
+            Cnc.CNC_XY_m(Cnc.CurrentX - xo, Cnc.CurrentY - yo);
         }
 
         private void button3_Click(object sender, EventArgs e)
