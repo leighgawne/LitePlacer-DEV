@@ -130,7 +130,6 @@ namespace LitePlacer
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
             Cnc_ReadyEvent = Cnc.ReadyEvent;
-            CNC.SquareCorrection = Setting.CNC_SquareCorrection;
 
             DownCamera = Terpsichore.Common.DIBindings.Resolve<IDownCamera>();
             DownCamera.ReportInfoCallback = DisplayText;
@@ -6782,7 +6781,7 @@ namespace LitePlacer
             if (double.TryParse(SquareCorrection_textBox.Text.Replace(',', '.'), out val))
             {
                 Setting.CNC_SquareCorrection = val;
-                CNC.SquareCorrection = val;
+                //CNC.SquareCorrection = val;
             }
         }
 
@@ -6794,7 +6793,7 @@ namespace LitePlacer
                 if (double.TryParse(SquareCorrection_textBox.Text.Replace(',', '.'), out val))
                 {
                     Setting.CNC_SquareCorrection = val;
-                    CNC.SquareCorrection = val;
+                    //CNC.SquareCorrection = val;
                 }
             }
         }
