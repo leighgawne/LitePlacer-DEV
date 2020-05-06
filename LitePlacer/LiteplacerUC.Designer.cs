@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LiteplacerUC));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Park_button = new System.Windows.Forms.Button();
             this.TestNozzleRecognition_button = new System.Windows.Forms.Button();
             this.DownCamZoomFactor_textBox = new System.Windows.Forms.TextBox();
@@ -87,7 +88,7 @@
             this.PlaceZ_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NextX_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NextY_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Tapes_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+            this.Tapes_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ShowPart_button = new System.Windows.Forms.Button();
             this.label129 = new System.Windows.Forms.Label();
@@ -719,7 +720,7 @@
             this.X_Machine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Y_machine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Rotation_machine = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RunJob_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+            this.RunJob_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.resetPlacedDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CadFilePath_label = new System.Windows.Forms.Label();
             this.label56 = new System.Windows.Forms.Label();
@@ -742,7 +743,7 @@
             this.NozzleMinSize_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NozzleMaxSize_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NozzleAlternative_column = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.NozzleUnload_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+            this.NozzleUnload_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.gotoUnloadStartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyUnloadStartPositionsFromLoadEndPositionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getUnloadMovesFromLoadMovesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -790,7 +791,7 @@
             this.StartX_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StartY_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StartZ_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NozzleLoad_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+            this.NozzleLoad_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.gotoLoadStartPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyMovesFromNozzle1ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.Calibration_tabPage = new System.Windows.Forms.TabPage();
@@ -844,7 +845,7 @@
             this.topLeft_XPos_textBox = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.CAD_openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.toolTip1 = new System.Windows.Forms.ToolTip();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.GotoX_textBox = new System.Windows.Forms.TextBox();
             this.GotoY_textBox = new System.Windows.Forms.TextBox();
             this.GotoZ_textBox = new System.Windows.Forms.TextBox();
@@ -860,7 +861,7 @@
             this.Abs_radioButton = new System.Windows.Forms.RadioButton();
             this.Relative_Button = new System.Windows.Forms.RadioButton();
             this.label108 = new System.Windows.Forms.Label();
-            this.MotorPower_timer = new System.Windows.Forms.Timer();
+            this.MotorPower_timer = new System.Windows.Forms.Timer(this.components);
             this.GoX_button = new System.Windows.Forms.Button();
             this.GoY_button = new System.Windows.Forms.Button();
             this.GoA_button = new System.Windows.Forms.Button();
@@ -951,24 +952,28 @@
             // 
             // Park_button
             // 
+            this.Park_button.BackColor = System.Drawing.Color.DimGray;
+            this.Park_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Park_button.Location = new System.Drawing.Point(1148, 829);
             this.Park_button.Name = "Park_button";
             this.Park_button.Size = new System.Drawing.Size(108, 23);
             this.Park_button.TabIndex = 41;
             this.Park_button.Text = "Park";
             this.toolTip1.SetToolTip(this.Park_button, "Moves the machine to \"Park\" location,\r\ndefined at Basic Setup tab.");
-            this.Park_button.UseVisualStyleBackColor = true;
+            this.Park_button.UseVisualStyleBackColor = false;
             this.Park_button.Click += new System.EventHandler(this.Park_button_Click);
             // 
             // TestNozzleRecognition_button
             // 
+            this.TestNozzleRecognition_button.BackColor = System.Drawing.Color.DimGray;
+            this.TestNozzleRecognition_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.TestNozzleRecognition_button.Location = new System.Drawing.Point(352, 571);
             this.TestNozzleRecognition_button.Name = "TestNozzleRecognition_button";
             this.TestNozzleRecognition_button.Size = new System.Drawing.Size(124, 23);
             this.TestNozzleRecognition_button.TabIndex = 63;
             this.TestNozzleRecognition_button.Text = "Measure Nozzle";
             this.toolTip1.SetToolTip(this.TestNozzleRecognition_button, "Re-runs Nozzle calibration routine.");
-            this.TestNozzleRecognition_button.UseVisualStyleBackColor = true;
+            this.TestNozzleRecognition_button.UseVisualStyleBackColor = false;
             this.TestNozzleRecognition_button.Click += new System.EventHandler(this.TestNozzleRecognition_button_Click);
             // 
             // DownCamZoomFactor_textBox
@@ -1126,6 +1131,7 @@
             // 
             // SerialMonitor_richTextBox
             // 
+            this.SerialMonitor_richTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.SerialMonitor_richTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SerialMonitor_richTextBox.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SerialMonitor_richTextBox.HideSelection = false;
@@ -1140,22 +1146,26 @@
             // 
             // Test1_button
             // 
+            this.Test1_button.BackColor = System.Drawing.Color.DimGray;
+            this.Test1_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Test1_button.Location = new System.Drawing.Point(1148, 667);
             this.Test1_button.Name = "Test1_button";
             this.Test1_button.Size = new System.Drawing.Size(108, 23);
             this.Test1_button.TabIndex = 18;
             this.Test1_button.Text = "Test 1";
-            this.Test1_button.UseVisualStyleBackColor = true;
+            this.Test1_button.UseVisualStyleBackColor = false;
             this.Test1_button.Click += new System.EventHandler(this.Test1_button_Click);
             // 
             // Test2_button
             // 
+            this.Test2_button.BackColor = System.Drawing.Color.DimGray;
+            this.Test2_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Test2_button.Location = new System.Drawing.Point(1148, 694);
             this.Test2_button.Name = "Test2_button";
             this.Test2_button.Size = new System.Drawing.Size(108, 23);
             this.Test2_button.TabIndex = 19;
             this.Test2_button.Text = "Test 2";
-            this.Test2_button.UseVisualStyleBackColor = true;
+            this.Test2_button.UseVisualStyleBackColor = false;
             this.Test2_button.Click += new System.EventHandler(this.Test2_button_Click);
             // 
             // Job_openFileDialog
@@ -1171,6 +1181,8 @@
             // 
             // OpticalHome_button
             // 
+            this.OpticalHome_button.BackColor = System.Drawing.Color.DimGray;
+            this.OpticalHome_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpticalHome_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OpticalHome_button.Location = new System.Drawing.Point(612, 777);
             this.OpticalHome_button.Name = "OpticalHome_button";
@@ -1179,7 +1191,7 @@
             this.OpticalHome_button.Text = "Home";
             this.toolTip1.SetToolTip(this.OpticalHome_button, "Homes the machine\r\nFirst basic homing using limit swithces,\r\nthen optical homing " +
         "based on home mark.");
-            this.OpticalHome_button.UseVisualStyleBackColor = true;
+            this.OpticalHome_button.UseVisualStyleBackColor = false;
             this.OpticalHome_button.Click += new System.EventHandler(this.OpticalHome_button_Click);
             // 
             // UpCamZoomFactor_textBox
@@ -1208,112 +1220,133 @@
             // 
             // Test3_button
             // 
+            this.Test3_button.BackColor = System.Drawing.Color.DimGray;
+            this.Test3_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Test3_button.Location = new System.Drawing.Point(1148, 721);
             this.Test3_button.Name = "Test3_button";
             this.Test3_button.Size = new System.Drawing.Size(108, 23);
             this.Test3_button.TabIndex = 66;
             this.Test3_button.Text = "Test 3";
-            this.Test3_button.UseVisualStyleBackColor = true;
+            this.Test3_button.UseVisualStyleBackColor = false;
             this.Test3_button.Click += new System.EventHandler(this.Test3_button_Click);
             // 
             // Test4_button
             // 
+            this.Test4_button.BackColor = System.Drawing.Color.DimGray;
+            this.Test4_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Test4_button.Location = new System.Drawing.Point(1148, 748);
             this.Test4_button.Name = "Test4_button";
             this.Test4_button.Size = new System.Drawing.Size(108, 23);
             this.Test4_button.TabIndex = 52;
             this.Test4_button.Text = "Test 4";
-            this.Test4_button.UseVisualStyleBackColor = true;
+            this.Test4_button.UseVisualStyleBackColor = false;
             this.Test4_button.Click += new System.EventHandler(this.Test4_button_Click);
             // 
             // Test5_button
             // 
+            this.Test5_button.BackColor = System.Drawing.Color.DimGray;
+            this.Test5_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Test5_button.Location = new System.Drawing.Point(1148, 775);
             this.Test5_button.Name = "Test5_button";
             this.Test5_button.Size = new System.Drawing.Size(108, 23);
             this.Test5_button.TabIndex = 68;
             this.Test5_button.Text = "Test 5";
-            this.Test5_button.UseVisualStyleBackColor = true;
+            this.Test5_button.UseVisualStyleBackColor = false;
             this.Test5_button.Click += new System.EventHandler(this.Test5_button_Click);
             // 
             // Test6_button
             // 
+            this.Test6_button.BackColor = System.Drawing.Color.DimGray;
+            this.Test6_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Test6_button.Location = new System.Drawing.Point(1148, 801);
             this.Test6_button.Name = "Test6_button";
             this.Test6_button.Size = new System.Drawing.Size(108, 23);
             this.Test6_button.TabIndex = 69;
             this.Test6_button.Text = "Test 6";
-            this.Test6_button.UseVisualStyleBackColor = true;
+            this.Test6_button.UseVisualStyleBackColor = false;
             this.Test6_button.Click += new System.EventHandler(this.Test6_button_Click);
             // 
             // Bookmark1_button
             // 
+            this.Bookmark1_button.BackColor = System.Drawing.Color.DimGray;
+            this.Bookmark1_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Bookmark1_button.Location = new System.Drawing.Point(792, 667);
             this.Bookmark1_button.Name = "Bookmark1_button";
             this.Bookmark1_button.Size = new System.Drawing.Size(133, 23);
             this.Bookmark1_button.TabIndex = 70;
             this.Bookmark1_button.Text = "Mark 1";
             this.toolTip1.SetToolTip(this.Bookmark1_button, "Goes to location 1\r\n(Named and set on the Basic Setup tab.)");
-            this.Bookmark1_button.UseVisualStyleBackColor = true;
+            this.Bookmark1_button.UseVisualStyleBackColor = false;
             this.Bookmark1_button.Click += new System.EventHandler(this.Bookmark1_button_Click);
             // 
             // Bookmark2_button
             // 
+            this.Bookmark2_button.BackColor = System.Drawing.Color.DimGray;
+            this.Bookmark2_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Bookmark2_button.Location = new System.Drawing.Point(792, 694);
             this.Bookmark2_button.Name = "Bookmark2_button";
             this.Bookmark2_button.Size = new System.Drawing.Size(133, 23);
             this.Bookmark2_button.TabIndex = 71;
             this.Bookmark2_button.Text = "Mark 2";
             this.toolTip1.SetToolTip(this.Bookmark2_button, "Goes to location 2\r\n(Named and set on the Basic Setup tab.)");
-            this.Bookmark2_button.UseVisualStyleBackColor = true;
+            this.Bookmark2_button.UseVisualStyleBackColor = false;
             this.Bookmark2_button.Click += new System.EventHandler(this.Bookmark2_button_Click);
             // 
             // Bookmark3_button
             // 
+            this.Bookmark3_button.BackColor = System.Drawing.Color.DimGray;
+            this.Bookmark3_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Bookmark3_button.Location = new System.Drawing.Point(792, 721);
             this.Bookmark3_button.Name = "Bookmark3_button";
             this.Bookmark3_button.Size = new System.Drawing.Size(133, 23);
             this.Bookmark3_button.TabIndex = 72;
             this.Bookmark3_button.Text = "Mark 3";
             this.toolTip1.SetToolTip(this.Bookmark3_button, "Goes to location 3\r\n(Named and set on the Basic Setup tab.)");
-            this.Bookmark3_button.UseVisualStyleBackColor = true;
+            this.Bookmark3_button.UseVisualStyleBackColor = false;
             this.Bookmark3_button.Click += new System.EventHandler(this.Bookmark3_button_Click);
             // 
             // Bookmark4_button
             // 
+            this.Bookmark4_button.BackColor = System.Drawing.Color.DimGray;
+            this.Bookmark4_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Bookmark4_button.Location = new System.Drawing.Point(792, 748);
             this.Bookmark4_button.Name = "Bookmark4_button";
             this.Bookmark4_button.Size = new System.Drawing.Size(133, 23);
             this.Bookmark4_button.TabIndex = 73;
             this.Bookmark4_button.Text = "Mark 4";
             this.toolTip1.SetToolTip(this.Bookmark4_button, "Goes to location 4\r\n(Named and set on the Basic Setup tab.)");
-            this.Bookmark4_button.UseVisualStyleBackColor = true;
+            this.Bookmark4_button.UseVisualStyleBackColor = false;
             this.Bookmark4_button.Click += new System.EventHandler(this.Bookmark4_button_Click);
             // 
             // Bookmark5_button
             // 
+            this.Bookmark5_button.BackColor = System.Drawing.Color.DimGray;
+            this.Bookmark5_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Bookmark5_button.Location = new System.Drawing.Point(792, 775);
             this.Bookmark5_button.Name = "Bookmark5_button";
             this.Bookmark5_button.Size = new System.Drawing.Size(133, 23);
             this.Bookmark5_button.TabIndex = 74;
             this.Bookmark5_button.Text = "Mark 5";
             this.toolTip1.SetToolTip(this.Bookmark5_button, "Goes to location 5\r\n(Named and set on the Basic Setup tab.)");
-            this.Bookmark5_button.UseVisualStyleBackColor = true;
+            this.Bookmark5_button.UseVisualStyleBackColor = false;
             this.Bookmark5_button.Click += new System.EventHandler(this.Bookmark5_button_Click);
             // 
             // Bookmark6_button
             // 
+            this.Bookmark6_button.BackColor = System.Drawing.Color.DimGray;
+            this.Bookmark6_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Bookmark6_button.Location = new System.Drawing.Point(792, 802);
             this.Bookmark6_button.Name = "Bookmark6_button";
             this.Bookmark6_button.Size = new System.Drawing.Size(133, 23);
             this.Bookmark6_button.TabIndex = 75;
             this.Bookmark6_button.Text = "Mark 6";
             this.toolTip1.SetToolTip(this.Bookmark6_button, "Goes to location 6\r\n(Named and set on the Basic Setup tab.)");
-            this.Bookmark6_button.UseVisualStyleBackColor = true;
+            this.Bookmark6_button.UseVisualStyleBackColor = false;
             this.Bookmark6_button.Click += new System.EventHandler(this.Bookmark6_button_Click);
             // 
             // Tapes_tabPage
             // 
+            this.Tapes_tabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.Tapes_tabPage.Controls.Add(this.button3);
             this.Tapes_tabPage.Controls.Add(this.label158);
             this.Tapes_tabPage.Controls.Add(this.label157);
@@ -1353,7 +1386,6 @@
             this.Tapes_tabPage.Size = new System.Drawing.Size(1245, 635);
             this.Tapes_tabPage.TabIndex = 6;
             this.Tapes_tabPage.Text = "Tape Positions";
-            this.Tapes_tabPage.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
@@ -2082,6 +2114,7 @@
             // 
             // Components_tabPage
             // 
+            this.Components_tabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.Components_tabPage.Controls.Add(this.ComponentData_dataGridView);
             this.Components_tabPage.Location = new System.Drawing.Point(4, 22);
             this.Components_tabPage.Name = "Components_tabPage";
@@ -2089,7 +2122,6 @@
             this.Components_tabPage.Size = new System.Drawing.Size(1245, 635);
             this.Components_tabPage.TabIndex = 3;
             this.Components_tabPage.Text = "Component Data";
-            this.Components_tabPage.UseVisualStyleBackColor = true;
             // 
             // ComponentData_dataGridView
             // 
@@ -2121,6 +2153,7 @@
             // 
             // tabPageSetupCameras
             // 
+            this.tabPageSetupCameras.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.tabPageSetupCameras.Controls.Add(this.NozzleOffset_label);
             this.tabPageSetupCameras.Controls.Add(this.Nozzle2_dataGridView);
             this.tabPageSetupCameras.Controls.Add(this.Temp_dataGridView);
@@ -2171,7 +2204,6 @@
             this.tabPageSetupCameras.Size = new System.Drawing.Size(1245, 635);
             this.tabPageSetupCameras.TabIndex = 0;
             this.tabPageSetupCameras.Text = "Setup Cameras";
-            this.tabPageSetupCameras.UseVisualStyleBackColor = true;
             // 
             // NozzleOffset_label
             // 
@@ -5331,6 +5363,7 @@
             // 
             // tabPageBasicSetup
             // 
+            this.tabPageBasicSetup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.tabPageBasicSetup.Controls.Add(this.Ato0_button);
             this.tabPageBasicSetup.Controls.Add(this.VacuumInvert_checkBox);
             this.tabPageBasicSetup.Controls.Add(this.PumpInvert_checkBox);
@@ -5426,7 +5459,6 @@
             this.tabPageBasicSetup.Size = new System.Drawing.Size(1245, 635);
             this.tabPageBasicSetup.TabIndex = 1;
             this.tabPageBasicSetup.Text = "Basic Setup";
-            this.tabPageBasicSetup.UseVisualStyleBackColor = true;
             // 
             // Ato0_button
             // 
@@ -7601,6 +7633,7 @@
             // 
             // RunJob_tabPage
             // 
+            this.RunJob_tabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.RunJob_tabPage.Controls.Add(this.ClearPlaced_button);
             this.RunJob_tabPage.Controls.Add(this.Placement_pictureBox);
             this.RunJob_tabPage.Controls.Add(this.SkipMeasurements_checkBox);
@@ -7655,16 +7688,17 @@
             this.RunJob_tabPage.Size = new System.Drawing.Size(1245, 635);
             this.RunJob_tabPage.TabIndex = 2;
             this.RunJob_tabPage.Text = "Run Job";
-            this.RunJob_tabPage.UseVisualStyleBackColor = true;
             // 
             // ClearPlaced_button
             // 
+            this.ClearPlaced_button.BackColor = System.Drawing.Color.DimGray;
+            this.ClearPlaced_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ClearPlaced_button.Location = new System.Drawing.Point(1141, 281);
             this.ClearPlaced_button.Name = "ClearPlaced_button";
             this.ClearPlaced_button.Size = new System.Drawing.Size(98, 23);
             this.ClearPlaced_button.TabIndex = 82;
             this.ClearPlaced_button.Text = "Clear \"Placed\"";
-            this.ClearPlaced_button.UseVisualStyleBackColor = true;
+            this.ClearPlaced_button.UseVisualStyleBackColor = false;
             this.ClearPlaced_button.Click += new System.EventHandler(this.resetPlacedDataToolStripMenuItem_Click);
             // 
             // Placement_pictureBox
@@ -7738,74 +7772,88 @@
             // 
             // PasteCadDataRow_button
             // 
+            this.PasteCadDataRow_button.BackColor = System.Drawing.Color.DimGray;
+            this.PasteCadDataRow_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PasteCadDataRow_button.Location = new System.Drawing.Point(64, 48);
             this.PasteCadDataRow_button.Name = "PasteCadDataRow_button";
             this.PasteCadDataRow_button.Size = new System.Drawing.Size(50, 23);
             this.PasteCadDataRow_button.TabIndex = 26;
             this.PasteCadDataRow_button.Text = "Paste";
-            this.PasteCadDataRow_button.UseVisualStyleBackColor = true;
+            this.PasteCadDataRow_button.UseVisualStyleBackColor = false;
             this.PasteCadDataRow_button.Click += new System.EventHandler(this.PasteCadDataRow_button_Click);
             // 
             // CopyCadDataRow_button
             // 
+            this.CopyCadDataRow_button.BackColor = System.Drawing.Color.DimGray;
+            this.CopyCadDataRow_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CopyCadDataRow_button.Location = new System.Drawing.Point(5, 48);
             this.CopyCadDataRow_button.Name = "CopyCadDataRow_button";
             this.CopyCadDataRow_button.Size = new System.Drawing.Size(50, 23);
             this.CopyCadDataRow_button.TabIndex = 25;
             this.CopyCadDataRow_button.Text = "Copy";
-            this.CopyCadDataRow_button.UseVisualStyleBackColor = true;
+            this.CopyCadDataRow_button.UseVisualStyleBackColor = false;
             this.CopyCadDataRow_button.Click += new System.EventHandler(this.CopyCadDataRow_button_Click);
             // 
             // DeleteCadDataRow_button
             // 
+            this.DeleteCadDataRow_button.BackColor = System.Drawing.Color.DimGray;
+            this.DeleteCadDataRow_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.DeleteCadDataRow_button.Location = new System.Drawing.Point(64, 19);
             this.DeleteCadDataRow_button.Name = "DeleteCadDataRow_button";
             this.DeleteCadDataRow_button.Size = new System.Drawing.Size(50, 23);
             this.DeleteCadDataRow_button.TabIndex = 24;
             this.DeleteCadDataRow_button.Text = "Delete";
-            this.DeleteCadDataRow_button.UseVisualStyleBackColor = true;
+            this.DeleteCadDataRow_button.UseVisualStyleBackColor = false;
             this.DeleteCadDataRow_button.Click += new System.EventHandler(this.DeleteCadDataRow_button_Click);
             // 
             // AddCadDataRow_button
             // 
+            this.AddCadDataRow_button.BackColor = System.Drawing.Color.DimGray;
+            this.AddCadDataRow_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AddCadDataRow_button.Location = new System.Drawing.Point(5, 19);
             this.AddCadDataRow_button.Name = "AddCadDataRow_button";
             this.AddCadDataRow_button.Size = new System.Drawing.Size(50, 23);
             this.AddCadDataRow_button.TabIndex = 23;
             this.AddCadDataRow_button.Text = "Add";
             this.toolTip1.SetToolTip(this.AddCadDataRow_button, "Adds a new row");
-            this.AddCadDataRow_button.UseVisualStyleBackColor = true;
+            this.AddCadDataRow_button.UseVisualStyleBackColor = false;
             this.AddCadDataRow_button.Click += new System.EventHandler(this.AddCadDataRow_button_Click);
             // 
             // RebuildJobData_button
             // 
+            this.RebuildJobData_button.BackColor = System.Drawing.Color.DimGray;
+            this.RebuildJobData_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RebuildJobData_button.Location = new System.Drawing.Point(665, 310);
             this.RebuildJobData_button.Name = "RebuildJobData_button";
             this.RebuildJobData_button.Size = new System.Drawing.Size(108, 23);
             this.RebuildJobData_button.TabIndex = 77;
             this.RebuildJobData_button.Text = "Rebuild";
-            this.RebuildJobData_button.UseVisualStyleBackColor = true;
+            this.RebuildJobData_button.UseVisualStyleBackColor = false;
             this.RebuildJobData_button.Click += new System.EventHandler(this.RebuildJobData_button_Click);
             // 
             // SaveCadData_button
             // 
+            this.SaveCadData_button.BackColor = System.Drawing.Color.DimGray;
+            this.SaveCadData_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SaveCadData_button.Location = new System.Drawing.Point(785, 33);
             this.SaveCadData_button.Name = "SaveCadData_button";
             this.SaveCadData_button.Size = new System.Drawing.Size(75, 23);
             this.SaveCadData_button.TabIndex = 76;
             this.SaveCadData_button.Text = "Save as";
             this.toolTip1.SetToolTip(this.SaveCadData_button, "Saves the CAD data to a file. ");
-            this.SaveCadData_button.UseVisualStyleBackColor = true;
+            this.SaveCadData_button.UseVisualStyleBackColor = false;
             this.SaveCadData_button.Click += new System.EventHandler(this.SaveCadData_button_Click);
             // 
             // Panelize_button
             // 
+            this.Panelize_button.BackColor = System.Drawing.Color.DimGray;
+            this.Panelize_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Panelize_button.Location = new System.Drawing.Point(665, 340);
             this.Panelize_button.Name = "Panelize_button";
             this.Panelize_button.Size = new System.Drawing.Size(108, 23);
             this.Panelize_button.TabIndex = 75;
             this.Panelize_button.Text = "Panelize";
-            this.Panelize_button.UseVisualStyleBackColor = true;
+            this.Panelize_button.UseVisualStyleBackColor = false;
             this.Panelize_button.Click += new System.EventHandler(this.Panelize_button_Click);
             // 
             // StopDemo_button
@@ -7832,12 +7880,14 @@
             // 
             // ManualNeedeChange_button
             // 
+            this.ManualNeedeChange_button.BackColor = System.Drawing.Color.DimGray;
+            this.ManualNeedeChange_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ManualNeedeChange_button.Location = new System.Drawing.Point(352, 596);
             this.ManualNeedeChange_button.Name = "ManualNeedeChange_button";
             this.ManualNeedeChange_button.Size = new System.Drawing.Size(124, 23);
             this.ManualNeedeChange_button.TabIndex = 72;
             this.ManualNeedeChange_button.Text = "Man. Nozzle change";
-            this.ManualNeedeChange_button.UseVisualStyleBackColor = true;
+            this.ManualNeedeChange_button.UseVisualStyleBackColor = false;
             this.ManualNeedeChange_button.Click += new System.EventHandler(this.ManualNozzleChange_button_Click);
             // 
             // ValidMeasurement_checkBox
@@ -7882,6 +7932,8 @@
             // 
             // ReMeasure_button
             // 
+            this.ReMeasure_button.BackColor = System.Drawing.Color.DimGray;
+            this.ReMeasure_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ReMeasure_button.Location = new System.Drawing.Point(352, 546);
             this.ReMeasure_button.Name = "ReMeasure_button";
             this.ReMeasure_button.Size = new System.Drawing.Size(124, 23);
@@ -7889,7 +7941,7 @@
             this.ReMeasure_button.Text = "Re-measure";
             this.toolTip1.SetToolTip(this.ReMeasure_button, "Re-measures PCB, convertign CAD data coordinates to \r\nmachine coordinates, based " +
         "on PCB fiducials.");
-            this.ReMeasure_button.UseVisualStyleBackColor = true;
+            this.ReMeasure_button.UseVisualStyleBackColor = false;
             this.ReMeasure_button.Click += new System.EventHandler(this.ReMeasure_button_Click);
             // 
             // label122
@@ -7964,6 +8016,8 @@
             // 
             // JobDataSave_button
             // 
+            this.JobDataSave_button.BackColor = System.Drawing.Color.DimGray;
+            this.JobDataSave_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.JobDataSave_button.Location = new System.Drawing.Point(784, 335);
             this.JobDataSave_button.Name = "JobDataSave_button";
             this.JobDataSave_button.Size = new System.Drawing.Size(75, 23);
@@ -7971,22 +8025,26 @@
             this.JobDataSave_button.Text = "Save";
             this.toolTip1.SetToolTip(this.JobDataSave_button, "Saves a Job Data file. If saved with the same name \r\nand same directory as a CAD " +
         "Data file, it will be loaded \r\nautomatically when the CAD data file is loaded.");
-            this.JobDataSave_button.UseVisualStyleBackColor = true;
+            this.JobDataSave_button.UseVisualStyleBackColor = false;
             this.JobDataSave_button.Click += new System.EventHandler(this.JobDataSave_button_Click);
             // 
             // JobDataLoad_button
             // 
+            this.JobDataLoad_button.BackColor = System.Drawing.Color.DimGray;
+            this.JobDataLoad_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.JobDataLoad_button.Location = new System.Drawing.Point(784, 310);
             this.JobDataLoad_button.Name = "JobDataLoad_button";
             this.JobDataLoad_button.Size = new System.Drawing.Size(75, 23);
             this.JobDataLoad_button.TabIndex = 59;
             this.JobDataLoad_button.Text = "Load";
             this.toolTip1.SetToolTip(this.JobDataLoad_button, "Loads a Job Data file");
-            this.JobDataLoad_button.UseVisualStyleBackColor = true;
+            this.JobDataLoad_button.UseVisualStyleBackColor = false;
             this.JobDataLoad_button.Click += new System.EventHandler(this.JobDataLoad_button_Click);
             // 
             // LoadCadData_button
             // 
+            this.LoadCadData_button.BackColor = System.Drawing.Color.DimGray;
+            this.LoadCadData_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LoadCadData_button.Location = new System.Drawing.Point(784, 6);
             this.LoadCadData_button.Name = "LoadCadData_button";
             this.LoadCadData_button.Size = new System.Drawing.Size(75, 23);
@@ -7995,7 +8053,7 @@
             this.toolTip1.SetToolTip(this.LoadCadData_button, "Loads CSV format file. This file should \r\noriginate from your PCB design program." +
         "\r\nIf a Job Data file with the same name is found at\r\nthe same directory, it is l" +
         "oaded, too.");
-            this.LoadCadData_button.UseVisualStyleBackColor = true;
+            this.LoadCadData_button.UseVisualStyleBackColor = false;
             this.LoadCadData_button.Click += new System.EventHandler(this.LoadCadData_button_Click);
             // 
             // groupBox3
@@ -8012,28 +8070,34 @@
             // 
             // PlaceOne_button
             // 
+            this.PlaceOne_button.BackColor = System.Drawing.Color.DimGray;
+            this.PlaceOne_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PlaceOne_button.Location = new System.Drawing.Point(5, 87);
             this.PlaceOne_button.Name = "PlaceOne_button";
             this.PlaceOne_button.Size = new System.Drawing.Size(110, 23);
             this.PlaceOne_button.TabIndex = 49;
             this.PlaceOne_button.Text = "Place";
-            this.PlaceOne_button.UseVisualStyleBackColor = true;
+            this.PlaceOne_button.UseVisualStyleBackColor = false;
             this.PlaceOne_button.Click += new System.EventHandler(this.PlaceOne_button_Click);
             // 
             // ShowMachine_button
             // 
+            this.ShowMachine_button.BackColor = System.Drawing.Color.DimGray;
+            this.ShowMachine_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ShowMachine_button.Location = new System.Drawing.Point(5, 29);
             this.ShowMachine_button.Name = "ShowMachine_button";
             this.ShowMachine_button.Size = new System.Drawing.Size(110, 23);
             this.ShowMachine_button.TabIndex = 46;
             this.ShowMachine_button.Text = "Measured location";
             this.toolTip1.SetToolTip(this.ShowMachine_button, "Shows selected component measured location");
-            this.ShowMachine_button.UseVisualStyleBackColor = true;
+            this.ShowMachine_button.UseVisualStyleBackColor = false;
             this.ShowMachine_button.Click += new System.EventHandler(this.ShowMachine_button_Click);
             this.ShowMachine_button.Leave += new System.EventHandler(this.ShowMachine_button_Leave);
             // 
             // ShowNominal_button
             // 
+            this.ShowNominal_button.BackColor = System.Drawing.Color.DimGray;
+            this.ShowNominal_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ShowNominal_button.Location = new System.Drawing.Point(5, 58);
             this.ShowNominal_button.Name = "ShowNominal_button";
             this.ShowNominal_button.Size = new System.Drawing.Size(110, 23);
@@ -8041,7 +8105,7 @@
             this.ShowNominal_button.Text = "Nominal location";
             this.toolTip1.SetToolTip(this.ShowNominal_button, "Shows selected component location based on PCB zero and \r\nCAD data coordinates on" +
         "ly (no optical measurements).");
-            this.ShowNominal_button.UseVisualStyleBackColor = true;
+            this.ShowNominal_button.UseVisualStyleBackColor = false;
             this.ShowNominal_button.Click += new System.EventHandler(this.ShowNominal_button_Click);
             this.ShowNominal_button.Leave += new System.EventHandler(this.ShowNominal_button_Leave);
             // 
@@ -8119,88 +8183,104 @@
             // 
             // ResetOneTape_button
             // 
+            this.ResetOneTape_button.BackColor = System.Drawing.Color.DimGray;
+            this.ResetOneTape_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ResetOneTape_button.Location = new System.Drawing.Point(7, 194);
             this.ResetOneTape_button.Name = "ResetOneTape_button";
             this.ResetOneTape_button.Size = new System.Drawing.Size(109, 23);
             this.ResetOneTape_button.TabIndex = 25;
             this.ResetOneTape_button.Text = "Reset Tape(s)";
             this.toolTip1.SetToolTip(this.ResetOneTape_button, "Resets the  tape pickup locations for \r\nthe components on selected rows to 1.");
-            this.ResetOneTape_button.UseVisualStyleBackColor = true;
+            this.ResetOneTape_button.UseVisualStyleBackColor = false;
             this.ResetOneTape_button.Click += new System.EventHandler(this.ResetOneTape_button_Click);
             // 
             // PasteRow_button
             // 
+            this.PasteRow_button.BackColor = System.Drawing.Color.DimGray;
+            this.PasteRow_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PasteRow_button.Location = new System.Drawing.Point(6, 164);
             this.PasteRow_button.Name = "PasteRow_button";
             this.PasteRow_button.Size = new System.Drawing.Size(110, 23);
             this.PasteRow_button.TabIndex = 24;
             this.PasteRow_button.Text = "Paste Row";
-            this.PasteRow_button.UseVisualStyleBackColor = true;
+            this.PasteRow_button.UseVisualStyleBackColor = false;
             this.PasteRow_button.Click += new System.EventHandler(this.PasteRow_button_Click);
             // 
             // CopyRow_button
             // 
+            this.CopyRow_button.BackColor = System.Drawing.Color.DimGray;
+            this.CopyRow_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CopyRow_button.Location = new System.Drawing.Point(6, 135);
             this.CopyRow_button.Name = "CopyRow_button";
             this.CopyRow_button.Size = new System.Drawing.Size(110, 23);
             this.CopyRow_button.TabIndex = 23;
             this.CopyRow_button.Text = "Copy Row";
-            this.CopyRow_button.UseVisualStyleBackColor = true;
+            this.CopyRow_button.UseVisualStyleBackColor = false;
             this.CopyRow_button.Click += new System.EventHandler(this.CopyRow_button_Click);
             // 
             // NewRow_button
             // 
+            this.NewRow_button.BackColor = System.Drawing.Color.DimGray;
+            this.NewRow_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.NewRow_button.Location = new System.Drawing.Point(6, 77);
             this.NewRow_button.Name = "NewRow_button";
             this.NewRow_button.Size = new System.Drawing.Size(110, 23);
             this.NewRow_button.TabIndex = 22;
             this.NewRow_button.Text = "Add Row";
             this.toolTip1.SetToolTip(this.NewRow_button, "Adds a new row");
-            this.NewRow_button.UseVisualStyleBackColor = true;
+            this.NewRow_button.UseVisualStyleBackColor = false;
             this.NewRow_button.Click += new System.EventHandler(this.NewRow_button_Click);
             // 
             // PlaceThese_button
             // 
+            this.PlaceThese_button.BackColor = System.Drawing.Color.DimGray;
+            this.PlaceThese_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PlaceThese_button.Location = new System.Drawing.Point(7, 232);
             this.PlaceThese_button.Name = "PlaceThese_button";
             this.PlaceThese_button.Size = new System.Drawing.Size(110, 23);
             this.PlaceThese_button.TabIndex = 17;
             this.PlaceThese_button.Text = "Place Selected";
             this.toolTip1.SetToolTip(this.PlaceThese_button, "Does the \"Method\" operation on the components on\r\nthe selected rows.");
-            this.PlaceThese_button.UseVisualStyleBackColor = true;
+            this.PlaceThese_button.UseVisualStyleBackColor = false;
             this.PlaceThese_button.Click += new System.EventHandler(this.PlaceThese_button_Click);
             // 
             // DeleteComponentGroup_button
             // 
+            this.DeleteComponentGroup_button.BackColor = System.Drawing.Color.DimGray;
+            this.DeleteComponentGroup_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.DeleteComponentGroup_button.Location = new System.Drawing.Point(6, 106);
             this.DeleteComponentGroup_button.Name = "DeleteComponentGroup_button";
             this.DeleteComponentGroup_button.Size = new System.Drawing.Size(110, 23);
             this.DeleteComponentGroup_button.TabIndex = 16;
             this.DeleteComponentGroup_button.Text = "Delete Row(s)";
             this.toolTip1.SetToolTip(this.DeleteComponentGroup_button, "Deletes selected rows");
-            this.DeleteComponentGroup_button.UseVisualStyleBackColor = true;
+            this.DeleteComponentGroup_button.UseVisualStyleBackColor = false;
             this.DeleteComponentGroup_button.Click += new System.EventHandler(this.DeleteComponentGroup_button_Click);
             // 
             // Down_button
             // 
+            this.Down_button.BackColor = System.Drawing.Color.DimGray;
+            this.Down_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Down_button.Location = new System.Drawing.Point(6, 48);
             this.Down_button.Name = "Down_button";
             this.Down_button.Size = new System.Drawing.Size(110, 23);
             this.Down_button.TabIndex = 15;
             this.Down_button.Text = "Move Down";
             this.toolTip1.SetToolTip(this.Down_button, "Moves selected row down");
-            this.Down_button.UseVisualStyleBackColor = true;
+            this.Down_button.UseVisualStyleBackColor = false;
             this.Down_button.Click += new System.EventHandler(this.Down_button_Click);
             // 
             // Up_button
             // 
+            this.Up_button.BackColor = System.Drawing.Color.DimGray;
+            this.Up_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Up_button.Location = new System.Drawing.Point(6, 19);
             this.Up_button.Name = "Up_button";
             this.Up_button.Size = new System.Drawing.Size(110, 23);
             this.Up_button.TabIndex = 14;
             this.Up_button.Text = "Move Up";
             this.toolTip1.SetToolTip(this.Up_button, "Moves selected row up");
-            this.Up_button.UseVisualStyleBackColor = true;
+            this.Up_button.UseVisualStyleBackColor = false;
             this.Up_button.Click += new System.EventHandler(this.Up_button_Click);
             // 
             // groupBox1
@@ -8229,35 +8309,41 @@
             // 
             // ResetAllTapes_button
             // 
+            this.ResetAllTapes_button.BackColor = System.Drawing.Color.DimGray;
+            this.ResetAllTapes_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ResetAllTapes_button.Location = new System.Drawing.Point(6, 48);
             this.ResetAllTapes_button.Name = "ResetAllTapes_button";
             this.ResetAllTapes_button.Size = new System.Drawing.Size(109, 23);
             this.ResetAllTapes_button.TabIndex = 37;
             this.ResetAllTapes_button.Text = "Reset All Tapes";
             this.toolTip1.SetToolTip(this.ResetAllTapes_button, "Reset all tape loacations to 1");
-            this.ResetAllTapes_button.UseVisualStyleBackColor = true;
+            this.ResetAllTapes_button.UseVisualStyleBackColor = false;
             this.ResetAllTapes_button.Click += new System.EventHandler(this.ResetAllTapes_button_Click);
             // 
             // AbortPlacement_button
             // 
+            this.AbortPlacement_button.BackColor = System.Drawing.Color.DimGray;
+            this.AbortPlacement_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AbortPlacement_button.Location = new System.Drawing.Point(6, 106);
             this.AbortPlacement_button.Name = "AbortPlacement_button";
             this.AbortPlacement_button.Size = new System.Drawing.Size(109, 23);
             this.AbortPlacement_button.TabIndex = 36;
             this.AbortPlacement_button.Text = "Stop";
             this.toolTip1.SetToolTip(this.AbortPlacement_button, "Aborts the whole operation.");
-            this.AbortPlacement_button.UseVisualStyleBackColor = true;
+            this.AbortPlacement_button.UseVisualStyleBackColor = false;
             this.AbortPlacement_button.Click += new System.EventHandler(this.AbortPlacement_button_Click);
             // 
             // PausePlacement_button
             // 
+            this.PausePlacement_button.BackColor = System.Drawing.Color.DimGray;
+            this.PausePlacement_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PausePlacement_button.Location = new System.Drawing.Point(6, 77);
             this.PausePlacement_button.Name = "PausePlacement_button";
             this.PausePlacement_button.Size = new System.Drawing.Size(109, 23);
             this.PausePlacement_button.TabIndex = 35;
             this.PausePlacement_button.Text = "Pause";
             this.toolTip1.SetToolTip(this.PausePlacement_button, "Temporary pause");
-            this.PausePlacement_button.UseVisualStyleBackColor = true;
+            this.PausePlacement_button.UseVisualStyleBackColor = false;
             this.PausePlacement_button.Click += new System.EventHandler(this.PausePlacement_button_Click);
             // 
             // MachineCoords_label
@@ -8361,13 +8447,15 @@
             // 
             // PlaceAll_button
             // 
+            this.PlaceAll_button.BackColor = System.Drawing.Color.DimGray;
+            this.PlaceAll_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.PlaceAll_button.Location = new System.Drawing.Point(6, 19);
             this.PlaceAll_button.Name = "PlaceAll_button";
             this.PlaceAll_button.Size = new System.Drawing.Size(109, 23);
             this.PlaceAll_button.TabIndex = 20;
             this.PlaceAll_button.Text = "Place All";
             this.toolTip1.SetToolTip(this.PlaceAll_button, "Places all components on the Job Data table.");
-            this.PlaceAll_button.UseVisualStyleBackColor = true;
+            this.PlaceAll_button.UseVisualStyleBackColor = false;
             this.PlaceAll_button.Click += new System.EventHandler(this.PlaceAll_button_Click);
             // 
             // label89
@@ -8413,15 +8501,16 @@
             // 
             this.JobData_GridView.AllowUserToAddRows = false;
             this.JobData_GridView.AllowUserToResizeRows = false;
+            this.JobData_GridView.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.JobData_GridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.JobData_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.JobData_GridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ComponentCount,
@@ -8495,6 +8584,7 @@
             this.CadData_GridView.AllowUserToAddRows = false;
             this.CadData_GridView.AllowUserToDeleteRows = false;
             this.CadData_GridView.AllowUserToResizeRows = false;
+            this.CadData_GridView.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.CadData_GridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
             this.CadData_GridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.CadData_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -8631,12 +8721,14 @@
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.Color.DimGray;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Location = new System.Drawing.Point(444, 775);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(65, 23);
             this.button1.TabIndex = 83;
             this.button1.Text = "Go Nozzle";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // tabControlPages
@@ -8658,6 +8750,7 @@
             // 
             // Nozzles_tabPage
             // 
+            this.Nozzles_tabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.Nozzles_tabPage.Controls.Add(this.DefaultNozzle_label);
             this.Nozzles_tabPage.Controls.Add(this.label139);
             this.Nozzles_tabPage.Controls.Add(this.NozzleWarning_textBox);
@@ -8694,7 +8787,6 @@
             this.Nozzles_tabPage.Size = new System.Drawing.Size(1245, 635);
             this.Nozzles_tabPage.TabIndex = 7;
             this.Nozzles_tabPage.Text = "Nozzles Setup";
-            this.Nozzles_tabPage.UseVisualStyleBackColor = true;
             // 
             // DefaultNozzle_label
             // 
@@ -9377,6 +9469,7 @@
             // 
             // Calibration_tabPage
             // 
+            this.Calibration_tabPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.Calibration_tabPage.Controls.Add(this.runCalibrationE_button);
             this.Calibration_tabPage.Controls.Add(this.runCalibrationD_button);
             this.Calibration_tabPage.Controls.Add(this.runCalibrationC_button);
@@ -9431,7 +9524,6 @@
             this.Calibration_tabPage.Size = new System.Drawing.Size(1245, 635);
             this.Calibration_tabPage.TabIndex = 8;
             this.Calibration_tabPage.Text = "Machine Calibration";
-            this.Calibration_tabPage.UseVisualStyleBackColor = true;
             // 
             // runCalibrationE_button
             // 
@@ -9967,6 +10059,8 @@
             // 
             // Goto_button
             // 
+            this.Goto_button.BackColor = System.Drawing.Color.DimGray;
+            this.Goto_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Goto_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Goto_button.Location = new System.Drawing.Point(959, 727);
             this.Goto_button.Name = "Goto_button";
@@ -9974,7 +10068,7 @@
             this.Goto_button.TabIndex = 89;
             this.Goto_button.Text = "GO:";
             this.toolTip1.SetToolTip(this.Goto_button, resources.GetString("Goto_button.ToolTip"));
-            this.Goto_button.UseVisualStyleBackColor = true;
+            this.Goto_button.UseVisualStyleBackColor = false;
             this.Goto_button.Click += new System.EventHandler(this.Goto_button_Click);
             // 
             // NozzleNo_textBox
@@ -9993,24 +10087,28 @@
             // 
             // LoadCurrentPosition_button
             // 
+            this.LoadCurrentPosition_button.BackColor = System.Drawing.Color.DimGray;
+            this.LoadCurrentPosition_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LoadCurrentPosition_button.Location = new System.Drawing.Point(959, 780);
             this.LoadCurrentPosition_button.Name = "LoadCurrentPosition_button";
             this.LoadCurrentPosition_button.Size = new System.Drawing.Size(177, 23);
             this.LoadCurrentPosition_button.TabIndex = 105;
             this.LoadCurrentPosition_button.Text = "Load current position";
             this.toolTip1.SetToolTip(this.LoadCurrentPosition_button, "Loads current coordinates to X-A boxes");
-            this.LoadCurrentPosition_button.UseVisualStyleBackColor = true;
+            this.LoadCurrentPosition_button.UseVisualStyleBackColor = false;
             this.LoadCurrentPosition_button.Click += new System.EventHandler(this.LoadCurrentPosition_button_Click);
             // 
             // SetCurrentPosition_button
             // 
+            this.SetCurrentPosition_button.BackColor = System.Drawing.Color.DimGray;
+            this.SetCurrentPosition_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SetCurrentPosition_button.Location = new System.Drawing.Point(959, 809);
             this.SetCurrentPosition_button.Name = "SetCurrentPosition_button";
             this.SetCurrentPosition_button.Size = new System.Drawing.Size(177, 23);
             this.SetCurrentPosition_button.TabIndex = 114;
             this.SetCurrentPosition_button.Text = "Set current position";
             this.toolTip1.SetToolTip(this.SetCurrentPosition_button, "Loads current coordinates to X-A boxes");
-            this.SetCurrentPosition_button.UseVisualStyleBackColor = true;
+            this.SetCurrentPosition_button.UseVisualStyleBackColor = false;
             this.SetCurrentPosition_button.Click += new System.EventHandler(this.SetCurrentPosition_button_Click);
             // 
             // TrueX_label
@@ -10077,46 +10175,54 @@
             // 
             // GoX_button
             // 
+            this.GoX_button.BackColor = System.Drawing.Color.DimGray;
+            this.GoX_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.GoX_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GoX_button.Location = new System.Drawing.Point(1048, 670);
             this.GoX_button.Name = "GoX_button";
             this.GoX_button.Size = new System.Drawing.Size(32, 23);
             this.GoX_button.TabIndex = 106;
             this.GoX_button.Text = "X:";
-            this.GoX_button.UseVisualStyleBackColor = true;
+            this.GoX_button.UseVisualStyleBackColor = false;
             this.GoX_button.Click += new System.EventHandler(this.GoX_button_Click);
             // 
             // GoY_button
             // 
+            this.GoY_button.BackColor = System.Drawing.Color.DimGray;
+            this.GoY_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.GoY_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GoY_button.Location = new System.Drawing.Point(1048, 698);
             this.GoY_button.Name = "GoY_button";
             this.GoY_button.Size = new System.Drawing.Size(32, 23);
             this.GoY_button.TabIndex = 107;
             this.GoY_button.Text = "Y:";
-            this.GoY_button.UseVisualStyleBackColor = true;
+            this.GoY_button.UseVisualStyleBackColor = false;
             this.GoY_button.Click += new System.EventHandler(this.GoY_button_Click);
             // 
             // GoA_button
             // 
+            this.GoA_button.BackColor = System.Drawing.Color.DimGray;
+            this.GoA_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.GoA_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GoA_button.Location = new System.Drawing.Point(1048, 752);
             this.GoA_button.Name = "GoA_button";
             this.GoA_button.Size = new System.Drawing.Size(32, 23);
             this.GoA_button.TabIndex = 109;
             this.GoA_button.Text = "A:";
-            this.GoA_button.UseVisualStyleBackColor = true;
+            this.GoA_button.UseVisualStyleBackColor = false;
             this.GoA_button.Click += new System.EventHandler(this.GoA_button_Click);
             // 
             // GoZ_button
             // 
+            this.GoZ_button.BackColor = System.Drawing.Color.DimGray;
+            this.GoZ_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.GoZ_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GoZ_button.Location = new System.Drawing.Point(1048, 724);
             this.GoZ_button.Name = "GoZ_button";
             this.GoZ_button.Size = new System.Drawing.Size(32, 23);
             this.GoZ_button.TabIndex = 108;
             this.GoZ_button.Text = "Z:";
-            this.GoZ_button.UseVisualStyleBackColor = true;
+            this.GoZ_button.UseVisualStyleBackColor = false;
             this.GoZ_button.Click += new System.EventHandler(this.GoZ_button_Click);
             // 
             // AppSettings_openFileDialog
@@ -10154,32 +10260,38 @@
             // 
             // button2
             // 
+            this.button2.BackColor = System.Drawing.Color.DimGray;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Location = new System.Drawing.Point(515, 775);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(65, 23);
             this.button2.TabIndex = 115;
             this.button2.Text = "Go Cam";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // popCam_button
             // 
+            this.popCam_button.BackColor = System.Drawing.Color.DimGray;
+            this.popCam_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.popCam_button.Location = new System.Drawing.Point(444, 800);
             this.popCam_button.Name = "popCam_button";
             this.popCam_button.Size = new System.Drawing.Size(65, 23);
             this.popCam_button.TabIndex = 116;
             this.popCam_button.Text = "Pop Cam";
-            this.popCam_button.UseVisualStyleBackColor = true;
+            this.popCam_button.UseVisualStyleBackColor = false;
             this.popCam_button.Click += new System.EventHandler(this.popCam_button_Click);
             // 
             // popMultiCam_button
             // 
+            this.popMultiCam_button.BackColor = System.Drawing.Color.DimGray;
+            this.popMultiCam_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.popMultiCam_button.Location = new System.Drawing.Point(515, 800);
             this.popMultiCam_button.Name = "popMultiCam_button";
             this.popMultiCam_button.Size = new System.Drawing.Size(65, 23);
             this.popMultiCam_button.TabIndex = 117;
             this.popMultiCam_button.Text = "Pop Multi";
-            this.popMultiCam_button.UseVisualStyleBackColor = true;
+            this.popMultiCam_button.UseVisualStyleBackColor = false;
             this.popMultiCam_button.Click += new System.EventHandler(this.popMultiCam_button_Click);
             // 
             // LiteplacerUC
