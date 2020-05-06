@@ -28,9 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LiteplacerUC));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Park_button = new System.Windows.Forms.Button();
             this.TestNozzleRecognition_button = new System.Windows.Forms.Button();
             this.DownCamZoomFactor_textBox = new System.Windows.Forms.TextBox();
@@ -88,7 +87,7 @@
             this.PlaceZ_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NextX_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NextY_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Tapes_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.Tapes_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ShowPart_button = new System.Windows.Forms.Button();
             this.label129 = new System.Windows.Forms.Label();
@@ -720,7 +719,7 @@
             this.X_Machine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Y_machine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Rotation_machine = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RunJob_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.RunJob_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
             this.resetPlacedDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CadFilePath_label = new System.Windows.Forms.Label();
             this.label56 = new System.Windows.Forms.Label();
@@ -743,7 +742,7 @@
             this.NozzleMinSize_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NozzleMaxSize_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NozzleAlternative_column = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.NozzleUnload_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.NozzleUnload_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
             this.gotoUnloadStartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyUnloadStartPositionsFromLoadEndPositionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getUnloadMovesFromLoadMovesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -791,7 +790,7 @@
             this.StartX_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StartY_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StartZ_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NozzleLoad_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.NozzleLoad_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
             this.gotoLoadStartPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyMovesFromNozzle1ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.Calibration_tabPage = new System.Windows.Forms.TabPage();
@@ -845,7 +844,7 @@
             this.topLeft_XPos_textBox = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.CAD_openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip1 = new System.Windows.Forms.ToolTip();
             this.GotoX_textBox = new System.Windows.Forms.TextBox();
             this.GotoY_textBox = new System.Windows.Forms.TextBox();
             this.GotoZ_textBox = new System.Windows.Forms.TextBox();
@@ -861,7 +860,7 @@
             this.Abs_radioButton = new System.Windows.Forms.RadioButton();
             this.Relative_Button = new System.Windows.Forms.RadioButton();
             this.label108 = new System.Windows.Forms.Label();
-            this.MotorPower_timer = new System.Windows.Forms.Timer(this.components);
+            this.MotorPower_timer = new System.Windows.Forms.Timer();
             this.GoX_button = new System.Windows.Forms.Button();
             this.GoY_button = new System.Windows.Forms.Button();
             this.GoA_button = new System.Windows.Forms.Button();
@@ -2673,7 +2672,7 @@
             this.label135.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label135.Location = new System.Drawing.Point(98, 38);
             this.label135.Name = "label135";
-            this.label135.Size = new System.Drawing.Size(78, 13);
+            this.label135.Size = new System.Drawing.Size(81, 13);
             this.label135.TabIndex = 143;
             this.label135.Text = "ICamera switch:";
             this.toolTip1.SetToolTip(this.label135, resources.GetString("label135.ToolTip"));
@@ -4994,7 +4993,7 @@
             this.label55.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.792F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label55.Location = new System.Drawing.Point(391, 497);
             this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(79, 17);
+            this.label55.Size = new System.Drawing.Size(82, 17);
             this.label55.TabIndex = 115;
             this.label55.Text = "Up ICamera";
             // 
@@ -8415,14 +8414,14 @@
             this.JobData_GridView.AllowUserToAddRows = false;
             this.JobData_GridView.AllowUserToResizeRows = false;
             this.JobData_GridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.JobData_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.JobData_GridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ComponentCount,
@@ -10183,12 +10182,12 @@
             this.popMultiCam_button.UseVisualStyleBackColor = true;
             this.popMultiCam_button.Click += new System.EventHandler(this.popMultiCam_button_Click);
             // 
-            // FormMain
+            // LiteplacerUC
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1258, 856);
+            this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.popMultiCam_button);
             this.Controls.Add(this.popCam_button);
             this.Controls.Add(this.button2);
@@ -10243,15 +10242,9 @@
             this.Controls.Add(this.xpos_textBox);
             this.Controls.Add(this.label14);
             this.DoubleBuffered = true;
-            //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            //this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            //this.KeyPreview = true;
-            this.Name = "FormMain";
-            //this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "LitePlacer";
-            //this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.Name = "LiteplacerUC";
+            this.Size = new System.Drawing.Size(1259, 856);
             this.Load += new System.EventHandler(this.Form1_Load);
-            //this.Shown += new System.EventHandler(this.FormMain_Shown);
             this.Tapes_tabPage.ResumeLayout(false);
             this.Tapes_tabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TapesOld_dataGridView)).EndInit();

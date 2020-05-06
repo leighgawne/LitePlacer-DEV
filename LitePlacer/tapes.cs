@@ -9,23 +9,47 @@ using System.Threading.Tasks;
 using Terpsichore.Machine.Sensors;
 using Terpsichore.Machine.Interfaces;
 using Terpsichore.Machine;
+using Terpsichore.Common;
 
 namespace LitePlacer
 {
-	class TapesClass
+    public enum FeatureType
+    {
+        Circle,
+        Rectangle,
+        Both
+    };
+
+
+    class TapesClass
 	{
         private DataGridView Grid;
         private NozzleClass Nozzle;
-		private dynamic MainForm;
 		private ICamera DownCamera;
 		private ICNC Cnc;
 
-        public TapesClass(DataGridView grd, NozzleClass ndl, ICamera cam, ICNC c, dynamic MainF)
+        private IAppLogger appLogger = DIBindings.Resolve<IAppLogger>();
+
+        public delegate bool GoToFeatureLocation_mHandler(FeatureType Shape, double FindTolerance, double MoveTolerance, out double X, out double Y);
+        public event GoToFeatureLocation_mHandler GoToFeatureLocation_mEvent;
+
+        public delegate void SetPaperTapeMeasurementHandler();
+        public event SetPaperTapeMeasurementHandler SetPaperTapeMeasurementEvent;
+
+        public delegate void SetBlackTapeMeasurementHandler();
+        public event SetBlackTapeMeasurementHandler SetBlackTapeMeasurementEvent;
+
+        public delegate void SetClearTapeMeasurementHandler();
+        public event SetClearTapeMeasurementHandler SetClearTapeMeasurementEvent;
+
+        public delegate bool UseCoordinatesDirectlyHandler(int TapeNum);
+        public event UseCoordinatesDirectlyHandler UseCoordinatesDirectlyEvent;
+
+        public TapesClass(DataGridView grd, NozzleClass ndl, ICamera cam, ICNC c)
 		{
             Grid = grd;
 			Nozzle = ndl;
 			DownCamera = cam;
-			MainForm = MainF;
 			Cnc = c;
 		}
 
@@ -69,11 +93,7 @@ namespace LitePlacer
 					return true;
 				}
 			}
-			MainForm.ShowMessageBox(
-				"Did not find tape " + Id.ToString(),
-				"Tape data error",
-				MessageBoxButtons.OK
-			);
+            appLogger.Error("Did not find tape " + Id.ToString());
 			return false;
 		}
 
@@ -101,7 +121,7 @@ namespace LitePlacer
                 FastParametersOk = false;
                 return false;
             }
-            if (MainForm.UseCoordinatesDirectly(TapeNum))
+            if (UseCoordinatesDirectlyEvent(TapeNum))
             {
                 return true;
             }
@@ -110,10 +130,7 @@ namespace LitePlacer
             int first;
             if (!int.TryParse(Grid.Rows[TapeNum].Cells["NextPart_Column"].Value.ToString(), out first))
             {
-                MainForm.ShowMessageBox(
-                    "Bad data at next column",
-                    "Sloppy programmer error",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Bad data at next column");
                 FastParametersOk = false;
                 return false;
             }
@@ -121,10 +138,7 @@ namespace LitePlacer
             double pitch = 0;
             if (!double.TryParse(Grid.Rows[TapeNum].Cells["Pitch_Column"].Value.ToString().Replace(',', '.'), out pitch))
             {
-                MainForm.ShowMessageBox(
-                    "Bad data at Pitch column, tape ID: " + Grid.Rows[TapeNum].Cells["Id_Column"].Value.ToString(),
-                    "Data error",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Bad data at Pitch column, tape ID: " + Grid.Rows[TapeNum].Cells["Id_Column"].Value.ToString());
                 return false;
             }
             int last = first + ComponentCount - 1;
@@ -222,11 +236,7 @@ namespace LitePlacer
                         break;
 
                     default:
-                        MainForm.ShowMessageBox(
-                            "Bad data at Tape #" + TapeNum.ToString() + ", Orientation",
-                            "Tape data error",
-                            MessageBoxButtons.OK
-                        );
+                    appLogger.Error("Bad data at Tape #" + TapeNum.ToString());
                         return false;
                 }
             }
@@ -236,10 +246,10 @@ namespace LitePlacer
                 FastYstep = 0.0;
             }
 
-            MainForm.DisplayText("Fast parameters:");
-            MainForm.DisplayText("First X: " + FirstX.ToString() + ", Y: " + FirstY.ToString());
-            MainForm.DisplayText("Last X: " + LastX.ToString() + ", Y: " + LastY.ToString());
-            MainForm.DisplayText("Step X: " + FastXstep.ToString() + ", Y: " + FastYstep.ToString());
+            appLogger.Info("Fast parameters:");
+            appLogger.Info("First X: " + FirstX.ToString() + ", Y: " + FirstY.ToString());
+            appLogger.Info("Last X: " + LastX.ToString() + ", Y: " + LastY.ToString());
+            appLogger.Info("Step X: " + FastXstep.ToString() + ", Y: " + FastYstep.ToString());
 
             return true;
         }
@@ -253,10 +263,7 @@ namespace LitePlacer
             int pos;
             if (!int.TryParse(Grid.Rows[TapeNum].Cells["NextPart_Column"].Value.ToString(), out pos))
             {
-                MainForm.ShowMessageBox(
-                    "Bad data at next column",
-                    "Sloppy programmer error",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Bad data at next column");
                 return false;
             }
 
@@ -264,10 +271,7 @@ namespace LitePlacer
             double pitch = 0;
             if (!double.TryParse(Grid.Rows[TapeNum].Cells["Pitch_Column"].Value.ToString().Replace(',', '.'), out pitch))
             {
-                MainForm.ShowMessageBox(
-                    "Bad data at Pitch column, tape ID: " + Grid.Rows[TapeNum].Cells["Id_Column"].Value.ToString(),
-                    "Data error",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Bad data at Pitch column, tape ID: " + Grid.Rows[TapeNum].Cells["Id_Column"].Value.ToString());
                 return false;
             }
 
@@ -299,29 +303,17 @@ namespace LitePlacer
             // Check for values
             if (!double.TryParse(Grid.Rows[Tape].Cells["OffsetX_Column"].Value.ToString().Replace(',', '.'), out OffsetX))
             {
-                MainForm.ShowMessageBox(
-                    "Bad data at Tape " + Grid.Rows[Tape].Cells["ID_Column"].Value.ToString() + ", OffsetX",
-                    "Tape data error",
-                    MessageBoxButtons.OK
-                );
+                appLogger.Error("Bad data at Tape " + Grid.Rows[Tape].Cells["ID_Column"].Value.ToString() + ", OffsetX");
                 return false;
             }
             if (!double.TryParse(Grid.Rows[Tape].Cells["OffsetY_Column"].Value.ToString().Replace(',', '.'), out OffsetY))
             {
-                MainForm.ShowMessageBox(
-                    "Bad data at Tape " + Grid.Rows[Tape].Cells["ID_Column"].Value.ToString() + ", OffsetY",
-                    "Tape data error",
-                    MessageBoxButtons.OK
-                );
+                appLogger.Error("Bad data at Tape " + Grid.Rows[Tape].Cells["ID_Column"].Value.ToString() + ", OffsetY");
                 return false;
             }
             if (!double.TryParse(Grid.Rows[Tape].Cells["Pitch_Column"].Value.ToString().Replace(',', '.'), out Pitch))
             {
-                MainForm.ShowMessageBox(
-                    "Bad data at Tape " + Grid.Rows[Tape].Cells["ID_Column"].Value.ToString() + ", Pitch",
-                    "Tape data error",
-                    MessageBoxButtons.OK
-                );
+                appLogger.Error("Bad data at Tape " + Grid.Rows[Tape].Cells["ID_Column"].Value.ToString() + ", Pitch");
                 return false;
             }
             return true;
@@ -340,20 +332,12 @@ namespace LitePlacer
             double Y = 0.0;
             if (!double.TryParse(Grid.Rows[TapeNum].Cells["FirstX_Column"].Value.ToString().Replace(',', '.'), out X))
             {
-                MainForm.ShowMessageBox(
-                    "Bad data at Tape " + TapeNum.ToString() + ", X",
-                    "Tape data error",
-                    MessageBoxButtons.OK
-                );
+                appLogger.Error("Bad data at Tape " + TapeNum.ToString() + ", X");
                 return false;
             }
             if (!double.TryParse(Grid.Rows[TapeNum].Cells["FirstY_Column"].Value.ToString().Replace(',', '.'), out Y))
             {
-                MainForm.ShowMessageBox(
-                    "Bad data at Tape " + TapeNum.ToString() + ", Y",
-                    "Tape data error",
-                    MessageBoxButtons.OK
-                );
+                appLogger.Error("Bad data at Tape " + TapeNum.ToString() + ", Y");
                 return false;
             }
 
@@ -390,11 +374,7 @@ namespace LitePlacer
                     break;
 
                 default:
-                    MainForm.ShowMessageBox(
-                        "Bad data at Tape #" + TapeNum.ToString() + ", Orientation",
-                        "Tape data error",
-                        MessageBoxButtons.OK
-                    );
+                appLogger.Error("Bad data at Tape #" + TapeNum.ToString() + ", Orientation");
                     return false;
             }
             // X, Y now hold the first guess
@@ -405,19 +385,15 @@ namespace LitePlacer
                 return false;
             }
             // Go there:
-            if (!MainForm.CNC_XY_m(X, Y))
+            if (!Cnc.CNC_XY_m(X, Y))
             {
                 return false;
             };
 
             // get hole exact location:
-            if (!MainForm.GoToFeatureLocation_m(FormMain.FeatureType.Circle, 1.8, 0.1, out X, out Y))
+            if (!GoToFeatureLocation_mEvent(FeatureType.Circle, 1.8, 0.1, out X, out Y))
             {
-                MainForm.ShowMessageBox(
-                    "Can't find tape hole",
-                    "Tape error",
-                    MessageBoxButtons.OK
-                );
+                appLogger.Error("Can't find tape hole");
                 return false;
             }
             ResultX = Cnc.CurrentX + X;
@@ -446,11 +422,7 @@ namespace LitePlacer
             int pos;
 			if (!int.TryParse(Grid.Rows[Tape].Cells["NextPart_Column"].Value.ToString(), out pos))
 			{
-				MainForm.ShowMessageBox(
-					"Bad data at Tape " + Tape.ToString() + ", Next",
-					"Tape data error",
-					MessageBoxButtons.OK
-				);
+                appLogger.Error("Bad data at Tape " + Tape.ToString() + ", Next");
 				return false;
 			}
             // if pitch == 2 and part# is even, DL=0
@@ -494,23 +466,15 @@ namespace LitePlacer
 					break;
 
 				default:
-					MainForm.ShowMessageBox(
-						"Bad data at Tape #" + Tape.ToString() + ", Orientation",
-						"Tape data error",
-						MessageBoxButtons.OK
-					);
+                appLogger.Error("Bad data at Tape #" + Tape.ToString() + ", Orientation");
 					return false;
 			}
-            MainForm.DisplayText("Part position: " + Grid.Rows[Tape].Cells["Id_Column"].Value.ToString() + ", part #" + pos.ToString()
+            appLogger.Info("Part position: " + Grid.Rows[Tape].Cells["Id_Column"].Value.ToString() + ", part #" + pos.ToString()
                 + ": X= " + PartX.ToString() + ", Y= " + PartY.ToString());
 			// rotation:
 			if (Grid.Rows[Tape].Cells["Rotation_Column"].Value == null)
 			{
-				MainForm.ShowMessageBox(
-					"Bad data at tape " + Grid.Rows[Tape].Cells["Id_Column"].Value.ToString() +" rotation",
-					"Assertion error",
-					MessageBoxButtons.OK
-				);
+                appLogger.Error("Bad data at tape " + Grid.Rows[Tape].Cells["Id_Column"].Value.ToString() +" rotation");
 				return false;
 			}
 			switch (Grid.Rows[Tape].Cells["Rotation_Column"].Value.ToString())
@@ -531,11 +495,7 @@ namespace LitePlacer
 					break;
 
 				default:
-					MainForm.ShowMessageBox(
-						"Bad data at Tape " + Grid.Rows[Tape].Cells["Id_Column"].Value.ToString() + " rotation",
-						"Tape data error",
-						MessageBoxButtons.OK
-					);
+					appLogger.Error("Bad data at Tape " + Grid.Rows[Tape].Cells["Id_Column"].Value.ToString() + " rotation");
 					return false;
 					// break;
 			};
@@ -566,11 +526,7 @@ namespace LitePlacer
             int pos;
             if (!int.TryParse(Grid.Rows[Tape].Cells["NextPart_Column"].Value.ToString(), out pos))
 			{
-				MainForm.ShowMessageBox(
-                    "Bad data at Tape " + Grid.Rows[Tape].Cells["Id_Column"].Value.ToString() + ", next",
-					"S´loppy programmer error",
-					MessageBoxButtons.OK
-				);
+                appLogger.Error("Bad data at Tape " + Grid.Rows[Tape].Cells["Id_Column"].Value.ToString() + ", next");
 				return false;
 			}
 
@@ -708,25 +664,17 @@ namespace LitePlacer
             double NextY = 0;
             if (!double.TryParse(Grid.Rows[TapeNumber].Cells["Next_X_Column"].Value.ToString().Replace(',', '.'), out NextX))
 			{
-				MainForm.ShowMessageBox(
-                    "Bad data at Tape " + Grid.Rows[TapeNumber].Cells["Id_Column"].Value.ToString() + ", Next X",
-					"Tape data error",
-					MessageBoxButtons.OK
-				);
+                appLogger.Error("Bad data at Tape " + Grid.Rows[TapeNumber].Cells["Id_Column"].Value.ToString() + ", Next X");
 				return false;
 			}
 
             if (!double.TryParse(Grid.Rows[TapeNumber].Cells["Next_Y_Column"].Value.ToString().Replace(',', '.'), out NextY))
 			{
-				MainForm.ShowMessageBox(
-                    "Bad data at Tape " + Grid.Rows[TapeNumber].Cells["Id_Column"].Value.ToString() + ", Next Y",
-					"Tape data error",
-					MessageBoxButtons.OK
-				);
+                appLogger.Error("Bad data at Tape " + Grid.Rows[TapeNumber].Cells["Id_Column"].Value.ToString() + ", Next Y");
 				return false;
 			}
 			// Go there:
-            if (!MainForm.CNC_XY_m(NextX, NextY))
+            if (!Cnc.CNC_XY_m(NextX, NextY))
 			{
 				return false;
 			};
@@ -734,13 +682,9 @@ namespace LitePlacer
 			// Get hole exact location:
             // We want to find the hole less than 2mm from where we think it should be. (Otherwise there is a risk
 			// of picking a wrong hole.)
-            if (!MainForm.GoToFeatureLocation_m(FormMain.FeatureType.Circle, 1.8, 0.5, out HoleX, out HoleY))
+            if (!GoToFeatureLocation_mEvent(FeatureType.Circle, 1.8, 0.5, out HoleX, out HoleY))
 			{
-				MainForm.ShowMessageBox(
-					"Can't find tape hole",
-					"Tape error",
-					MessageBoxButtons.OK
-				);
+                appLogger.Error("Can't find tape hole");
 				return false;
 			}
 			// The hole locations are:
@@ -755,11 +699,7 @@ namespace LitePlacer
 
             if (!GetPartLocationFromHolePosition_m(TapeNumber, HoleX, HoleY, out PartX, out PartY, out A))
             {
-                MainForm.ShowMessageBox(
-                    "Can't find tape hole",
-                    "Tape error",
-                    MessageBoxButtons.OK
-                );
+                appLogger.Error("Can't find tape hole");
             }
 
 			// Now, PartX, PartY, A tell the position of the part. Take Nozzle there:
@@ -779,26 +719,22 @@ namespace LitePlacer
 			switch (Grid.Rows[row].Cells["Type_Column"].Value.ToString())
 			{
 				case "Paper (White)":
-					MainForm.SetPaperTapeMeasurement();
+                    SetPaperTapeMeasurementEvent();
 					Thread.Sleep(200);   // for automatic camera gain to have an effect
 					return true;
 
 				case "Black Plastic":
-					MainForm.SetBlackTapeMeasurement();
+					SetBlackTapeMeasurementEvent();
 					Thread.Sleep(200);   // for automatic camera gain to have an effect
 					return true;
 
 				case "Clear Plastic":
-					MainForm.SetClearTapeMeasurement();
+					SetClearTapeMeasurementEvent();
 					Thread.Sleep(200);   // for automatic camera gain to have an effect
 					return true;
 
 				default:
-					MainForm.ShowMessageBox(
-						"Bad Type data on row " + row.ToString() + ": " + Grid.Rows[row].Cells["Type_Column"].Value.ToString(),
-						"Bad Type data",
-						MessageBoxButtons.OK
-					);
+                appLogger.Error("Bad Type data on row " + row.ToString() + ": " + Grid.Rows[row].Cells["Type_Column"].Value.ToString());
 					return false;
 			}
 		}

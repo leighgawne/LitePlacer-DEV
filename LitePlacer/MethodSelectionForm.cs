@@ -6,21 +6,22 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Terpsichore.Common;
+using Terpsichore.Machine;
 
 namespace LitePlacer
 {
 	public partial class MethodSelectionForm : Form
 	{
-		public string SelectedMethod = "";
+        private IMySettings settings = DIBindings.Resolve<IMySettings>();
+
+        public string SelectedMethod = "";
 		public bool ShowCheckBox = false;
 		public string HeaderString = "";
 
-        static FormMain MainForm;
-
-        public MethodSelectionForm(dynamic MainF)
+        public MethodSelectionForm()
 		{
 			InitializeComponent();
-            MainForm = MainF;
         }
 
         private void MethodSelectionForm_Load(object sender, EventArgs e)
@@ -32,12 +33,12 @@ namespace LitePlacer
 				Question_button.Enabled = false;
 				this.Text = "Place " + HeaderString;
 			}
-			UpdateJobGrid_checkBox.Checked = MainForm.Setting.Placement_UpdateJobGridAtRuntime;
+			UpdateJobGrid_checkBox.Checked = settings.Placement_UpdateJobGridAtRuntime;
 		}
 
 		private void UpdateJobGrid_checkBox_CheckedChanged(object sender, EventArgs e)
 		{
-            MainForm.Setting.Placement_UpdateJobGridAtRuntime = UpdateJobGrid_checkBox.Checked;
+            settings.Placement_UpdateJobGridAtRuntime = UpdateJobGrid_checkBox.Checked;
 		}
 
 		private void Question_button_Click(object sender, EventArgs e)

@@ -6,13 +6,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Terpsichore.Common;
+using Terpsichore.Machine;
 
 namespace LitePlacer
 {
 	public partial class TapeSelectionForm : Form
 	{
-        static FormMain MainForm;
-
         public DataGridView Grid;
 		public string ID = "none";
         public string Nozzle;
@@ -26,13 +26,16 @@ namespace LitePlacer
 
         private Size GridSizeSave= new Size();
 
-		public TapeSelectionForm(DataGridView grd, dynamic MainF)
+        private IMySettings settings = DIBindings.Resolve<IMySettings>();
+        private IAppLogger appLoggerUC = DIBindings.Resolve<IAppLogger>();
+
+
+        public TapeSelectionForm(DataGridView grd)
 		{
-            MainForm = MainF;
             InitializeComponent();
 			Grid = grd;
             GridSizeSave = Grid.Size;
-            Nozzle = MainForm.Setting.Nozzles_default.ToString();
+            Nozzle = settings.Nozzles_default.ToString();
             // this.Size = new Size(10 * ButtonWidth + 9*ButtonGap + 2 * SideGap+20, 133);  // 20?? 404; 480
             this.Controls.Add(Grid);
 			for (int i = 0; i < Grid.RowCount; i++)
@@ -60,7 +63,7 @@ namespace LitePlacer
 		private void TapeSelectionForm_Load(object sender, EventArgs e)
 		{
             this.Text = HeaderString;
-            UpdateJobData_checkBox.Checked = MainForm.Setting.Placement_UpdateJobGridAtRuntime;
+            UpdateJobData_checkBox.Checked = settings.Placement_UpdateJobGridAtRuntime;
 		}
 
 
@@ -72,7 +75,7 @@ namespace LitePlacer
 
 		private void UpdateJobData_checkBox_CheckedChanged(object sender, EventArgs e)
 		{
-			MainForm.Setting.Placement_UpdateJobGridAtRuntime = UpdateJobData_checkBox.Checked;
+            settings.Placement_UpdateJobGridAtRuntime = UpdateJobData_checkBox.Checked;
 		}
 
 		private void Grid_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -85,11 +88,8 @@ namespace LitePlacer
 			ID = Grid.Rows[e.RowIndex].Cells["Id_Column"].Value.ToString();
             if (Grid.Rows[e.RowIndex].Cells["Nozzle_Column"].Value == null)
             {
-                MainForm.ShowMessageBox(
-                    "Warning: This tape has no nozzle defined, using default value",
-                    "No nozzle defined",
-                    MessageBoxButtons.OK);
-                Grid.Rows[e.RowIndex].Cells["Nozzle_Column"].Value = MainForm.Setting.Nozzles_default.ToString();
+                appLoggerUC.Info("Warning: This tape has no nozzle defined, using default value");
+                Grid.Rows[e.RowIndex].Cells["Nozzle_Column"].Value = settings.Nozzles_default.ToString();
             }
             CloseForm();
         }

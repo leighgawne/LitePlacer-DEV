@@ -8,12 +8,23 @@ using System.Text;
 using System.Windows.Forms;
 using System.Configuration;
 using System.Globalization;
+using Terpsichore.Machine;
+using Terpsichore.Common;
 
 namespace LitePlacer
 {
+    public enum DataTableType
+    {
+        Tapes,
+        ComponentData,
+        VideoProcessing,
+        PanelFiducials,
+        Nozzles
+    };
+
     public partial class PanelizeForm : Form
     {
-        public static FormMain MainForm;
+        //public static FormMain MainForm;
         public DataGridView CadData;
         public DataGridView JobData;
 
@@ -27,10 +38,27 @@ namespace LitePlacer
         private double XIncrement = double.NaN;
         private double YIncrement = double.NaN;
         // =================================================================================
-        
-        public PanelizeForm(dynamic MainF)
+
+        private IMySettings settings = DIBindings.Resolve<IMySettings>();
+        private IAppLogger appLogger = DIBindings.Resolve<IAppLogger>();
+
+        public delegate void LoadDataGridHandler(string FileName, DataGridView dgv, DataTableType TableType);
+        public event LoadDataGridHandler LoadDataGridEvent;
+
+        public delegate bool SaveDataGridHandler(string FileName, DataGridView dgv);
+        public event SaveDataGridHandler SaveDataGridEvent;
+
+        public delegate void DataGridViewCopyHandler(DataGridView FromGr, ref DataGridView ToGr, bool print = true);
+        public event DataGridViewCopyHandler DataGridViewCopyEvent;
+
+        public delegate void FillJobData_GridViewHandler();
+        public event FillJobData_GridViewHandler FillJobData_GridViewEvent;
+
+        public delegate bool FindFiducials_mHandler(out int FiducialsRow);
+        public event FindFiducials_mHandler FindFiducials_mEvent;
+
+        public PanelizeForm()
         {
-            MainForm = MainF;
             InitializeComponent();
         }
 
@@ -39,21 +67,21 @@ namespace LitePlacer
             string path = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
             int i = path.LastIndexOf('\\');
             path = path.Remove(i + 1);
-            MainForm.LoadDataGrid(path + "LitePlacer.PanelFids", PanelFiducials_dataGridView, FormMain.DataTableType.PanelFiducials);
+            LoadDataGridEvent(path + "LitePlacer.PanelFids", PanelFiducials_dataGridView, DataTableType.PanelFiducials);
 
-            XFirstOffset = MainForm.Setting.Panel_XFirstOffset;
+            XFirstOffset = settings.Panel_XFirstOffset;
             XFirstOffset_textBox.Text = XFirstOffset.ToString("0.00", CultureInfo.InvariantCulture);
-            YFirstOffset = MainForm.Setting.Panel_YFirstOffset;
+            YFirstOffset = settings.Panel_YFirstOffset;
             YFirstOffset_textBox.Text = YFirstOffset.ToString("0.00", CultureInfo.InvariantCulture);
-            XRepeats = MainForm.Setting.Panel_XRepeats;
+            XRepeats = settings.Panel_XRepeats;
             XRepeats_textBox.Text = XRepeats.ToString();
-            YRepeats = MainForm.Setting.Panel_YRepeats;
+            YRepeats = settings.Panel_YRepeats;
             YRepeats_textBox.Text = YRepeats.ToString();
-            XIncrement = MainForm.Setting.Panel_XIncrement;
+            XIncrement = settings.Panel_XIncrement;
             XIncrement_textBox.Text = XIncrement.ToString("0.00", CultureInfo.InvariantCulture);
-            YIncrement = MainForm.Setting.Panel_YIncrement;
+            YIncrement = settings.Panel_YIncrement;
             YIncrement_textBox.Text = YIncrement.ToString("0.00", CultureInfo.InvariantCulture);
-            UseBoardFids_checkBox.Checked = MainForm.Setting.Panel_UseBoardFids;
+            UseBoardFids_checkBox.Checked = settings.Panel_UseBoardFids;
         }
 
         public bool OK = false;
@@ -73,14 +101,14 @@ namespace LitePlacer
             string path = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
             int i = path.LastIndexOf('\\');
             path = path.Remove(i + 1);
-            MainForm.SaveDataGrid(path + "LitePlacer.PanelFids", PanelFiducials_dataGridView);
-            MainForm.Setting.Panel_XFirstOffset = XFirstOffset;
-            MainForm.Setting.Panel_YFirstOffset = YFirstOffset;
-            MainForm.Setting.Panel_XRepeats = XRepeats;
-            MainForm.Setting.Panel_YRepeats = YRepeats;
-            MainForm.Setting.Panel_XIncrement = XIncrement;
-            MainForm.Setting.Panel_YIncrement = YIncrement;
-            MainForm.Setting.Panel_UseBoardFids = UseBoardFids_checkBox.Checked;
+            SaveDataGridEvent(path + "LitePlacer.PanelFids", PanelFiducials_dataGridView);
+            settings.Panel_XFirstOffset = XFirstOffset;
+            settings.Panel_YFirstOffset = YFirstOffset;
+            settings.Panel_XRepeats = XRepeats;
+            settings.Panel_YRepeats = YRepeats;
+            settings.Panel_XIncrement = XIncrement;
+            settings.Panel_YIncrement = YIncrement;
+            settings.Panel_UseBoardFids = UseBoardFids_checkBox.Checked;
             this.Close();
         }
 
@@ -98,10 +126,7 @@ namespace LitePlacer
             }
             else
             {
-                MainForm.ShowMessageBox(
-                    "Invalid value in Offset to lower left board, X",
-                    "Invalid value",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Invalid value in Offset to lower left board, X");
                 return false;
             }
 
@@ -111,10 +136,7 @@ namespace LitePlacer
             }
             else
             {
-                MainForm.ShowMessageBox(
-                    "Invalid value in Offset to lower left board, Y",
-                    "Invalid value",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Invalid value in Offset to lower left board, Y");
                 return false;
             }
 
@@ -123,19 +145,13 @@ namespace LitePlacer
                 XRepeats = intval;
                 if (intval < 1)
                 {
-                    MainForm.ShowMessageBox(
-                        "Invalid value in X repeats",
-                        "Invalid value",
-                        MessageBoxButtons.OK);
+                    appLogger.Error("Invalid value in X repeats");
                     return false;
                 }
             }
             else
             {
-                MainForm.ShowMessageBox(
-                    "Invalid value in X repeats",
-                    "Invalid value",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Invalid value in X repeats");
                 return false;
             }
 
@@ -144,19 +160,13 @@ namespace LitePlacer
                 YRepeats = intval;
                 if (intval < 1)
                 {
-                    MainForm.ShowMessageBox(
-                        "Invalid value in Y repeats",
-                        "Invalid value",
-                        MessageBoxButtons.OK);
+                    appLogger.Error("Invalid value in Y repeats");
                     return false;
                 }
             }
             else
             {
-                MainForm.ShowMessageBox(
-                    "Invalid value in Y repeats",
-                    "Invalid value",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Invalid value in Y repeats");
                 return false;
             }
 
@@ -166,10 +176,7 @@ namespace LitePlacer
             }
             else
             {
-                MainForm.ShowMessageBox(
-                    "Invalid value in X increment",
-                    "Invalid value",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Invalid value in X increment");
                 return false;
             }
 
@@ -179,10 +186,7 @@ namespace LitePlacer
             }
             else
             {
-                MainForm.ShowMessageBox(
-                    "Invalid value in Y increment",
-                    "Invalid value",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Invalid value in Y increment");
                 return false;
             }
 
@@ -200,11 +204,8 @@ namespace LitePlacer
                 }
                 if (!found)
                 {
-                MainForm.ShowMessageBox(
-                    "Board fiducials not found or indicated",
-                    "No fiducials",
-                    MessageBoxButtons.OK);
-                return false;
+                    appLogger.Error("Board fiducials not found or indicated");
+                    return false;
                 }
             }
             else
@@ -213,21 +214,15 @@ namespace LitePlacer
                 // Less than three is error
                 if (PanelFiducials_dataGridView.RowCount < 3)
                 {
-                MainForm.ShowMessageBox(
-                    "Need data for at least three (four preferred) fiducials",
-                    "Not enough fiducials",
-                    MessageBoxButtons.OK);
+                appLogger.Error("Need data for at least three (four preferred) fiducials");
                 return false;
                 }
                 // Three is warning
                 if (PanelFiducials_dataGridView.RowCount == 3)
                 {
-                    DialogResult dialogResult = MainForm.ShowMessageBox(
-                        "Only three fiducials, results might be inaccurate. Continue?",
-                        "Three fiducials",
-                        MessageBoxButtons.OKCancel
-                    );
-                    if (dialogResult == DialogResult.Cancel)
+                    appLogger.Error("Only three fiducials, results might be inaccurate. Continue?");
+
+                    //if (dialogResult == DialogResult.Cancel)
                     {
                         return false;
                     }
@@ -267,7 +262,7 @@ namespace LitePlacer
                 }
                 if (!OK)
                 {
-                    MainForm.ShowMessageBox(
+                    appLogger.Error(
                         "Bad data in fiducials table, line " + i.ToString(),
                         "No fiducials",
                         MessageBoxButtons.OK);
@@ -322,7 +317,7 @@ namespace LitePlacer
                 CadData_copy.Columns[i].HeaderText = CadData.Columns[i].HeaderText;                
             }
             CadData_copy.Name = "CadData_copy";
-            MainForm.DataGridViewCopy(CadData, ref CadData_copy, false);
+            DataGridViewCopyEvent(CadData, ref CadData_copy, false);
 
             // ... and clear existing
             CadData.Rows.Clear();
@@ -376,11 +371,8 @@ namespace LitePlacer
             }
             if (!OK)
             {
-                MainForm.DataGridViewCopy(CadData_copy, ref CadData, false);
-                MainForm.ShowMessageBox(
-                    "Error in " + Component + " data.",
-                    "Fiducial data error",
-                    MessageBoxButtons.OK);
+                DataGridViewCopyEvent(CadData_copy, ref CadData, false);
+                appLogger.Error("Error in " + Component + " data.");
                 return false;
 
             }
@@ -423,9 +415,9 @@ namespace LitePlacer
                     CadData.Rows[Last].Cells["Rotation_machine"].Value = "Nan";                    
                 }
                 // Build Job data
-                MainForm.FillJobData_GridView();
+                FillJobData_GridViewEvent();
                 int dummy;
-                if (!MainForm.FindFiducials_m(out dummy)) // don't care of the result, just trying to find fids
+                if (!FindFiducials_mEvent(out dummy)) // don't care of the result, just trying to find fids
                 {
                     return false;
                 }
@@ -437,7 +429,7 @@ namespace LitePlacer
             // (We know they are indicated already)
             string[] OriginalFiducials = JobData.Rows[FiducialIndex].Cells["ComponentList"].Value.ToString().Split(',');
             // Build the job:
-            MainForm.FillJobData_GridView();
+            FillJobData_GridViewEvent();
 
             // Our job now has multiples of each board fiducials, we only want to use four that are furthest apart
             string LowLeft = "_";
@@ -477,7 +469,7 @@ namespace LitePlacer
                         if ((X < 0) || (Y < 0))
                         {
                             // if 10m is not enough, then ??
-                            MainForm.ShowMessageBox(
+                            appLogger.Error(
                                 "Problem with data. " + Row.Cells["Component"].Value.ToString() + " X: " + X.ToString() + ", Y: " + Y.ToString() + "?",
                                 "Fiducials data error",
                                 MessageBoxButtons.OK);
@@ -548,7 +540,7 @@ namespace LitePlacer
             // Likely, one fiducial on board, one dimensional panel
             if (String.Equals(LowLeft, "_") || String.Equals(HighLeft, "_") || String.Equals(LowRight, "_") || String.Equals(HighRight, "_"))
             {
-                MainForm.ShowMessageBox(
+                appLogger.Error(
                     "Current fiducials don't spread out.",
                     "Fiducials data error",
                     MessageBoxButtons.OK);

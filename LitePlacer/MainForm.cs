@@ -90,7 +90,6 @@ namespace LitePlacer
         // =================================================================================
 
         // We need "goto" to different features, currently circles, rectangles or both
-        public enum FeatureType { Circle, Rectangle, Both };
 
         private static ManualResetEventSlim Cnc_ReadyEvent = new ManualResetEventSlim(false);
         // This event is raised in the CNC class, and we'll wait for it when we want to continue only after TinyG has stabilized
@@ -129,7 +128,12 @@ namespace LitePlacer
             DownCamera = new Camera() { ReportInfoCallback = DisplayText };
             UpCamera = new Camera() { ReportInfoCallback = DisplayText };
             Nozzle = new NozzleClass(UpCamera, Cnc, this);
-            Tapes = new TapesClass(Tapes_dataGridView, Nozzle, DownCamera, Cnc, this);
+            Tapes = new TapesClass(Tapes_dataGridView, Nozzle, DownCamera, Cnc);
+            Tapes.GoToFeatureLocation_mEvent += GoToFeatureLocation_m;
+            Tapes.UseCoordinatesDirectlyEvent += UseCoordinatesDirectly;
+            Tapes.SetPaperTapeMeasurementEvent += SetPaperTapeMeasurement;
+            Tapes.SetBlackTapeMeasurementEvent += SetBlackTapeMeasurement;
+            Tapes.SetClearTapeMeasurementEvent += SetClearTapeMeasurement;
             BoardSettings.MainForm = this;
 
         // Setup error handling for Tapes_dataGridViews
@@ -643,7 +647,7 @@ namespace LitePlacer
         // Reading ver2 format allows changing the data grid itself at a software update, 
         // adding and removing columns, and still read in a saved file from previous software version.
 
-        public enum DataTableType { Tapes, ComponentData, VideoProcessing, PanelFiducials, Nozzles };
+        
 
         private int Ver2FormatID = 20000001;  // Just in case we need to identify the format we are using. 
         public bool LoadingDataGrid = false;  // to avoid problems with cell value changed event and unfilled grids
@@ -7616,7 +7620,7 @@ namespace LitePlacer
             {
                 // For method, show a form with explanation texts
                 MakeJobDataDirty();
-                MethodSelectionForm MethodDialog = new MethodSelectionForm(this);
+                MethodSelectionForm MethodDialog = new MethodSelectionForm();
                 MethodDialog.ShowCheckBox = false;
                 MethodDialog.ShowDialog(this);
                 if (MethodDialog.SelectedMethod != "")
@@ -7981,7 +7985,7 @@ namespace LitePlacer
                 // Display Method selection form:
                 bool UserHasNotDecided = false;
                 string NewMethod;
-                MethodSelectionForm MethodDialog = new MethodSelectionForm(this);
+                MethodSelectionForm MethodDialog = new MethodSelectionForm();
                 do
                 {
                     MethodDialog.ShowCheckBox = true;
@@ -10681,7 +10685,13 @@ namespace LitePlacer
         // =================================================================================
         private void Panelize_button_Click(object sender, EventArgs e)
         {
-            PanelizeForm PanelizeDialog = new PanelizeForm(this);
+            PanelizeForm PanelizeDialog = new PanelizeForm();
+            PanelizeDialog.LoadDataGridEvent += LoadDataGrid;
+            PanelizeDialog.SaveDataGridEvent += SaveDataGrid;
+            PanelizeDialog.DataGridViewCopyEvent += DataGridViewCopy;
+            PanelizeDialog.FillJobData_GridViewEvent += FillJobData_GridView;
+            PanelizeDialog.FindFiducials_mEvent += FindFiducials_m;
+
             PanelizeDialog.CadData = CadData_GridView;
             PanelizeDialog.JobData = JobData_GridView;
             PanelizeDialog.ShowDialog(this);
@@ -11674,7 +11684,7 @@ namespace LitePlacer
             System.Drawing.Point loc = Tapes_dataGridView.Location;
             Size size = Tapes_dataGridView.Size;
             DataGridView Grid = Tapes_dataGridView;
-            TapeSelectionForm TapeDialog = new TapeSelectionForm(Grid, this);
+            TapeSelectionForm TapeDialog = new TapeSelectionForm(Grid);
             TapeDialog.HeaderString = header;
             Tapes_dataGridView.CellClick -= new DataGridViewCellEventHandler(Tapes_dataGridView_CellClick);
             this.Controls.Remove(Tapes_dataGridView);
