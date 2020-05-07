@@ -235,6 +235,8 @@ namespace LitePlacer
 
             CalibrationAction.CNC_XYZ_m = Cnc.CNC_XYA_m;
 
+            tabControlPages.SelectedTab = tabControlPages.TabPages["tabPageBasicSetup"];
+
             //OpenSecondaryDownCameraForm();
         }
 
@@ -3966,7 +3968,7 @@ namespace LitePlacer
 
         Color DisplayTxtCol = Color.Black;
 
-        public void DisplayText(string txt, KnownColor col = KnownColor.Black, bool force = false)
+        public void DisplayText(string txt, KnownColor col = KnownColor.White, bool force = false)
         {
             if (DisableLog_checkBox.Checked && !force)
             {

@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LiteplacerUC));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Park_button = new System.Windows.Forms.Button();
             this.TestNozzleRecognition_button = new System.Windows.Forms.Button();
             this.DownCamZoomFactor_textBox = new System.Windows.Forms.TextBox();
@@ -1134,6 +1134,7 @@
             this.SerialMonitor_richTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.SerialMonitor_richTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SerialMonitor_richTextBox.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SerialMonitor_richTextBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.SerialMonitor_richTextBox.HideSelection = false;
             this.SerialMonitor_richTextBox.Location = new System.Drawing.Point(3, 665);
             this.SerialMonitor_richTextBox.Name = "SerialMonitor_richTextBox";
@@ -5462,13 +5463,15 @@
             // 
             // Ato0_button
             // 
+            this.Ato0_button.BackColor = System.Drawing.Color.DimGray;
+            this.Ato0_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Ato0_button.Location = new System.Drawing.Point(860, 435);
             this.Ato0_button.Name = "Ato0_button";
             this.Ato0_button.Size = new System.Drawing.Size(75, 23);
             this.Ato0_button.TabIndex = 114;
             this.Ato0_button.Text = "Set A=0";
             this.toolTip1.SetToolTip(this.Ato0_button, resources.GetString("Ato0_button.ToolTip"));
-            this.Ato0_button.UseVisualStyleBackColor = true;
+            this.Ato0_button.UseVisualStyleBackColor = false;
             this.Ato0_button.Click += new System.EventHandler(this.Ato0_button_Click);
             // 
             // VacuumInvert_checkBox
@@ -5497,28 +5500,34 @@
             // 
             // BoardSettingsLoad_button
             // 
+            this.BoardSettingsLoad_button.BackColor = System.Drawing.Color.DimGray;
+            this.BoardSettingsLoad_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BoardSettingsLoad_button.Location = new System.Drawing.Point(514, 64);
             this.BoardSettingsLoad_button.Name = "BoardSettingsLoad_button";
             this.BoardSettingsLoad_button.Size = new System.Drawing.Size(75, 23);
             this.BoardSettingsLoad_button.TabIndex = 111;
             this.BoardSettingsLoad_button.Text = "Load";
             this.toolTip1.SetToolTip(this.BoardSettingsLoad_button, "Loads TinyG settings from a file.");
-            this.BoardSettingsLoad_button.UseVisualStyleBackColor = true;
+            this.BoardSettingsLoad_button.UseVisualStyleBackColor = false;
             this.BoardSettingsLoad_button.Click += new System.EventHandler(this.BoardSettingsLoad_button_Click);
             // 
             // BoardSettingsSave_button
             // 
+            this.BoardSettingsSave_button.BackColor = System.Drawing.Color.DimGray;
+            this.BoardSettingsSave_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BoardSettingsSave_button.Location = new System.Drawing.Point(514, 35);
             this.BoardSettingsSave_button.Name = "BoardSettingsSave_button";
             this.BoardSettingsSave_button.Size = new System.Drawing.Size(75, 23);
             this.BoardSettingsSave_button.TabIndex = 110;
             this.BoardSettingsSave_button.Text = "Save as...";
             this.toolTip1.SetToolTip(this.BoardSettingsSave_button, "Saves TinyG settings to a file.");
-            this.BoardSettingsSave_button.UseVisualStyleBackColor = true;
+            this.BoardSettingsSave_button.UseVisualStyleBackColor = false;
             this.BoardSettingsSave_button.Click += new System.EventHandler(this.BoardSettingsSave_button_Click);
             // 
             // BoardBuiltInSettings_button
             // 
+            this.BoardBuiltInSettings_button.BackColor = System.Drawing.Color.DimGray;
+            this.BoardBuiltInSettings_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BoardBuiltInSettings_button.Location = new System.Drawing.Point(599, 35);
             this.BoardBuiltInSettings_button.Name = "BoardBuiltInSettings_button";
             this.BoardBuiltInSettings_button.Size = new System.Drawing.Size(111, 23);
@@ -5526,29 +5535,33 @@
             this.BoardBuiltInSettings_button.Text = "Reset to Defaults";
             this.toolTip1.SetToolTip(this.BoardBuiltInSettings_button, "Resets TinyG settings to conservative default settings.\r\nPrevious values will be " +
         "overwritten!");
-            this.BoardBuiltInSettings_button.UseVisualStyleBackColor = true;
+            this.BoardBuiltInSettings_button.UseVisualStyleBackColor = false;
             this.BoardBuiltInSettings_button.Click += new System.EventHandler(this.BoardBuiltInSettings_button_Click);
             // 
             // AppSettingsLoad_button
             // 
+            this.AppSettingsLoad_button.BackColor = System.Drawing.Color.DimGray;
+            this.AppSettingsLoad_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AppSettingsLoad_button.Location = new System.Drawing.Point(264, 64);
             this.AppSettingsLoad_button.Name = "AppSettingsLoad_button";
             this.AppSettingsLoad_button.Size = new System.Drawing.Size(75, 23);
             this.AppSettingsLoad_button.TabIndex = 108;
             this.AppSettingsLoad_button.Text = "Load";
             this.toolTip1.SetToolTip(this.AppSettingsLoad_button, "Loads application settings from a file.");
-            this.AppSettingsLoad_button.UseVisualStyleBackColor = true;
+            this.AppSettingsLoad_button.UseVisualStyleBackColor = false;
             this.AppSettingsLoad_button.Click += new System.EventHandler(this.AppSettingsLoad_button_Click);
             // 
             // AppSettingsSave_button
             // 
+            this.AppSettingsSave_button.BackColor = System.Drawing.Color.DimGray;
+            this.AppSettingsSave_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AppSettingsSave_button.Location = new System.Drawing.Point(264, 35);
             this.AppSettingsSave_button.Name = "AppSettingsSave_button";
             this.AppSettingsSave_button.Size = new System.Drawing.Size(75, 23);
             this.AppSettingsSave_button.TabIndex = 107;
             this.AppSettingsSave_button.Text = "Save as...";
             this.toolTip1.SetToolTip(this.AppSettingsSave_button, "Saves application settings to a file.");
-            this.AppSettingsSave_button.UseVisualStyleBackColor = true;
+            this.AppSettingsSave_button.UseVisualStyleBackColor = false;
             this.AppSettingsSave_button.Click += new System.EventHandler(this.AppSettingsSave_button_Click);
             // 
             // Board_label
@@ -5605,6 +5618,8 @@
             // 
             // CheckNow_button
             // 
+            this.CheckNow_button.BackColor = System.Drawing.Color.DimGray;
+            this.CheckNow_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CheckNow_button.Location = new System.Drawing.Point(179, 607);
             this.CheckNow_button.Name = "CheckNow_button";
             this.CheckNow_button.Size = new System.Drawing.Size(75, 23);
@@ -5612,7 +5627,7 @@
             this.CheckNow_button.Text = "Check Now";
             this.toolTip1.SetToolTip(this.CheckNow_button, "Reads file http://www.liteplacer.com/Downloads/release.txt\r\nand reports, if a new" +
         "er revision of the software is available.");
-            this.CheckNow_button.UseVisualStyleBackColor = true;
+            this.CheckNow_button.UseVisualStyleBackColor = false;
             this.CheckNow_button.Click += new System.EventHandler(this.CheckNow_button_Click);
             // 
             // CheckForUpdate_checkBox
@@ -5665,7 +5680,7 @@
             // 
             // panel9
             // 
-            this.panel9.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel9.BackColor = System.Drawing.Color.Transparent;
             this.panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel9.Controls.Add(this.Hysteresis_textBox);
             this.panel9.Controls.Add(this.label136);
@@ -5734,13 +5749,15 @@
             // 
             // CancelProbing_button
             // 
+            this.CancelProbing_button.BackColor = System.Drawing.Color.DimGray;
+            this.CancelProbing_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CancelProbing_button.Location = new System.Drawing.Point(89, 25);
             this.CancelProbing_button.Name = "CancelProbing_button";
             this.CancelProbing_button.Size = new System.Drawing.Size(75, 23);
             this.CancelProbing_button.TabIndex = 52;
             this.CancelProbing_button.Text = "Cancel";
             this.toolTip1.SetToolTip(this.CancelProbing_button, "Runs Nozzle height calibration routine");
-            this.CancelProbing_button.UseVisualStyleBackColor = true;
+            this.CancelProbing_button.UseVisualStyleBackColor = false;
             this.CancelProbing_button.Visible = false;
             this.CancelProbing_button.Click += new System.EventHandler(this.CancelProbing_button_Click);
             // 
@@ -5756,13 +5773,15 @@
             // 
             // SetProbing_button
             // 
+            this.SetProbing_button.BackColor = System.Drawing.Color.DimGray;
+            this.SetProbing_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SetProbing_button.Location = new System.Drawing.Point(8, 25);
             this.SetProbing_button.Name = "SetProbing_button";
             this.SetProbing_button.Size = new System.Drawing.Size(75, 23);
             this.SetProbing_button.TabIndex = 50;
             this.SetProbing_button.Text = "Start";
             this.toolTip1.SetToolTip(this.SetProbing_button, "Runs Nozzle height calibration routine");
-            this.SetProbing_button.UseVisualStyleBackColor = true;
+            this.SetProbing_button.UseVisualStyleBackColor = false;
             this.SetProbing_button.Click += new System.EventHandler(this.SetProbing_button_Click);
             // 
             // label111
@@ -6043,24 +6062,28 @@
             // 
             // SetMark6_button
             // 
+            this.SetMark6_button.BackColor = System.Drawing.Color.DimGray;
+            this.SetMark6_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SetMark6_button.Location = new System.Drawing.Point(1008, 605);
             this.SetMark6_button.Name = "SetMark6_button";
             this.SetMark6_button.Size = new System.Drawing.Size(75, 23);
             this.SetMark6_button.TabIndex = 69;
             this.SetMark6_button.Text = "Set Mark 6";
             this.toolTip1.SetToolTip(this.SetMark6_button, "Sets and names your \"special\" locations.");
-            this.SetMark6_button.UseVisualStyleBackColor = true;
+            this.SetMark6_button.UseVisualStyleBackColor = false;
             this.SetMark6_button.Click += new System.EventHandler(this.SetMark6_button_Click);
             // 
             // TestXYA_button
             // 
+            this.TestXYA_button.BackColor = System.Drawing.Color.DimGray;
+            this.TestXYA_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.TestXYA_button.Location = new System.Drawing.Point(735, 459);
             this.TestXYA_button.Name = "TestXYA_button";
             this.TestXYA_button.Size = new System.Drawing.Size(75, 23);
             this.TestXYA_button.TabIndex = 56;
             this.TestXYA_button.Text = "Test XYA";
             this.toolTip1.SetToolTip(this.TestXYA_button, "Makes some moves to test axis settings");
-            this.TestXYA_button.UseVisualStyleBackColor = true;
+            this.TestXYA_button.UseVisualStyleBackColor = false;
             this.TestXYA_button.Click += new System.EventHandler(this.TestXYA_button_Click);
             // 
             // Mark6_textBox
@@ -6153,24 +6176,28 @@
             // 
             // TestYX_button
             // 
+            this.TestYX_button.BackColor = System.Drawing.Color.DimGray;
+            this.TestYX_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.TestYX_button.Location = new System.Drawing.Point(230, 486);
             this.TestYX_button.Name = "TestYX_button";
             this.TestYX_button.Size = new System.Drawing.Size(75, 23);
             this.TestYX_button.TabIndex = 55;
             this.TestYX_button.Text = "Test YX";
             this.toolTip1.SetToolTip(this.TestYX_button, "Makes some moves to test axis settings");
-            this.TestYX_button.UseVisualStyleBackColor = true;
+            this.TestYX_button.UseVisualStyleBackColor = false;
             this.TestYX_button.Click += new System.EventHandler(this.TestYX_button_Click);
             // 
             // SetMark5_button
             // 
+            this.SetMark5_button.BackColor = System.Drawing.Color.DimGray;
+            this.SetMark5_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SetMark5_button.Location = new System.Drawing.Point(1008, 579);
             this.SetMark5_button.Name = "SetMark5_button";
             this.SetMark5_button.Size = new System.Drawing.Size(75, 23);
             this.SetMark5_button.TabIndex = 67;
             this.SetMark5_button.Text = "Set Mark 5";
             this.toolTip1.SetToolTip(this.SetMark5_button, "Sets and names your \"special\" locations.");
-            this.SetMark5_button.UseVisualStyleBackColor = true;
+            this.SetMark5_button.UseVisualStyleBackColor = false;
             this.SetMark5_button.Click += new System.EventHandler(this.SetMark5_button_Click);
             // 
             // MotorPower_checkBox
@@ -6187,35 +6214,41 @@
             // 
             // SetMark4_button
             // 
+            this.SetMark4_button.BackColor = System.Drawing.Color.DimGray;
+            this.SetMark4_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SetMark4_button.Location = new System.Drawing.Point(1008, 553);
             this.SetMark4_button.Name = "SetMark4_button";
             this.SetMark4_button.Size = new System.Drawing.Size(75, 23);
             this.SetMark4_button.TabIndex = 65;
             this.SetMark4_button.Text = "Set Mark 4";
             this.toolTip1.SetToolTip(this.SetMark4_button, "Sets and names your \"special\" locations.");
-            this.SetMark4_button.UseVisualStyleBackColor = true;
+            this.SetMark4_button.UseVisualStyleBackColor = false;
             this.SetMark4_button.Click += new System.EventHandler(this.SetMark4_button_Click);
             // 
             // SetMark3_button
             // 
+            this.SetMark3_button.BackColor = System.Drawing.Color.DimGray;
+            this.SetMark3_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SetMark3_button.Location = new System.Drawing.Point(1008, 527);
             this.SetMark3_button.Name = "SetMark3_button";
             this.SetMark3_button.Size = new System.Drawing.Size(75, 23);
             this.SetMark3_button.TabIndex = 63;
             this.SetMark3_button.Text = "Set Mark 3";
             this.toolTip1.SetToolTip(this.SetMark3_button, "Sets and names your \"special\" locations.");
-            this.SetMark3_button.UseVisualStyleBackColor = true;
+            this.SetMark3_button.UseVisualStyleBackColor = false;
             this.SetMark3_button.Click += new System.EventHandler(this.SetMark3_button_Click);
             // 
             // SetMark2_button
             // 
+            this.SetMark2_button.BackColor = System.Drawing.Color.DimGray;
+            this.SetMark2_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SetMark2_button.Location = new System.Drawing.Point(1008, 501);
             this.SetMark2_button.Name = "SetMark2_button";
             this.SetMark2_button.Size = new System.Drawing.Size(75, 23);
             this.SetMark2_button.TabIndex = 61;
             this.SetMark2_button.Text = "Set Mark 2";
             this.toolTip1.SetToolTip(this.SetMark2_button, "Sets and names your \"special\" locations.");
-            this.SetMark2_button.UseVisualStyleBackColor = true;
+            this.SetMark2_button.UseVisualStyleBackColor = false;
             this.SetMark2_button.Click += new System.EventHandler(this.SetMark2_button_Click);
             // 
             // label113
@@ -6238,13 +6271,15 @@
             // 
             // SetMark1_button
             // 
+            this.SetMark1_button.BackColor = System.Drawing.Color.DimGray;
+            this.SetMark1_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SetMark1_button.Location = new System.Drawing.Point(1008, 475);
             this.SetMark1_button.Name = "SetMark1_button";
             this.SetMark1_button.Size = new System.Drawing.Size(75, 23);
             this.SetMark1_button.TabIndex = 59;
             this.SetMark1_button.Text = "Set Mark 1";
             this.toolTip1.SetToolTip(this.SetMark1_button, "Sets and names your \"special\" locations.");
-            this.SetMark1_button.UseVisualStyleBackColor = true;
+            this.SetMark1_button.UseVisualStyleBackColor = false;
             this.SetMark1_button.Click += new System.EventHandler(this.SetMark1_button_Click);
             // 
             // label107
@@ -6285,90 +6320,106 @@
             // 
             // TestA_button
             // 
+            this.TestA_button.BackColor = System.Drawing.Color.DimGray;
+            this.TestA_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.TestA_button.Location = new System.Drawing.Point(860, 461);
             this.TestA_button.Name = "TestA_button";
             this.TestA_button.Size = new System.Drawing.Size(75, 23);
             this.TestA_button.TabIndex = 35;
             this.TestA_button.Text = "Test A";
             this.toolTip1.SetToolTip(this.TestA_button, "Makes some moves to test axis settings");
-            this.TestA_button.UseVisualStyleBackColor = true;
+            this.TestA_button.UseVisualStyleBackColor = false;
             this.TestA_button.Click += new System.EventHandler(this.TestA_button_Click);
             // 
             // Homebutton
             // 
+            this.Homebutton.BackColor = System.Drawing.Color.DimGray;
+            this.Homebutton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Homebutton.Location = new System.Drawing.Point(477, 435);
             this.Homebutton.Name = "Homebutton";
             this.Homebutton.Size = new System.Drawing.Size(75, 23);
             this.Homebutton.TabIndex = 17;
             this.Homebutton.Text = "Home XYZ";
             this.toolTip1.SetToolTip(this.Homebutton, "Homes X, Y and Z axis, using limit switch only.");
-            this.Homebutton.UseVisualStyleBackColor = true;
+            this.Homebutton.UseVisualStyleBackColor = false;
             this.Homebutton.Click += new System.EventHandler(this.Homebutton_Click);
             // 
             // TestZ_button
             // 
+            this.TestZ_button.BackColor = System.Drawing.Color.DimGray;
+            this.TestZ_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.TestZ_button.Location = new System.Drawing.Point(593, 461);
             this.TestZ_button.Name = "TestZ_button";
             this.TestZ_button.Size = new System.Drawing.Size(75, 23);
             this.TestZ_button.TabIndex = 34;
             this.TestZ_button.Text = "Test Z";
             this.toolTip1.SetToolTip(this.TestZ_button, "Makes some moves to test axis settings");
-            this.TestZ_button.UseVisualStyleBackColor = true;
+            this.TestZ_button.UseVisualStyleBackColor = false;
             this.TestZ_button.Click += new System.EventHandler(this.TestZ_button_Click);
             // 
             // HomeZ_button
             // 
+            this.HomeZ_button.BackColor = System.Drawing.Color.DimGray;
+            this.HomeZ_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.HomeZ_button.Location = new System.Drawing.Point(593, 435);
             this.HomeZ_button.Name = "HomeZ_button";
             this.HomeZ_button.Size = new System.Drawing.Size(75, 23);
             this.HomeZ_button.TabIndex = 33;
             this.HomeZ_button.Text = "Home Z";
             this.toolTip1.SetToolTip(this.HomeZ_button, "Homes Z axis, using limit switch only.");
-            this.HomeZ_button.UseVisualStyleBackColor = true;
+            this.HomeZ_button.UseVisualStyleBackColor = false;
             this.HomeZ_button.Click += new System.EventHandler(this.HomeZ_button_Click);
             // 
             // HomeY_button
             // 
+            this.HomeY_button.BackColor = System.Drawing.Color.DimGray;
+            this.HomeY_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.HomeY_button.Location = new System.Drawing.Point(341, 435);
             this.HomeY_button.Name = "HomeY_button";
             this.HomeY_button.Size = new System.Drawing.Size(75, 23);
             this.HomeY_button.TabIndex = 32;
             this.HomeY_button.Text = "Home Y";
             this.toolTip1.SetToolTip(this.HomeY_button, "Homes Y axis, using limit switch only.");
-            this.HomeY_button.UseVisualStyleBackColor = true;
+            this.HomeY_button.UseVisualStyleBackColor = false;
             this.HomeY_button.Click += new System.EventHandler(this.HomeY_button_Click);
             // 
             // HomeXY_button
             // 
+            this.HomeXY_button.BackColor = System.Drawing.Color.DimGray;
+            this.HomeXY_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.HomeXY_button.Location = new System.Drawing.Point(230, 435);
             this.HomeXY_button.Name = "HomeXY_button";
             this.HomeXY_button.Size = new System.Drawing.Size(75, 23);
             this.HomeXY_button.TabIndex = 31;
             this.HomeXY_button.Text = "Home XY";
             this.toolTip1.SetToolTip(this.HomeXY_button, "Homes X and Y axis, using limit switch only.");
-            this.HomeXY_button.UseVisualStyleBackColor = true;
+            this.HomeXY_button.UseVisualStyleBackColor = false;
             this.HomeXY_button.Click += new System.EventHandler(this.HomeXY_button_Click);
             // 
             // HomeX_button
             // 
+            this.HomeX_button.BackColor = System.Drawing.Color.DimGray;
+            this.HomeX_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.HomeX_button.Location = new System.Drawing.Point(88, 435);
             this.HomeX_button.Name = "HomeX_button";
             this.HomeX_button.Size = new System.Drawing.Size(75, 23);
             this.HomeX_button.TabIndex = 30;
             this.HomeX_button.Text = "Home X";
             this.toolTip1.SetToolTip(this.HomeX_button, "Homes X axis, using limit switch only.");
-            this.HomeX_button.UseVisualStyleBackColor = true;
+            this.HomeX_button.UseVisualStyleBackColor = false;
             this.HomeX_button.Click += new System.EventHandler(this.HomeX_button_Click);
             // 
             // AppBuiltInSettings_button
             // 
+            this.AppBuiltInSettings_button.BackColor = System.Drawing.Color.DimGray;
+            this.AppBuiltInSettings_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AppBuiltInSettings_button.Location = new System.Drawing.Point(345, 34);
             this.AppBuiltInSettings_button.Name = "AppBuiltInSettings_button";
             this.AppBuiltInSettings_button.Size = new System.Drawing.Size(111, 23);
             this.AppBuiltInSettings_button.TabIndex = 29;
             this.AppBuiltInSettings_button.Text = "Reset to Defaults";
             this.toolTip1.SetToolTip(this.AppBuiltInSettings_button, "Resets application settings to default values.");
-            this.AppBuiltInSettings_button.UseVisualStyleBackColor = true;
+            this.AppBuiltInSettings_button.UseVisualStyleBackColor = false;
             this.AppBuiltInSettings_button.Click += new System.EventHandler(this.AppBuiltInSettings_button_Click);
             // 
             // Vacuum_checkBox
@@ -6397,40 +6448,46 @@
             // 
             // TestXY_button
             // 
+            this.TestXY_button.BackColor = System.Drawing.Color.DimGray;
+            this.TestXY_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.TestXY_button.Location = new System.Drawing.Point(230, 461);
             this.TestXY_button.Name = "TestXY_button";
             this.TestXY_button.Size = new System.Drawing.Size(75, 23);
             this.TestXY_button.TabIndex = 24;
             this.TestXY_button.Text = "Test XY";
             this.toolTip1.SetToolTip(this.TestXY_button, "Makes some moves to test axis settings");
-            this.TestXY_button.UseVisualStyleBackColor = true;
+            this.TestXY_button.UseVisualStyleBackColor = false;
             this.TestXY_button.Click += new System.EventHandler(this.TestXY_button_Click);
             // 
             // TestY_button
             // 
+            this.TestY_button.BackColor = System.Drawing.Color.DimGray;
+            this.TestY_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.TestY_button.Location = new System.Drawing.Point(341, 461);
             this.TestY_button.Name = "TestY_button";
             this.TestY_button.Size = new System.Drawing.Size(75, 23);
             this.TestY_button.TabIndex = 23;
             this.TestY_button.Text = "Test Y";
             this.toolTip1.SetToolTip(this.TestY_button, "Makes some moves to test axis settings");
-            this.TestY_button.UseVisualStyleBackColor = true;
+            this.TestY_button.UseVisualStyleBackColor = false;
             this.TestY_button.Click += new System.EventHandler(this.TestY_button_Click);
             // 
             // TestX_button
             // 
+            this.TestX_button.BackColor = System.Drawing.Color.DimGray;
+            this.TestX_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.TestX_button.Location = new System.Drawing.Point(88, 461);
             this.TestX_button.Name = "TestX_button";
             this.TestX_button.Size = new System.Drawing.Size(75, 23);
             this.TestX_button.TabIndex = 22;
             this.TestX_button.Text = "Test X";
             this.toolTip1.SetToolTip(this.TestX_button, "Makes some moves to test axis settings");
-            this.TestX_button.UseVisualStyleBackColor = true;
+            this.TestX_button.UseVisualStyleBackColor = false;
             this.TestX_button.Click += new System.EventHandler(this.TestX_button_Click);
             // 
             // panel7
             // 
-            this.panel7.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel7.BackColor = System.Drawing.Color.Transparent;
             this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel7.Controls.Add(this.panel8);
             this.panel7.Controls.Add(this.label48);
@@ -6637,7 +6694,7 @@
             // 
             // panel3
             // 
-            this.panel3.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel3.BackColor = System.Drawing.Color.Transparent;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.label73);
             this.panel3.Controls.Add(this.xsv_maskedTextBox);
@@ -6948,7 +7005,7 @@
             // 
             // panel5
             // 
-            this.panel5.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel5.BackColor = System.Drawing.Color.Transparent;
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel5.Controls.Add(this.label81);
             this.panel5.Controls.Add(this.zsv_maskedTextBox);
@@ -7259,7 +7316,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.label77);
             this.panel1.Controls.Add(this.ysv_maskedTextBox);
@@ -7580,13 +7637,15 @@
             // 
             // buttonRefreshPortList
             // 
+            this.buttonRefreshPortList.BackColor = System.Drawing.Color.DimGray;
+            this.buttonRefreshPortList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonRefreshPortList.Location = new System.Drawing.Point(156, 13);
             this.buttonRefreshPortList.Name = "buttonRefreshPortList";
             this.buttonRefreshPortList.Size = new System.Drawing.Size(75, 23);
             this.buttonRefreshPortList.TabIndex = 4;
             this.buttonRefreshPortList.Text = "Refresh List";
             this.toolTip1.SetToolTip(this.buttonRefreshPortList, "Re-scans the serial ports on this computer");
-            this.buttonRefreshPortList.UseVisualStyleBackColor = true;
+            this.buttonRefreshPortList.UseVisualStyleBackColor = false;
             this.buttonRefreshPortList.Click += new System.EventHandler(this.buttonRefreshPortList_Click);
             // 
             // labelSerialPortStatus
@@ -7602,6 +7661,8 @@
             // 
             // buttonConnectSerial
             // 
+            this.buttonConnectSerial.BackColor = System.Drawing.Color.DimGray;
+            this.buttonConnectSerial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonConnectSerial.Location = new System.Drawing.Point(75, 41);
             this.buttonConnectSerial.Name = "buttonConnectSerial";
             this.buttonConnectSerial.Size = new System.Drawing.Size(75, 23);
@@ -7609,7 +7670,7 @@
             this.buttonConnectSerial.Text = "Connect";
             this.toolTip1.SetToolTip(this.buttonConnectSerial, "Close: Closes current connection.\r\nClear Err or Connect:Tries to connect to TinyG" +
         " at port shown above.");
-            this.buttonConnectSerial.UseVisualStyleBackColor = true;
+            this.buttonConnectSerial.UseVisualStyleBackColor = false;
             this.buttonConnectSerial.Click += new System.EventHandler(this.buttonConnectSerial_Click);
             // 
             // label2
@@ -7754,6 +7815,7 @@
             this.groupBox12.Controls.Add(this.CopyCadDataRow_button);
             this.groupBox12.Controls.Add(this.DeleteCadDataRow_button);
             this.groupBox12.Controls.Add(this.AddCadDataRow_button);
+            this.groupBox12.ForeColor = System.Drawing.SystemColors.ControlText;
             this.groupBox12.Location = new System.Drawing.Point(656, 186);
             this.groupBox12.Name = "groupBox12";
             this.groupBox12.Size = new System.Drawing.Size(120, 88);
@@ -8061,6 +8123,7 @@
             this.groupBox3.Controls.Add(this.PlaceOne_button);
             this.groupBox3.Controls.Add(this.ShowMachine_button);
             this.groupBox3.Controls.Add(this.ShowNominal_button);
+            this.groupBox3.ForeColor = System.Drawing.SystemColors.ControlText;
             this.groupBox3.Location = new System.Drawing.Point(656, 62);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(122, 118);
@@ -8174,6 +8237,7 @@
             this.groupBox2.Controls.Add(this.DeleteComponentGroup_button);
             this.groupBox2.Controls.Add(this.Down_button);
             this.groupBox2.Controls.Add(this.Up_button);
+            this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlText;
             this.groupBox2.Location = new System.Drawing.Point(657, 368);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(122, 263);
@@ -8300,6 +8364,7 @@
             this.groupBox1.Controls.Add(this.label63);
             this.groupBox1.Controls.Add(this.label58);
             this.groupBox1.Controls.Add(this.PlaceAll_button);
+            this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.groupBox1.Location = new System.Drawing.Point(6, 491);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(340, 144);
@@ -8503,14 +8568,14 @@
             this.JobData_GridView.AllowUserToResizeRows = false;
             this.JobData_GridView.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.JobData_GridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.JobData_GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.JobData_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.JobData_GridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ComponentCount,
