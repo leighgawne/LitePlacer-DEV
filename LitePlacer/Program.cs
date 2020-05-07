@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Terpsichore.Common;
 
 namespace LitePlacer
 {
@@ -13,6 +14,9 @@ namespace LitePlacer
         [STAThread]
         static void Main()
         {
+            Terpsichore.Common.DIBindings.CreateSingletonBinding<IAppLogger, AppLoggerStub>();
+            Bootstrap.Initialise();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormMain());

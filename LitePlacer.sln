@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LitePlacer", "LitePlacer\LitePlacer.csproj", "{69B205A1-16AF-4E8A-B751-EA5F5E4FCB4E}"
 EndProject
@@ -13,6 +13,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ubject.Core", "..\ubject.core\ubject.core\Ubject.Core.csproj", "{97645959-AB5E-4E23-9113-CF47F6340DE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terpsichore.Machine", "..\terpsichore.machine\Terpsichore.Machine\Terpsichore.Machine.csproj", "{5904A482-CB65-4ACC-B210-A32AAA6D0A97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terpsichore.Common", "..\terpsichore.common\Terpsichore.Common\Terpsichore.Common.csproj", "{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,30 @@ Global
 		{5904A482-CB65-4ACC-B210-A32AAA6D0A97}.x64|x64.Build.0 = Release|Any CPU
 		{5904A482-CB65-4ACC-B210-A32AAA6D0A97}.x64|x86.ActiveCfg = Release|Any CPU
 		{5904A482-CB65-4ACC-B210-A32AAA6D0A97}.x64|x86.Build.0 = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Debug|x64.Build.0 = Debug|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Debug|x86.Build.0 = Debug|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Release|x64.ActiveCfg = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Release|x64.Build.0 = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Release|x86.ActiveCfg = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.Release|x86.Build.0 = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.x64|Any CPU.ActiveCfg = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.x64|Any CPU.Build.0 = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.x64|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.x64|Mixed Platforms.Build.0 = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.x64|x64.ActiveCfg = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.x64|x64.Build.0 = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.x64|x86.ActiveCfg = Release|Any CPU
+		{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}.x64|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

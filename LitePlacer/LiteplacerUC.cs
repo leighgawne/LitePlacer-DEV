@@ -40,7 +40,7 @@ using Terpsichore.Machine.Sensors;
 using Terpsichore.Common;
 using Terpsichore.Machine.Interfaces;
 using Terpsichore.Machine;
-using Solvethirteen.Desktop.Workspace;
+//using Solvethirteen.Desktop.Workspace;
 
 namespace LitePlacer
 {
@@ -124,6 +124,7 @@ namespace LitePlacer
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
+            Cnc.ValueUpdaterEvent += ValueUpdater;
             Cnc.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
 
             DownCamera = Terpsichore.Common.DIBindings.Resolve<IDownCamera>();

@@ -124,6 +124,9 @@ namespace LitePlacer
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
+            Cnc.ValueUpdaterEvent += ValueUpdater;
+            Cnc.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
+
             Cnc_ReadyEvent = Cnc.ReadyEvent;
             DownCamera = new Camera() { ReportInfoCallback = DisplayText };
             UpCamera = new Camera() { ReportInfoCallback = DisplayText };

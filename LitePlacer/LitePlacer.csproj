@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{69B205A1-16AF-4E8A-B751-EA5F5E4FCB4E}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LitePlacer</RootNamespace>
     <AssemblyName>LitePlacer</AssemblyName>
@@ -135,8 +135,8 @@
     <Reference Include="MathNet.Numerics, Version=3.20.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7" />
     <Reference Include="PresentationFramework" />
@@ -156,6 +156,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppLoggerStub.cs" />
     <Compile Include="BoardSettings.cs" />
     <Compile Include="Bootstrap.cs" />
     <Compile Include="Calibration\Actions\CalibrationAction.cs" />
@@ -281,10 +282,6 @@
     <Folder Include="Mission\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DeveloperShell\Solvethirteen.Desktop.Workspace\Solvethirteen.Desktop.Workspace.csproj">
-      <Project>{14759D2A-5536-46EC-9267-D04DD6052AAB}</Project>
-      <Name>Solvethirteen.Desktop.Workspace</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\terpsichore.common\Terpsichore.Common\Terpsichore.Common.csproj">
       <Project>{A967B2E1-E18D-4C3D-BA4C-FC8DEA9942D5}</Project>
       <Name>Terpsichore.Common</Name>
