@@ -15,10 +15,12 @@ namespace LitePlacer
 
         public void Error(string text, params object[] args)
         {
+            Program.MainForm.DisplayText(text, System.Drawing.KnownColor.Red);
         }
 
         public void Info(string text, params object[] args)
         {
+            Program.MainForm.DisplayText(text);
         }
         
         public void Trace(string text, params object[] args)

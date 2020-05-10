@@ -86,7 +86,7 @@ namespace LitePlacer
             {
                 return (DialogResult)this.Invoke(new PassStringStringReturnDialogResultDelegate(ShowMessageBox), message, header, buttons);
             }
-            CenteredMessageBox2.PrepToCenterMessageBoxOnForm(this);
+            //CenteredMessageBox2.PrepToCenterMessageBoxOnForm(this);
             return MessageBox.Show(this, message, header, buttons);
         }
         public delegate DialogResult PassStringStringReturnDialogResultDelegate(String s1, String s2, MessageBoxButtons buttons);
@@ -124,7 +124,7 @@ namespace LitePlacer
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
-            Cnc.ValueUpdaterEvent += ValueUpdater;
+            Cnc.AddValueUpdaterHandler(ValueUpdater);
             Cnc.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
 
             DownCamera = Terpsichore.Common.DIBindings.Resolve<IDownCamera>();
@@ -343,7 +343,7 @@ namespace LitePlacer
         private string LastTabPage = "";
 
         // ==============================================================================================
-        private void FormMain_Shown(object sender, EventArgs e)
+        public void FormMain_Shown(object sender, EventArgs e)
         {
             LabelTestButtons();
             AttachButtonLogging(this.Controls);
@@ -3913,53 +3913,60 @@ namespace LitePlacer
 
         private void buttonConnectSerial_Click(object sender, EventArgs e)
         {
-            if (comboBoxSerialPorts.SelectedItem == null)
+            try
             {
-                return;  // no ports
-            };
-
-            if (Cnc.ErrorState || !Cnc.Connected)
-            {
-                if (Setting.CNC_SerialPort != comboBoxSerialPorts.SelectedItem.ToString())
+                if (comboBoxSerialPorts.SelectedItem == null)
                 {
-                    // user changed the selection
+                    return;  // no ports
+                };
+
+                if (Cnc.ErrorState || !Cnc.Connected)
+                {
+                    if (Setting.CNC_SerialPort != comboBoxSerialPorts.SelectedItem.ToString())
+                    {
+                        // user changed the selection
+                        buttonConnectSerial.Text = "Closing..";
+                        Cnc.Close();
+                        // 0.5 s delay for the system to clear buffers etc
+                        for (int i = 0; i < 250; i++)
+                        {
+                            Thread.Sleep(2);
+                            Application.DoEvents();
+                        }
+                    }
+                    // reconnect, attempt to clear the error
+                    if (Cnc.Connect(comboBoxSerialPorts.SelectedItem.ToString()))
+                    {
+                        buttonConnectSerial.Text = "Connecting..";
+                        Cnc.ErrorState = false;
+                        Setting.CNC_SerialPort = comboBoxSerialPorts.SelectedItem.ToString();
+                        UpdateCncConnectionStatus();
+                        if (ControlBoardJustConnected())
+                        {
+                            OfferHoming();
+                        }
+                        else
+                        {
+                            Cnc.CncError();
+                        }
+                    }
+                }
+                else
+                {
+                    // Close connection
                     buttonConnectSerial.Text = "Closing..";
                     Cnc.Close();
-                    // 0.5 s delay for the system to clear buffers etc
                     for (int i = 0; i < 250; i++)
                     {
                         Thread.Sleep(2);
                         Application.DoEvents();
                     }
-                }
-                // reconnect, attempt to clear the error
-                if (Cnc.Connect(comboBoxSerialPorts.SelectedItem.ToString()))
-                {
-                    buttonConnectSerial.Text = "Connecting..";
-                    Cnc.ErrorState = false;
-                    Setting.CNC_SerialPort = comboBoxSerialPorts.SelectedItem.ToString();
                     UpdateCncConnectionStatus();
-                    if (ControlBoardJustConnected())
-                    {
-                        OfferHoming();
-                    }
-                    else
-                    {
-                        Cnc.CncError();
-                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                // Close connection
-                buttonConnectSerial.Text = "Closing..";
-                Cnc.Close();
-                for (int i = 0; i < 250; i++)
-                {
-                    Thread.Sleep(2);
-                    Application.DoEvents();
-                }
-                UpdateCncConnectionStatus();
+                AppLogger.Error(ex.Message);
             }
         }
 
@@ -3989,7 +3996,7 @@ namespace LitePlacer
 
                     if (AppLogger != null)
                     {
-                        AppLogger.Info(txt);
+                        //AppLogger.Info(txt);
                     }
                 }));
 
@@ -4010,7 +4017,7 @@ namespace LitePlacer
 
             if (AppLogger != null)
             {
-                AppLogger.Info(txt);
+                //AppLogger.Info(txt);
             }
         }
 
@@ -4851,7 +4858,7 @@ namespace LitePlacer
                 value = value.Substring(0, ind);
             };
             double val = Convert.ToDouble(value);
-            Cnc.HomingSpeedY = val;
+            Cnc.HomingSpeedZ = val;
             zsv_maskedTextBox.Text = val.ToString();
         }
 

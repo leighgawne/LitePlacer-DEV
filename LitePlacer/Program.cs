@@ -8,6 +8,8 @@ namespace LitePlacer
 {
     static class Program
     {
+        public static FormMain MainForm { get; set; }
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -19,7 +21,8 @@ namespace LitePlacer
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormMain());
+            MainForm = new FormMain();
+            Application.Run(MainForm);
         }
     }
 }

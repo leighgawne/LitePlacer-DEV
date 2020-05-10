@@ -91,7 +91,7 @@ namespace LitePlacer
 
         // We need "goto" to different features, currently circles, rectangles or both
 
-        private static ManualResetEventSlim Cnc_ReadyEvent = new ManualResetEventSlim(false);
+        private static ManualResetEventSlim Cnc_ReadyEvent;
         // This event is raised in the CNC class, and we'll wait for it when we want to continue only after TinyG has stabilized
 
         public FormMain()
@@ -124,7 +124,7 @@ namespace LitePlacer
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
-            Cnc.ValueUpdaterEvent += ValueUpdater;
+            Cnc.AddValueUpdaterHandler(ValueUpdater);
             Cnc.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
 
             Cnc_ReadyEvent = Cnc.ReadyEvent;
