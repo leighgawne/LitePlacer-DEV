@@ -343,7 +343,7 @@ namespace LitePlacer
         private string LastTabPage = "";
 
         // ==============================================================================================
-        public void FormMain_Shown(object sender, EventArgs e)
+        public async void FormMain_Shown(object sender, EventArgs e)
         {
             LabelTestButtons();
             AttachButtonLogging(this.Controls);
@@ -418,7 +418,7 @@ namespace LitePlacer
             ForceNozzle_numericUpDown.Value = Setting.Nozzles_default;
             DefaultNozzle_label.Text = Setting.Nozzles_default.ToString();
 
-             PumpInvert_checkBox.Checked= Setting.General_PumpOutputInverted;
+            PumpInvert_checkBox.Checked= Setting.General_PumpOutputInverted;
             VacuumInvert_checkBox.Checked = Setting.General_VacuumOutputInverted;
             Pump_checkBox.Checked = false;
             Vacuum_checkBox.Checked = false;
@@ -428,7 +428,7 @@ namespace LitePlacer
 
             if (Cnc.Connected)
             {
-                if (ControlBoardJustConnected())
+                if (await ControlBoardJustConnectedAsync())
                 {
                     Cnc.PumpDefaultSetting();
                     Cnc.VacuumDefaultSetting();
@@ -3911,7 +3911,7 @@ namespace LitePlacer
             }
         }
 
-        private void buttonConnectSerial_Click(object sender, EventArgs e)
+        private async void buttonConnectSerial_Click(object sender, EventArgs e)
         {
             try
             {
@@ -3941,7 +3941,7 @@ namespace LitePlacer
                         Cnc.ErrorState = false;
                         Setting.CNC_SerialPort = comboBoxSerialPorts.SelectedItem.ToString();
                         UpdateCncConnectionStatus();
-                        if (ControlBoardJustConnected())
+                        if (await ControlBoardJustConnectedAsync())
                         {
                             OfferHoming();
                         }
@@ -4059,8 +4059,12 @@ namespace LitePlacer
         }
 
         // Sends the calls that will result to messages that update the values shown on UI
-
         private bool LoopParameters(Type type)
+        {
+            return (Task.Run(() => LoopParametersAsync(type)).GetAwaiter().GetResult());
+        }
+
+        private async Task<bool> LoopParametersAsync(Type type)
         {
             foreach (var parameter in type.GetFields())
             {
@@ -4072,7 +4076,7 @@ namespace LitePlacer
                 {
                     Name = Name.Substring(5);
                 }
-                if (!Cnc.CNC_Write_m("{\"" + Name + "\":\"\"}"))
+                if (!await Cnc.CNC_Write_mAsync("{\"" + Name + "\":\"\"}"))
                 {
                     return false;
                 };
@@ -4082,6 +4086,11 @@ namespace LitePlacer
         }
 
         private bool ControlBoardJustConnected()
+        {
+            return (Task.Run(() => ControlBoardJustConnectedAsync()).GetAwaiter().GetResult());
+        }
+
+        private async Task<bool> ControlBoardJustConnectedAsync()
         {
             // Called when control board conenction is estabished.
             // First, find out the board type. Then, 
@@ -4102,14 +4111,14 @@ namespace LitePlacer
 
             }
             // initial position
-            if (!Cnc.CNC_Write_m("{sr:n}"))
+            if (!await Cnc.CNC_Write_mAsync("{sr:n}"))
             {
                 return false;
             }
             if (Cnc.Controlboard == ControlBoardType.TinyG)
             {
                 DisplayText("Reading TinyG settings:");
-                if (!LoopParameters(typeof(BoardSettings.TinyG)))
+                if (!await LoopParametersAsync(typeof(BoardSettings.TinyG)))
                 {
                     return false;
                 }
@@ -4136,7 +4145,7 @@ namespace LitePlacer
             //Thread.Sleep(100);
             //Vacuum_checkBox.Checked = true;
             //Cnc.IgnoreError = false;
-            Cnc.CNC_Write_m("{\"me\":\"\"}");  // motor power on
+            await Cnc.CNC_Write_mAsync("{\"me\":\"\"}");  // motor power on
             MotorPower_checkBox.Checked = true;
             return true;
         }
