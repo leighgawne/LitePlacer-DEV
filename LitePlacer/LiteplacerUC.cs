@@ -343,7 +343,7 @@ namespace LitePlacer
         private string LastTabPage = "";
 
         // ==============================================================================================
-        public async void FormMain_Shown(object sender, EventArgs e)
+        public async Task FormMain_ShownAsync(object sender, EventArgs e)
         {
             LabelTestButtons();
             AttachButtonLogging(this.Controls);
@@ -2019,6 +2019,16 @@ namespace LitePlacer
         // =================================================================================
         // Different types of control hardware and settings
         // =================================================================================
+
+        private async Task<bool> UpdateCNCBoardType_mAsync()
+        {
+            DisplayText("Finding board type:");
+            if (!await Cnc.CNC_Write_mAsync("{\"hp\":\"\"}"))
+            {
+                return false;
+            };
+            return true;
+        }
 
         private bool UpdateCNCBoardType_m()
         {
@@ -4098,7 +4108,7 @@ namespace LitePlacer
             // For qQuintic boards that dont' have on-board storage, write the values.
 
             Thread.Sleep(200); // Give TinyG time to wake up
-            bool res = UpdateCNCBoardType_m();
+            bool res = await UpdateCNCBoardType_mAsync();
             if (!res)
             {
                 return false;
@@ -4153,7 +4163,14 @@ namespace LitePlacer
         // Called from CNC class when UI need updating
         public void ValueUpdater(string item, string value)
         {
-            if (InvokeRequired) { Invoke(new Action<string, string>(ValueUpdater), new[] { item, value }); return; }
+            //if (InvokeRequired) { Invoke(new Action<string, string>(ValueUpdater), new[] { item, value }); return; }
+
+            if (InvokeRequired) 
+            { 
+                BeginInvoke(new Action<string, string>(ValueUpdater), new[] { item, value }); 
+                return; 
+            }
+
             // DisplayText("ValueUpdater: item= " + item + ", value= " + value);
 
             switch (item)
