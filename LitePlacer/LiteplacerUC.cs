@@ -444,7 +444,7 @@ namespace LitePlacer
 
         // =================================================================================
 
-        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        public void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             bool OK = true;
             bool res;
