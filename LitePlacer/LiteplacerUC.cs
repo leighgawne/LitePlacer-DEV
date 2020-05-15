@@ -40,6 +40,7 @@ using Terpsichore.Machine.Sensors;
 using Terpsichore.Common;
 using Terpsichore.Machine.Interfaces;
 using Terpsichore.Machine;
+using Terpsichore.Machine.EmbeddedController;
 //using Solvethirteen.Desktop.Workspace;
 
 namespace LitePlacer
@@ -60,6 +61,7 @@ namespace LitePlacer
         public BoardSettings.qQuintic qQuinticBoard = new BoardSettings.qQuintic();
 
         public IAppLogger AppLogger = Terpsichore.Common.DIBindings.Resolve<IAppLogger>();
+        private ICommsProcessor CommsProcessor = DIBindings.Resolve<ICommsProcessor>();
 
 
         AppSettings SettingsOps;
@@ -126,6 +128,7 @@ namespace LitePlacer
             Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
             Cnc.AddValueUpdaterHandler(ValueUpdater);
             Cnc.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
+            RegisterForParameterUpdates();
 
             DownCamera = Terpsichore.Common.DIBindings.Resolve<IDownCamera>();
             DownCamera.ReportInfoCallback = DisplayText;
@@ -4160,6 +4163,66 @@ namespace LitePlacer
             return true;
         }
 
+
+        private void RegisterForParameterUpdates()
+        {
+            var tinyGCalibrations = DIBindings.Resolve<ITinyGCalibrations>();
+
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.mt, (x) => { UpdateControlThreadSafe(Update_mt, x); });
+
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1sa, (x) => { UpdateControlThreadSafe(Update_1sa, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1tr, (x) => { UpdateControlThreadSafe(Update_1tr, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1mi, (x) => { UpdateControlThreadSafe(Update_1mi, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor2sa, (x) => { UpdateControlThreadSafe(Update_2sa, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor2tr, (x) => { UpdateControlThreadSafe(Update_2tr, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor2mi, (x) => { UpdateControlThreadSafe(Update_2mi, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor3sa, (x) => { UpdateControlThreadSafe(Update_3sa, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor3tr, (x) => { UpdateControlThreadSafe(Update_3tr, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor3mi, (x) => { UpdateControlThreadSafe(Update_3mi, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4sa, (x) => { UpdateControlThreadSafe(Update_4sa, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4tr, (x) => { UpdateControlThreadSafe(Update_4tr, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4mi, (x) => { UpdateControlThreadSafe(Update_4mi, x); });
+
+
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xvm, (x) => { UpdateControlThreadSafe(Update_xvm, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xjm, (x) => { UpdateControlThreadSafe(Update_xjm, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xjh, (x) => { UpdateControlThreadSafe(Update_xjh, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xsv, (x) => { UpdateControlThreadSafe(Update_xsv, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.yvm, (x) => { UpdateControlThreadSafe(Update_yvm, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.yjm, (x) => { UpdateControlThreadSafe(Update_yjm, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.yjh, (x) => { UpdateControlThreadSafe(Update_yjh, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.ysv, (x) => { UpdateControlThreadSafe(Update_ysv, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zvm, (x) => { UpdateControlThreadSafe(Update_zvm, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zjm, (x) => { UpdateControlThreadSafe(Update_zjm, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zjh, (x) => { UpdateControlThreadSafe(Update_zjh, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsv, (x) => { UpdateControlThreadSafe(Update_zsv, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.avm, (x) => { UpdateControlThreadSafe(Update_avm, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.ajm, (x) => { UpdateControlThreadSafe(Update_ajm, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xsn, (x) => { UpdateControlThreadSafe(Update_xsn, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xsx, (x) => { UpdateControlThreadSafe(Update_xsx, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.ysn, (x) => { UpdateControlThreadSafe(Update_ysn, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.ysx, (x) => { UpdateControlThreadSafe(Update_ysx, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsn, (x) => { UpdateControlThreadSafe(Update_zsn, x); });
+            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsx, (x) => { UpdateControlThreadSafe(Update_zsx, x); });
+
+            //CommsProcessor.RegisterDataReceived(tinyGCalibrations.hp, (x) => { UpdateControlThreadSafe(Update_hp, x); });
+        }
+
+        private void UpdateControlThreadSafe(Action<string> action, string value)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new MethodInvoker(delegate
+                {
+                    action(value);
+                }));
+            }
+            else
+            {
+                action(value);
+            }
+        }
+
         // Called from CNC class when UI need updating
         public void ValueUpdater(string item, string value)
         {
@@ -4170,6 +4233,11 @@ namespace LitePlacer
                 BeginInvoke(new Action<string, string>(ValueUpdater), new[] { item, value }); 
                 return; 
             }
+
+            var tinyG = DIBindings.Resolve<ITinyGCalibrations>();
+            var settings = new Settings();
+            //settings.RegisterParamUpdate(tinyG.mt, Update_mt);
+
 
             // DisplayText("ValueUpdater: item= " + item + ", value= " + value);
 

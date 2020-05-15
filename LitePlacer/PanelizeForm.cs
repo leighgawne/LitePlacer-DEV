@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Globalization;
 using Terpsichore.Machine;
 using Terpsichore.Common;
+using Terpsichore.Machine.Interfaces;
 
 namespace LitePlacer
 {

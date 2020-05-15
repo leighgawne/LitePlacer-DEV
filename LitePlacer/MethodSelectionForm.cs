@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Terpsichore.Common;
 using Terpsichore.Machine;
+using Terpsichore.Machine.Interfaces;
 
 namespace LitePlacer
 {
