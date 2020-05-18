@@ -126,17 +126,19 @@ namespace LitePlacer
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
-            Cnc.AddValueUpdaterHandler(ValueUpdater);
+            //Cnc.AddValueUpdaterHandler(ValueUpdater);
             Cnc.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
             RegisterForParameterUpdates();
 
             DownCamera = Terpsichore.Common.DIBindings.Resolve<IDownCamera>();
             DownCamera.ReportInfoCallback = DisplayText;
             //DownCamera = new ICamera() { ReportInfoCallback = DisplayText };
-            UpCamera = new Camera() { ReportInfoCallback = DisplayText };
+            UpCamera = Terpsichore.Common.DIBindings.Resolve<IUpCamera>();
+            UpCamera.ReportInfoCallback = DisplayText;
+            //UpCamera = new Camera() { ReportInfoCallback = DisplayText };
             Nozzle = new NozzleClass(UpCamera, Cnc, this);
             Tapes = new TapesClass(Tapes_dataGridView, Nozzle, DownCamera, Cnc);
-            Tapes.GoToFeatureLocation_mEvent += GoToFeatureLocation_m;
+            Tapes.GoToFeatureLocation_mEventAsync += GoToFeatureLocation_mAsync;
             Tapes.UseCoordinatesDirectlyEvent += UseCoordinatesDirectly;
             Tapes.SetPaperTapeMeasurementEvent += SetPaperTapeMeasurement;
             Tapes.SetBlackTapeMeasurementEvent += SetBlackTapeMeasurement;
@@ -385,7 +387,8 @@ namespace LitePlacer
             }
             RobustFast_checkBox.Checked = Setting.Cameras_RobustSwitch;
 
-            StartCameras();
+            await Task.Run(() => StartCameras());
+            
             tabControlPages.SelectedTab = tabPageBasicSetup;
             LastTabPage = "tabPageBasicSetup";
 
@@ -435,7 +438,7 @@ namespace LitePlacer
                 {
                     Cnc.PumpDefaultSetting();
                     Cnc.VacuumDefaultSetting();
-                    OfferHoming();
+                    await OfferHomingAsync();
                 }
             }
 
@@ -2025,18 +2028,10 @@ namespace LitePlacer
 
         private async Task<bool> UpdateCNCBoardType_mAsync()
         {
-            DisplayText("Finding board type:");
-            if (!await Cnc.CNC_Write_mAsync("{\"hp\":\"\"}"))
-            {
-                return false;
-            };
-            return true;
-        }
+            var tinyGSystemParameters = DIBindings.Resolve<ITinyGSystemParameters>();
 
-        private bool UpdateCNCBoardType_m()
-        {
             DisplayText("Finding board type:");
-            if (!Cnc.CNC_Write_m("{\"hp\":\"\"}"))
+            if (!await Cnc.CNC_Write_mAsync("{\"" + tinyGSystemParameters.hp.Name + "\":\"\"}"))
             {
                 return false;
             };
@@ -2089,7 +2084,7 @@ namespace LitePlacer
         }
 
         [DebuggerStepThrough]
-        private void MotorPower_timer_Tick(object sender, EventArgs e)
+        private async void MotorPower_timer_Tick(object sender, EventArgs e)
         {
             if (PositionConfidence)         // == if timer should run
             {
@@ -2097,12 +2092,12 @@ namespace LitePlacer
                 PowerTimerCount = PowerTimerCount + 1.0;
                 if ((PowerTimerCount + 0.1) > TinyGMotorTimeout)
                 {
-                    OfferHoming();
+                    await OfferHomingAsync();
                 }
             }
         }
 
-         private void OfferHoming()
+         private async Task OfferHomingAsync()
         {
             PositionConfidence = false;
             DialogResult dialogResult = ShowMessageBox(
@@ -2114,21 +2109,21 @@ namespace LitePlacer
             }
             else
             {
-                DoHoming();
+                await DoHomingAsync();
             }
         }
 
-        private bool DoHoming()
+        private async Task<bool> DoHomingAsync()
         {
             PositionConfidence = false;
             ValidMeasurement_checkBox.Checked = false;
             OpticalHome_button.BackColor = Color.Red;
-            if (!MechanicalHoming_m())
+            if (!await MechanicalHoming_mAsync())
             {
                 OpticalHome_button.BackColor = Color.Red;
                 return false;
             }
-            if (!OpticalHoming_m())
+            if (!await OpticalHoming_mAsync())
             {
                 OpticalHome_button.BackColor = Color.Red;
                 return false;
@@ -2141,7 +2136,7 @@ namespace LitePlacer
                     return false;
                 }
                 // home again
-                if (!OpticalHoming_m())
+                if (!await OpticalHoming_mAsync())
                 {
                     OpticalHome_button.BackColor = Color.Red;
                     return false;
@@ -2333,8 +2328,13 @@ namespace LitePlacer
         // X and Y are set to remainding error (true position: currect + error)
         // =====================================================================
 
-        public bool GoToFeatureLocation_m(FeatureType Shape, double FindTolerance, double MoveTolerance, out double X, out double Y)
+        public async Task<Tuple<bool, double, double>> GoToFeatureLocation_mAsync(FeatureType Shape, double FindTolerance, double MoveTolerance)
         {
+            double X = 0.0F;
+            double Y = 0.0F;
+
+            bool isRunning = DownCamera.IsRunning();
+
             DisplayText("GoToFeatureLocation_m(), FindTolerance: " + FindTolerance.ToString() + ", MoveTolerance: " + MoveTolerance.ToString());
             SelectCamera(DownCamera);
             X = 100;
@@ -2346,13 +2346,13 @@ namespace LitePlacer
                     "Attempt to find circle, downcamera is not running.",
                     "ICamera not running",
                     MessageBoxButtons.OK);
-                return false;
+                return new Tuple<bool, double, double>(false, X, Y);
             }
             int count = 0;
             int res = 0;
             int tries = 0;
-            bool ProcessingStateSave = DownCamera.PauseProcessing;
-            DownCamera.PauseProcessing = true;
+            //bool ProcessingStateSave = DownCamera.PauseProcessing;
+            //DownCamera.PauseProcessing = true;
             do
             {
                 // Measure location
@@ -2380,7 +2380,7 @@ namespace LitePlacer
                             "GoToFeatureLocation called with unknown feature " + Shape.ToString(),
                             "Programmer error:",
                             MessageBoxButtons.OK);
-                        return false;
+                        return new Tuple<bool, double, double>(false, X, Y);
                     }
 
                     if (res != 0)
@@ -2395,8 +2395,8 @@ namespace LitePlacer
                             "Optical positioning: Can't find Feature",
                             "No found",
                             MessageBoxButtons.OK);
-                        DownCamera.PauseProcessing = ProcessingStateSave;
-                        return false;
+                        //DownCamera.PauseProcessing = ProcessingStateSave;
+                        return new Tuple<bool, double, double>(false, X, Y);
                     }
                 }
                 X = X * Setting.DownCam_XmmPerPixel;
@@ -2405,9 +2405,9 @@ namespace LitePlacer
                 // If we are further than move tolerance, go there
                 if ((Math.Abs(X) > MoveTolerance) || (Math.Abs(Y) > MoveTolerance))
                 {
-                    if (!Cnc.CNC_XY_m(Cnc.CurrentX + X, Cnc.CurrentY + Y))
+                    if (!await Cnc.CNC_XY_mAsync(Cnc.CurrentX + X, Cnc.CurrentY + Y))
                     {
-                        return false;
+                        return new Tuple<bool, double, double>(false, X, Y);
                     }
                 }
                 count++;
@@ -2416,30 +2416,33 @@ namespace LitePlacer
                 && ((Math.Abs(X) > MoveTolerance)
                 || (Math.Abs(Y) > MoveTolerance)));
 
-            DownCamera.PauseProcessing = ProcessingStateSave;
+            //DownCamera.PauseProcessing = ProcessingStateSave;
             if (count >= 7)
             {
                 ShowMessageBox(
                     "Optical positioning: Process is unstable, result is unreliable!",
                     "Count exeeded",
                     MessageBoxButtons.OK);
-                return false;
+                return new Tuple<bool, double, double>(false, X, Y);
             }
-            return true;
+            return new Tuple<bool, double, double>(true, X, Y);
         }
 
 
-        private bool OpticalHoming_m()
+        private async Task<bool> OpticalHoming_mAsync()
         {
             DisplayText("Optical homing");
             SetHomingMeasurement();
-            double X;
-            double Y;
             // Find within 20mm, goto within 0.05
-            if (!GoToFeatureLocation_m(FeatureType.Circle, 20.0, 0.05, out X, out Y))
+            var result = await GoToFeatureLocation_mAsync(FeatureType.Circle, 20.0, 0.05);
+
+            if (!result.Item1)
             {
                 return false;
             }
+
+            double X = result.Item2;
+            double Y = result.Item3;
 
             // Measure 7 times, get median: 
             SetHomingMeasurement();
@@ -2483,10 +2486,10 @@ namespace LitePlacer
             return true;
         }
 
-        private bool MechanicalHoming_m()
+        private async Task<bool> MechanicalHoming_mAsync()
         {
             Cnc.ProbingMode(false);
-            if (!Cnc.CNC_Home_m("Z"))
+            if (!await Cnc.CNC_Home_mAsync("Z"))
             {
                 return false;
             };
@@ -2495,11 +2498,11 @@ namespace LitePlacer
             {
                 return false;
             };
-            if (!Cnc.CNC_Home_m("Y"))
+            if (!await Cnc.CNC_Home_mAsync("Y"))
             {
                 return false;
             };
-            if (!Cnc.CNC_Home_m("X"))
+            if (!await Cnc.CNC_Home_mAsync("X"))
             {
                 return false;
             };
@@ -2528,9 +2531,9 @@ namespace LitePlacer
             return true;
         }
 
-        private void OpticalHome_button_Click(object sender, EventArgs e)
+        private async void OpticalHome_button_Click(object sender, EventArgs e)
         {
-            DoHoming();
+            await DoHomingAsync();
         }
 
         #endregion CNC interface functions
@@ -2610,6 +2613,11 @@ namespace LitePlacer
 
         private void SelectCamera(ICamera cam)
         {
+            if (cam == DownCamera)
+            {
+                return;
+            }
+
             if (KeepActive_checkBox.Checked)
             {
                 DownCamera.Active = false;
@@ -2624,7 +2632,7 @@ namespace LitePlacer
                     DisplayText("UpCamera activated");
                 }
                 return;
-            };
+            }
 
             if (Setting.Cameras_RobustSwitch)
             {
@@ -2664,7 +2672,7 @@ namespace LitePlacer
             {
                 DisplayText("DownCamera already running");
                 DownCamera.Active = true;
-                UpdateCameraCameraStatus_label();
+                UpdateCameraCameraStatus_labelThreadSafe();
                 return true;
             };
 
@@ -2672,7 +2680,7 @@ namespace LitePlacer
             if (Setting.DowncamMoniker == "")
             {
                 // Very first runs, no attempt to connect cameras yet. This is ok.
-                UpdateCameraCameraStatus_label();
+                UpdateCameraCameraStatus_labelThreadSafe();
                 return true;
             };
             // Check that the device exists
@@ -2680,7 +2688,7 @@ namespace LitePlacer
             if (!monikers.Contains(Setting.DowncamMoniker))
             {
                 DisplayText("Downcamera moniker not found. Moniker: " + Setting.DowncamMoniker);
-                UpdateCameraCameraStatus_label();
+                UpdateCameraCameraStatus_labelThreadSafe();
                 return false;
             }
 
@@ -2691,7 +2699,7 @@ namespace LitePlacer
                     "ICamera selection isse",
                     MessageBoxButtons.OK
                 );
-                UpdateCameraCameraStatus_label();
+                UpdateCameraCameraStatus_labelThreadSafe();
                 return false;
             }
 
@@ -2704,11 +2712,11 @@ namespace LitePlacer
                 );
                 CameraStatus_label.Text = "Not Connected";
                 DownCamera.Active = false;
-                UpdateCameraCameraStatus_label();
+                UpdateCameraCameraStatus_labelThreadSafe();
                 return false;
             };
             DownCamera.Active = true;
-            UpdateCameraCameraStatus_label();
+            UpdateCameraCameraStatus_labelThreadSafe();
             return true;
         }
 
@@ -2721,7 +2729,7 @@ namespace LitePlacer
             {
                 DisplayText("UpCamera already running");
                 UpCamera.Active = true;
-                UpdateCameraCameraStatus_label();
+                UpdateCameraCameraStatus_labelThreadSafe();
                 return true;
             };
 
@@ -2729,7 +2737,7 @@ namespace LitePlacer
             if (Setting.UpcamMoniker == "")
             {
                 // Very first runs, no attempt to connect cameras yet. This is ok.
-                UpdateCameraCameraStatus_label();
+                UpdateCameraCameraStatus_labelThreadSafe();
                 return true;
             };
             // Check that the device exists
@@ -2737,7 +2745,7 @@ namespace LitePlacer
             if (!monikers.Contains(Setting.UpcamMoniker))
             {
                 DisplayText("Upcamera moniker not found. Moniker: " + Setting.UpcamMoniker);
-                UpdateCameraCameraStatus_label();
+                UpdateCameraCameraStatus_labelThreadSafe();
                 return false;
             }
 
@@ -2748,7 +2756,7 @@ namespace LitePlacer
                     "ICamera selection issue",
                     MessageBoxButtons.OK
                 );
-                UpdateCameraCameraStatus_label();
+                UpdateCameraCameraStatus_labelThreadSafe();
                 return false;
             }
 
@@ -2759,11 +2767,11 @@ namespace LitePlacer
                     "Up camera problem",
                     MessageBoxButtons.OK
                 );
-                UpdateCameraCameraStatus_label();
+                UpdateCameraCameraStatus_labelThreadSafe();
                 return false;
             };
             UpCamera.Active = true;
-            UpdateCameraCameraStatus_label();
+            UpdateCameraCameraStatus_labelThreadSafe();
             return true;
         }
 
@@ -2944,7 +2952,7 @@ namespace LitePlacer
             UpCamera.BuildDisplayFunctionsList(Display_dataGridView);
             getDownCamList();
             getUpCamList();
-            UpdateCameraCameraStatus_label();
+            UpdateCameraCameraStatus_labelThreadSafe();
 
             // SelectCamera(DownCamera);
         }
@@ -3815,8 +3823,8 @@ namespace LitePlacer
         {
             // SetDownCameraDefaults();
 
-            UpCamera.Active = false;
-            DownCamera.Active = false;
+            //UpCamera.Active = false;
+            //DownCamera.Active = false;
 
             UpdateCncConnectionStatus();
             SizeXMax_textBox.Text = Setting.General_MachineSizeX.ToString();
@@ -3956,7 +3964,7 @@ namespace LitePlacer
                         UpdateCncConnectionStatus();
                         if (await ControlBoardJustConnectedAsync())
                         {
-                            OfferHoming();
+                            await OfferHomingAsync();
                         }
                         else
                         {
@@ -4166,10 +4174,13 @@ namespace LitePlacer
 
         private void RegisterForParameterUpdates()
         {
+            var tinyGSystemParameters = DIBindings.Resolve<ITinyGSystemParameters>();
             var tinyGCalibrations = DIBindings.Resolve<ITinyGCalibrations>();
+            var tinyGVariables = DIBindings.Resolve<ITinyGVariables>();
+
+            CommsProcessor.RegisterDataReceived(tinyGSystemParameters.hp, (x) => { UpdateControlThreadSafe(Update_hp, x); });
 
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.mt, (x) => { UpdateControlThreadSafe(Update_mt, x); });
-
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1sa, (x) => { UpdateControlThreadSafe(Update_1sa, x); });
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1tr, (x) => { UpdateControlThreadSafe(Update_1tr, x); });
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1mi, (x) => { UpdateControlThreadSafe(Update_1mi, x); });
@@ -4182,8 +4193,6 @@ namespace LitePlacer
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4sa, (x) => { UpdateControlThreadSafe(Update_4sa, x); });
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4tr, (x) => { UpdateControlThreadSafe(Update_4tr, x); });
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4mi, (x) => { UpdateControlThreadSafe(Update_4mi, x); });
-
-
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.xvm, (x) => { UpdateControlThreadSafe(Update_xvm, x); });
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.xjm, (x) => { UpdateControlThreadSafe(Update_xjm, x); });
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.xjh, (x) => { UpdateControlThreadSafe(Update_xjh, x); });
@@ -4205,7 +4214,10 @@ namespace LitePlacer
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsn, (x) => { UpdateControlThreadSafe(Update_zsn, x); });
             CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsx, (x) => { UpdateControlThreadSafe(Update_zsx, x); });
 
-            //CommsProcessor.RegisterDataReceived(tinyGCalibrations.hp, (x) => { UpdateControlThreadSafe(Update_hp, x); });
+            CommsProcessor.RegisterDataReceived(tinyGVariables.posx, (x) => { UpdateControlThreadSafe(Update_xpos, x); });
+            CommsProcessor.RegisterDataReceived(tinyGVariables.posy, (x) => { UpdateControlThreadSafe(Update_ypos, x); });
+            CommsProcessor.RegisterDataReceived(tinyGVariables.posz, (x) => { UpdateControlThreadSafe(Update_zpos, x); });
+            CommsProcessor.RegisterDataReceived(tinyGVariables.posa, (x) => { UpdateControlThreadSafe(Update_apos, x); });
         }
 
         private void UpdateControlThreadSafe(Action<string> action, string value)
@@ -5924,27 +5936,27 @@ namespace LitePlacer
             t.Start();
         }
 
-        private void HomeX_button_Click(object sender, EventArgs e)
+        private async void HomeX_button_Click(object sender, EventArgs e)
         {
-            Cnc.CNC_Home_m("X");
+            await Cnc.CNC_Home_mAsync("X");
         }
 
-        private void HomeXY_button_Click(object sender, EventArgs e)
+        private async void HomeXY_button_Click(object sender, EventArgs e)
         {
-            if (!Cnc.CNC_Home_m("X"))
+            if (!await Cnc.CNC_Home_mAsync("X"))
                 return;
-            Cnc.CNC_Home_m("Y");
+            await Cnc.CNC_Home_mAsync("Y");
         }
 
-        private void HomeY_button_Click(object sender, EventArgs e)
+        private async void HomeY_button_Click(object sender, EventArgs e)
         {
-            Cnc.CNC_Home_m("Y");
+            await Cnc.CNC_Home_mAsync("Y");
         }
 
-        private void HomeZ_button_Click(object sender, EventArgs e)
+        private async void HomeZ_button_Click(object sender, EventArgs e)
         {
             Cnc.ProbingMode(false);
-            Cnc.CNC_Home_m("Z");
+            await Cnc.CNC_Home_mAsync("Z");
         }
 
         private void TestZ_thread()
@@ -6009,13 +6021,13 @@ namespace LitePlacer
             t.Start();
         }
 
-        private void Homebutton_Click(object sender, EventArgs e)
+        private async void Homebutton_Click(object sender, EventArgs e)
         {
-            if (!Cnc.CNC_Home_m("Z"))
+            if (!await Cnc.CNC_Home_mAsync("Z"))
                 return;
-            if (!Cnc.CNC_Home_m("X"))
+            if (!await Cnc.CNC_Home_mAsync("X"))
                 return;
-            if (!Cnc.CNC_Home_m("Y"))
+            if (!await Cnc.CNC_Home_mAsync("Y"))
                 return;
             Cnc.CNC_A_m(0);
         }
@@ -6133,7 +6145,7 @@ namespace LitePlacer
 
         private static int SetProbing_stage = 0;
 
-        private void CancelProbing()
+        private async Task CancelProbingAsync()
         {
             SetProbing_button.Text = "Start";
             SetProbing_button.Enabled = false;
@@ -6142,16 +6154,16 @@ namespace LitePlacer
             CancelProbing_button.Visible = false;
             Zlb_label.Visible = false;
             Cnc.ProbingMode(false);
-            Cnc.CNC_Home_m("Z");
+            await Cnc.CNC_Home_mAsync("Z");
             SetProbing_button.Enabled = true;
         }
 
-        private void CancelProbing_button_Click(object sender, EventArgs e)
+        private async void CancelProbing_button_Click(object sender, EventArgs e)
         {
-            CancelProbing();
+            await CancelProbingAsync();
         }
 
-        private void SetProbing_button_Click(object sender, EventArgs e)
+        private async void SetProbing_button_Click(object sender, EventArgs e)
         {
             Cnc.ZGuardOff();
             switch (SetProbing_stage)
@@ -6170,7 +6182,7 @@ namespace LitePlacer
                     CancelProbing_button.Enabled = false;
                     if (!Nozzle_ProbeDown_m())
                     {
-                        CancelProbing();
+                        await CancelProbingAsync();
                         return;
                     }
                     SetProbing_button.Enabled = true;
@@ -6189,7 +6201,7 @@ namespace LitePlacer
                     Zlb_label.Visible = false;
                     CancelProbing_button.Visible = false;
                     SetProbing_button.Enabled = false;
-                    Cnc.CNC_Home_m("Z");
+                    await Cnc.CNC_Home_mAsync("Z");
                     Cnc.ZGuardOn();
                     SetProbing_button.Enabled = true;
                     ShowMessageBox(
@@ -7298,10 +7310,10 @@ namespace LitePlacer
         // =================================================================================
         // Several rows are selected at Job data:
 
-        private void PlaceThese_button_Click(object sender, EventArgs e)
+        private async void PlaceThese_button_Click(object sender, EventArgs e)
         {
             this.ActiveControl = null; // User might need press enter during the process, which would run this again...
-            if (!PrepareToPlace_m())
+            if (!await PrepareToPlace_mAsync())
             {
                 ShowMessageBox(
                     "Placement operation failed, nothing done.",
@@ -7392,7 +7404,7 @@ namespace LitePlacer
                 };
 
                 // Labels are updated, place the row:
-                if (!PlaceRow_m(CurrentRow))
+                if (!await PlaceRow_mAsync(CurrentRow))
                 {
                     ShowMessageBox(
                         "Placement operation failed. Review job status.",
@@ -7415,7 +7427,7 @@ namespace LitePlacer
         // This routine places selected component(s) from CAD data grid view.
         // The mechanism is the same as from job data: a temp row is addded to job data
         // and then that row is processed.
-        private void PlaceOne_button_Click(object sender, EventArgs e)
+        private async void PlaceOne_button_Click(object sender, EventArgs e)
         {
             // Do we need to do something in the first place?
             // is something actually selected?
@@ -7447,7 +7459,7 @@ namespace LitePlacer
 
             // OK, we actually need to do something.
             // Preparations:
-            if (!PrepareToPlace_m())
+            if (!await PrepareToPlace_mAsync())
             {
                 ShowMessageBox(
                     "Placement operation failed, nothing done.",
@@ -7524,7 +7536,7 @@ namespace LitePlacer
                 CurrentGroup_label.Text = JobData_GridView.Rows[LastRowNo].Cells["ComponentType"].Value.ToString() + " (1 pcs.)";
 
                 // Place that row
-                ok = PlaceRow_m(LastRowNo);
+                ok = await PlaceRow_mAsync(LastRowNo);
                 // delete the row
                 JobData_GridView.Rows.RemoveAt(LastRowNo);
                 if (!ok)
@@ -7570,7 +7582,7 @@ namespace LitePlacer
 
         // =================================================================================
         // This routine places the [index] row from Job data grid view:
-        private bool PlaceRow_m(int RowNo)
+        private async Task<bool> PlaceRow_mAsync(int RowNo)
         {
             DisplayText("PlaceRow_m(" + RowNo.ToString() + ")", KnownColor.Blue);
             // Select the row and keep it visible
@@ -7752,7 +7764,7 @@ namespace LitePlacer
                 {
                     count -= placedCount;
                 }
-                if (!Tapes.PrepareForFastPlacement_m(TapeID, count))
+                if (!await Tapes.PrepareForFastPlacement_mAsync(TapeID, count))
                 {
                     return false;
                 }
@@ -7761,7 +7773,7 @@ namespace LitePlacer
             // Place parts:
             foreach (string Component in Components)
             {
-                if (!PlaceComponent_m(Component, RowNo, FirstInRow))
+                if (!await PlaceComponent_mAsync(Component, RowNo, FirstInRow))
                 {
                     JobData_GridView.Rows[RowNo].Selected = false;
                     ReturnValue = false;
@@ -7789,10 +7801,10 @@ namespace LitePlacer
 
         // =================================================================================
         // All rows:
-        private void PlaceAll_button_Click(object sender, EventArgs e)
+        private async void PlaceAll_button_Click(object sender, EventArgs e)
         {
 
-            if (!PrepareToPlace_m())
+            if (!await PrepareToPlace_mAsync())
             {
                 ShowMessageBox(
                     "Placement operation failed, nothing done.",
@@ -7820,7 +7832,7 @@ namespace LitePlacer
                     NextGroup_label.Text = "--";
                 };
 
-                if (!PlaceRow_m(i))
+                if (!await PlaceRow_mAsync(i))
                 {
                     break;
                 }
@@ -7934,7 +7946,7 @@ namespace LitePlacer
         // GroupRow is the row index to Job data grid view.
         // =================================================================================
 
-        private bool PlaceComponent_m(string Component, int GroupRow, bool FirstInRow)
+        private async Task<bool> PlaceComponent_mAsync(string Component, int GroupRow, bool FirstInRow)
         {
             DisplayText("PlaceComponent_m: Component: " + Component + ", Row:" + GroupRow.ToString(), KnownColor.Blue);
             // Skip fiducials
@@ -8102,7 +8114,7 @@ namespace LitePlacer
                             break;
                         }
                     }
-                    if (!PlacePart_m(CADdataRow, GroupRow, X_machine, Y_machine, A_machine, FirstInRow))
+                    if (!await PlacePart_mAsync(CADdataRow, GroupRow, X_machine, Y_machine, A_machine, FirstInRow))
                     {
                         return false;
                     }
@@ -8114,13 +8126,13 @@ namespace LitePlacer
                     break;
 
                 case "Change Nozzle":
-                    if (!ChangeNozzleManually_m())
+                    if (!await ChangeNozzleManually_mAsync())
                         return false;
                     break;
 
                 case "Recalibrate":
                     ValidMeasurement_checkBox.Checked = false;
-                    if (!PrepareToPlace_m())
+                    if (!await PrepareToPlace_mAsync())
                         return false;
                     break;
 
@@ -8181,7 +8193,7 @@ namespace LitePlacer
         }
 
         // =================================================================================
-        private bool ChangeNozzleManually_m()
+        private async Task<bool> ChangeNozzleManually_mAsync()
         {
             Cnc.CNC_Write_m("{\"zsn\":0}");
             Thread.Sleep(50);
@@ -8202,11 +8214,11 @@ namespace LitePlacer
             Thread.Sleep(50);
             Cnc.CNC_Write_m("{\"zsx\":2}");
             Thread.Sleep(50);
-            if (!MechanicalHoming_m())
+            if (!await MechanicalHoming_mAsync())
             {
                 return false;
             }
-            if (!OpticalHoming_m())
+            if (!await OpticalHoming_mAsync())
             {
                 return false;
             }
@@ -8214,7 +8226,7 @@ namespace LitePlacer
             {
                 return false;
             }
-            if (!BuildMachineCoordinateData_m())
+            if (!await BuildMachineCoordinateData_mAsync())
             {
                 return false;
             }
@@ -8225,7 +8237,7 @@ namespace LitePlacer
         // =================================================================================
         // This is called before any placement is done:
         // =================================================================================
-        private bool PrepareToPlace_m()
+        private async Task<bool> PrepareToPlace_mAsync()
         {
             if (JobData_GridView.RowCount < 1)
             {
@@ -8260,7 +8272,7 @@ namespace LitePlacer
             if(!ValidMeasurement_checkBox.Checked)
             {
                 CurrentGroup_label.Text = "Measuring PCB";
-                if (!BuildMachineCoordinateData_m())
+                if (!await BuildMachineCoordinateData_mAsync())
                 {
                     CurrentGroup_label.Text = "--";
                     return false;
@@ -8408,9 +8420,9 @@ namespace LitePlacer
 
 
         // ========================================================================================
-        public void CameraToFirstComponent(int TapeNum)
+        public async Task CameraToFirstComponent(int TapeNum)
         {
-            if (!Tapes.PrepareForFastPlacement_m("CC0603KRX7R9BB103", 1))
+            if (!await Tapes.PrepareForFastPlacement_mAsync("CC0603KRX7R9BB103", 1))
             {
                 return;
             }
@@ -8435,7 +8447,7 @@ namespace LitePlacer
 
         // =================================================================================
         // PickUpPartWithHoleMeasurement_m(): Picks next part from the tape, measuring the hole
-        private bool PickUpPartWithHoleMeasurement_m(int TapeNumber)
+        private async Task<bool> PickUpPartWithHoleMeasurement_mAsync(int TapeNumber)
         {
             if (UseCoordinatesDirectly(TapeNumber))
             {
@@ -8448,7 +8460,12 @@ namespace LitePlacer
             DisplayText("PickUpPart_m(), tape no: " + TapeNumber.ToString());
             // Go to part location:
             Cnc.VacuumOff();
-            if (!Tapes.GotoNextPartByMeasurement_m(TapeNumber, out HoleX, out HoleY))
+
+            var result = await Tapes.GotoNextPartByMeasurement_m(TapeNumber);
+            HoleX = result.Item2;
+            HoleY = result.Item3;
+
+            if (!result.Item1) 
             {
                 return false;
             }
@@ -8977,7 +8994,7 @@ namespace LitePlacer
         // It should go to X, Y, A
         // CAD data is validated already.
 
-        private bool PlacePart_m(int CADdataRow, int JobDataRow, double X, double Y, double A, bool FirstInRow)
+        private async Task<bool> PlacePart_mAsync(int CADdataRow, int JobDataRow, double X, double Y, double A, bool FirstInRow)
         {
             if (Cnc.AbortPlacement)
             {
@@ -9029,7 +9046,7 @@ namespace LitePlacer
             {
                 case "Place":
                 case "Place Assisted":
-                    if (!PickUpPartWithHoleMeasurement_m(TapeNum))
+                    if (!await PickUpPartWithHoleMeasurement_mAsync(TapeNum))
                     {
                         return false;
                     }
@@ -9400,15 +9417,13 @@ namespace LitePlacer
         // Takes the parameter nominal location and measures its physical location.
         // Assumes measurement parameters already set.
 
-        private bool MeasureFiducial_m(ref PhysicalComponent fid)
+        private async Task<bool> MeasureFiducial_mAsync(PhysicalComponent fid)
         {
             if (!Cnc.CNC_XY_m(fid.X_nominal + Setting.Job_Xoffset + Setting.General_JigOffsetX,
                      fid.Y_nominal + Setting.Job_Yoffset + Setting.General_JigOffsetY))
             {
                 return false;
             }
-            double X;
-            double Y;
             FeatureType FidShape= FeatureType.Circle;
             if (Setting.Placement_FiducialsType==0)
             {
@@ -9431,7 +9446,10 @@ namespace LitePlacer
                 return false;
             }
             double FindTolerance = Setting.Placement_FiducialTolerance;
-            if (!GoToFeatureLocation_m(FidShape, FindTolerance, 0.1, out X, out Y))
+
+            var result = await GoToFeatureLocation_mAsync(FidShape, FindTolerance, 0.1);
+
+            if (!result.Item1)
             {
                 ShowMessageBox(
                     "Finding fiducial: Can't regognize fiducial " + fid.Designator,
@@ -9439,6 +9457,10 @@ namespace LitePlacer
                     MessageBoxButtons.OK);
                 return false;
             }
+
+            double X = result.Item2;
+            double Y = result.Item3;
+
             fid.X_machine = Cnc.CurrentX + X;
             fid.Y_machine = Cnc.CurrentY + Y;
             // For user confidence, show it:
@@ -9491,7 +9513,7 @@ namespace LitePlacer
 
         // =================================================================================
         // BuildMachineCoordinateData_m():
-        private bool BuildMachineCoordinateData_m()
+        private async Task<bool> BuildMachineCoordinateData_mAsync()
         {
             double X_nom = 0;
             double Y_nom = 0;
@@ -9564,7 +9586,7 @@ namespace LitePlacer
                 Fiducials[i].X_nominal = X_nom;
                 Fiducials[i].Y_nominal = Y_nom;
                 // And measure it's true location:
-                if (!MeasureFiducial_m(ref Fiducials[i]))
+                if (!await MeasureFiducial_mAsync(Fiducials[i]))
                 {
                     return false;
                 }
@@ -9757,9 +9779,9 @@ namespace LitePlacer
 
         }
 
-        private void ManualNozzleChange_button_Click(object sender, EventArgs e)
+        private async void ManualNozzleChange_button_Click(object sender, EventArgs e)
         {
-            ChangeNozzleManually_m();
+            await ChangeNozzleManually_mAsync();
         }
 
 
@@ -9878,19 +9900,19 @@ namespace LitePlacer
         // =================================================================================
         // Checks what is needed to check before doing something for a single component selected at "CAD data" table. 
         // If succesful, sets X, Y to component machine coordinates.
-        private bool PrepareSingleComponentOperation(out double X, out double Y)
+        private async Task<Tuple<bool, double, double>> PrepareSingleComponentOperationAsync()
         {
-            X = 0.0;
-            Y = 0.0;
+            double X = 0.0;
+            double Y = 0.0;
 
             DataGridViewCell cell = CadData_GridView.CurrentCell;
             if (cell == null)
             {
-                return false;  // no component selected
+                return new Tuple<bool, double, double>(false, X, Y);  // no component selected
             }
             if (cell.OwningRow.Index < 0)
             {
-                return false;  // header row
+                return new Tuple<bool, double, double>(false, X, Y);  // header row
             }
             if (cell.OwningRow.Cells["X_machine"].Value.ToString() == "Nan")
             {
@@ -9899,11 +9921,11 @@ namespace LitePlacer
                     "Measure now?", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.No)
                 {
-                    return false;
+                    return new Tuple<bool, double, double>(false, X, Y);
                 }
-                if (!BuildMachineCoordinateData_m())
+                if (!await BuildMachineCoordinateData_mAsync())
                 {
-                    return false;
+                    return new Tuple<bool, double, double>(false, X, Y);
                 }
             }
 
@@ -9913,7 +9935,7 @@ namespace LitePlacer
                     "Bad data at X_machine",
                     "Sloppy programmer error",
                     MessageBoxButtons.OK);
-                return false;
+                return new Tuple<bool, double, double>(false, X, Y);
             }
 
             if (!double.TryParse(cell.OwningRow.Cells["Y_machine"].Value.ToString().Replace(',', '.'), out Y))
@@ -9922,19 +9944,23 @@ namespace LitePlacer
                     "Bad data at Y_machine",
                     "Sloppy programmer error",
                     MessageBoxButtons.OK);
-                return false;
+                return new Tuple<bool, double, double>(false, X, Y);
             }
-            return true;
+            return new Tuple<bool, double, double>(true, X, Y);
         }
 
         // =================================================================================
-        private void ShowMachine_button_Click(object sender, EventArgs e)
+        private async void ShowMachine_button_Click(object sender, EventArgs e)
         {
             double X;
             double Y;
             double A;
 
-            if (!PrepareSingleComponentOperation(out X, out Y))
+            var result = await PrepareSingleComponentOperationAsync();
+            X = result.Item2;
+            Y = result.Item3;
+
+            if (!result.Item1)
             {
                 return;
             }
@@ -10080,10 +10106,10 @@ namespace LitePlacer
         }
 
         // =================================================================================
-        private void ReMeasure_button_Click(object sender, EventArgs e)
+        private async void ReMeasure_button_Click(object sender, EventArgs e)
         {
             ValidMeasurement_checkBox.Checked = false;
-            ValidMeasurement_checkBox.Checked = BuildMachineCoordinateData_m();
+            ValidMeasurement_checkBox.Checked = await BuildMachineCoordinateData_mAsync();
             // CNC_Park();
         }
 
@@ -11450,7 +11476,7 @@ namespace LitePlacer
             }
         }
 
-        private void HoleTest_button_Click(object sender, EventArgs e)
+        private async void HoleTest_button_Click(object sender, EventArgs e)
         {
             int PartNum = 0;
             int TapeNum = 0;
@@ -11475,7 +11501,12 @@ namespace LitePlacer
             {
                 return;
             }
-            if (Tapes.GetPartHole_m(TapeNum, PartNum, out X, out Y))
+
+            var result = await Tapes.GetPartHole_m(TapeNum, PartNum);
+            X = result.Item2;
+            Y = result.Item3;
+
+            if (result.Item1)
             {
                 Cnc.CNC_XY_m(X, Y);
             }
@@ -11496,7 +11527,7 @@ namespace LitePlacer
             DownCamera.DrawArrow = true;
         }
 
-    private void ShowPart_button_Click(object sender, EventArgs e)
+        private async void ShowPart_button_Click(object sender, EventArgs e)
         {
             int PartNum = 0;
             int TapeNum = 0;
@@ -11527,7 +11558,12 @@ namespace LitePlacer
                 Row.Cells["NextPart_Column"].Value = temp.ToString();
                 return;
             }
-            if (!Tapes.GetPartHole_m(TapeNum, PartNum, out X, out Y))
+
+            var result = await Tapes.GetPartHole_m(TapeNum, PartNum);
+            X = result.Item2;
+            Y = result.Item3;
+
+            if (!result.Item1)
             {
                 Row.Cells["NextPart_Column"].Value = temp.ToString();
                 return;
@@ -12730,6 +12766,21 @@ namespace LitePlacer
         // Parameter labels and control widgets:
         // ==========================================================================================================
         // Sharing the labels and some controls so I don't need to duplicate so much code:
+        private void UpdateCameraCameraStatus_labelThreadSafe()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new MethodInvoker(delegate
+                {
+                    UpdateCameraCameraStatus_label();
+                }));
+            }
+            else
+            {
+                UpdateCameraCameraStatus_label();
+            }
+        }
+
         private void UpdateCameraCameraStatus_label()
         {
             if (tabControlPages.SelectedTab.Name!= "tabPageSetupCameras")
@@ -12794,7 +12845,7 @@ namespace LitePlacer
             ListResolutions_button.Parent = Page;
             CamShowPixels_checkBox.Parent = Page;
             CameraStatus_label.Parent = Page;
-            UpdateCameraCameraStatus_label();
+            UpdateCameraCameraStatus_labelThreadSafe();
         }
 
         private void ClearEditTargets()
@@ -15265,9 +15316,9 @@ namespace LitePlacer
             Cnc.CNC_XY_m(Cnc.CurrentX - xo, Cnc.CurrentY - yo);
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private async void button3_Click(object sender, EventArgs e)
         {
-            CameraToFirstComponent(0);
+            await CameraToFirstComponent(0);
         }
 
         public void LoadCalibrationSettingsToUI()

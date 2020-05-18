@@ -30,8 +30,8 @@ namespace LitePlacer
 
         private IAppLogger appLogger = DIBindings.Resolve<IAppLogger>();
 
-        public delegate bool GoToFeatureLocation_mHandler(FeatureType Shape, double FindTolerance, double MoveTolerance, out double X, out double Y);
-        public event GoToFeatureLocation_mHandler GoToFeatureLocation_mEvent;
+        public delegate Task<Tuple<bool, double, double>> GoToFeatureLocation_mHandler(FeatureType Shape, double FindTolerance, double MoveTolerance);
+        public event GoToFeatureLocation_mHandler GoToFeatureLocation_mEventAsync;
 
         public delegate void SetPaperTapeMeasurementHandler();
         public event SetPaperTapeMeasurementHandler SetPaperTapeMeasurementEvent;
@@ -113,7 +113,7 @@ namespace LitePlacer
         // ========================================================================================
         // PrepareForFastPlacement_m: Called before starting fast placement
 
-        public bool PrepareForFastPlacement_m(string TapeID, int ComponentCount)
+        public async Task<bool> PrepareForFastPlacement_mAsync(string TapeID, int ComponentCount)
         {
             int TapeNum;
             if (!IdValidates_m(TapeID, out TapeNum))
@@ -161,14 +161,23 @@ namespace LitePlacer
             double LastY = 0.0;
             double FirstX = 0.0;
             double FirstY = 0.0;
-            if (!GetPartHole_m(TapeNum, last, out LastX, out LastY))
+
+            var result = await GetPartHole_m(TapeNum, last);
+            LastX = result.Item2;
+            LastY = result.Item3;
+
+            if (!result.Item1)
             {
                 FastParametersOk = false;
                 return false;
             }
-            if (last!= first)
+            if (last != first)
             {
-                if (!GetPartHole_m(TapeNum, first, out FirstX, out FirstY))
+                var result2 = await GetPartHole_m(TapeNum, first);
+                FirstX = result2.Item2;
+                FirstY = result2.Item3;
+
+                if (!result.Item1)
                 {
                     FastParametersOk = false;
                     return false;
@@ -322,10 +331,10 @@ namespace LitePlacer
 
         // ========================================================================================
         // GetPartHole_m(): Measures X,Y location of the hole corresponding to part number
-        public bool GetPartHole_m(int TapeNum, int PartNum, out double ResultX, out double ResultY)
+        public async Task<Tuple<bool, double, double>> GetPartHole_m(int TapeNum, int PartNum)
         {
-            ResultX = 0.0;
-            ResultY = 0.0;
+            double ResultX = 0.0;
+            double ResultY = 0.0;
 
             // Get start points
             double X = 0.0;
@@ -333,12 +342,12 @@ namespace LitePlacer
             if (!double.TryParse(Grid.Rows[TapeNum].Cells["FirstX_Column"].Value.ToString().Replace(',', '.'), out X))
             {
                 appLogger.Error("Bad data at Tape " + TapeNum.ToString() + ", X");
-                return false;
+                return new Tuple<bool, double, double>(false, ResultX, ResultY);
             }
             if (!double.TryParse(Grid.Rows[TapeNum].Cells["FirstY_Column"].Value.ToString().Replace(',', '.'), out Y))
             {
                 appLogger.Error("Bad data at Tape " + TapeNum.ToString() + ", Y");
-                return false;
+                return new Tuple<bool, double, double>(false, ResultX, ResultY);
             }
 
             // Get the hole location guess
@@ -347,7 +356,7 @@ namespace LitePlacer
             double FromHole;
             if (!GetTapeParameters_m(TapeNum, out dW, out FromHole, out Pitch))
             {
-                return false;
+                return new Tuple<bool, double, double>(false, ResultX, ResultY);
             }
             if (Math.Abs(Pitch-2.0)<0.01) // if pitch ==2
             {
@@ -375,34 +384,36 @@ namespace LitePlacer
 
                 default:
                 appLogger.Error("Bad data at Tape #" + TapeNum.ToString() + ", Orientation");
-                    return false;
+                    return new Tuple<bool, double, double>(false, ResultX, ResultY);
             }
             // X, Y now hold the first guess
 
             // Measuring 
             if (!SetCurrentTapeMeasurement_m(TapeNum))  // having the measurement setup here helps with the automatic gain lag
             {
-                return false;
+                return new Tuple<bool, double, double>(false, ResultX, ResultY);
             }
             // Go there:
             if (!Cnc.CNC_XY_m(X, Y))
             {
-                return false;
+                return new Tuple<bool, double, double>(false, ResultX, ResultY);
             };
 
             // get hole exact location:
-            if (!GoToFeatureLocation_mEvent(FeatureType.Circle, 1.8, 0.1, out X, out Y))
+            var result = await GoToFeatureLocation_mEventAsync(FeatureType.Circle, 1.8, 0.1);
+
+            if (!result.Item1)
             {
                 appLogger.Error("Can't find tape hole");
-                return false;
+                return new Tuple<bool, double, double>(false, ResultX, ResultY);
             }
             ResultX = Cnc.CurrentX + X;
             ResultY = Cnc.CurrentY + Y;
-            return true;
+            return new Tuple<bool, double, double>(true, ResultX, ResultY);
         }
 
-		// ========================================================================================
-		// GetPartLocationFromHolePosition_m(): Returns the location and rotation of the part
+        // ========================================================================================
+        // GetPartLocationFromHolePosition_m(): Returns the location and rotation of the part
         // Input is the exact (measured) location of the hole
 
         public bool GetPartLocationFromHolePosition_m(int Tape, double X, double Y, out double PartX, out double PartY, out double A)
@@ -652,42 +663,49 @@ namespace LitePlacer
         // The hole position is measured on each call using tape holes and knowledge about tape width and pitch (see EIA-481 standard).
         // Id tells the tape name. 
         // The caller needs the hole coordinates and tape number later in the process, but they are measured and returned here.
-        public bool GotoNextPartByMeasurement_m(int TapeNumber, out double HoleX, out double HoleY)
+        public async Task<Tuple<bool, double, double>> GotoNextPartByMeasurement_m(int TapeNumber)
 		{
-            HoleX = 0;
-            HoleY = 0;
+            double HoleX = 0;
+            double HoleY = 0;
+
 			// Go to next hole approximate location:
 			if (!SetCurrentTapeMeasurement_m(TapeNumber))  // having the measurement setup here helps with the automatic gain lag
-				return false;
+				return new Tuple<bool, double, double>(false, HoleX, HoleY);
 
 			double NextX= 0;
             double NextY = 0;
             if (!double.TryParse(Grid.Rows[TapeNumber].Cells["Next_X_Column"].Value.ToString().Replace(',', '.'), out NextX))
 			{
                 appLogger.Error("Bad data at Tape " + Grid.Rows[TapeNumber].Cells["Id_Column"].Value.ToString() + ", Next X");
-				return false;
-			}
+                return new Tuple<bool, double, double>(false, HoleX, HoleY);
+            }
 
             if (!double.TryParse(Grid.Rows[TapeNumber].Cells["Next_Y_Column"].Value.ToString().Replace(',', '.'), out NextY))
 			{
                 appLogger.Error("Bad data at Tape " + Grid.Rows[TapeNumber].Cells["Id_Column"].Value.ToString() + ", Next Y");
-				return false;
-			}
-			// Go there:
+                return new Tuple<bool, double, double>(false, HoleX, HoleY);
+            }
+            // Go there:
             if (!Cnc.CNC_XY_m(NextX, NextY))
 			{
-				return false;
-			};
+                return new Tuple<bool, double, double>(false, HoleX, HoleY);
+            };
 
-			// Get hole exact location:
+            // Get hole exact location:
             // We want to find the hole less than 2mm from where we think it should be. (Otherwise there is a risk
-			// of picking a wrong hole.)
-            if (!GoToFeatureLocation_mEvent(FeatureType.Circle, 1.8, 0.5, out HoleX, out HoleY))
+            // of picking a wrong hole.)
+            var result = await GoToFeatureLocation_mEventAsync(FeatureType.Circle, 1.8, 0.5);
+
+            if (!result.Item1)
 			{
                 appLogger.Error("Can't find tape hole");
-				return false;
-			}
-			// The hole locations are:
+                return new Tuple<bool, double, double>(false, HoleX, HoleY);
+            }
+
+            HoleX = result.Item2;
+            HoleY = result.Item3;
+
+            // The hole locations are:
             HoleX = Cnc.CurrentX + HoleX;
             HoleY = Cnc.CurrentY + HoleY;
 
@@ -705,16 +723,16 @@ namespace LitePlacer
 			// Now, PartX, PartY, A tell the position of the part. Take Nozzle there:
 			if (!Nozzle.Move_m(PartX, PartY, A))
 			{
-				return false;
-			}
+                return new Tuple<bool, double, double>(false, HoleX, HoleY);
+            }
 
-			return true;
-		}	// end GotoNextPartByMeasurement_m
+            return new Tuple<bool, double, double>(true, HoleX, HoleY);
+        }   // end GotoNextPartByMeasurement_m
 
 
-		// ========================================================================================
-		// SetCurrentTapeMeasurement_m(): sets the camera measurement parameters according to the tape type.
-		private bool SetCurrentTapeMeasurement_m(int row)
+        // ========================================================================================
+        // SetCurrentTapeMeasurement_m(): sets the camera measurement parameters according to the tape type.
+        private bool SetCurrentTapeMeasurement_m(int row)
 		{
 			switch (Grid.Rows[row].Cells["Type_Column"].Value.ToString())
 			{

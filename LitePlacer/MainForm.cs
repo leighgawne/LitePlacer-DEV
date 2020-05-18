@@ -124,7 +124,7 @@ namespace LitePlacer
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
-            Cnc.AddValueUpdaterHandler(ValueUpdater);
+            //Cnc.AddValueUpdaterHandler(ValueUpdater);
             Cnc.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
 
             Cnc_ReadyEvent = Cnc.ReadyEvent;
@@ -132,7 +132,7 @@ namespace LitePlacer
             UpCamera = new Camera() { ReportInfoCallback = DisplayText };
             Nozzle = new NozzleClass(UpCamera, Cnc, this);
             Tapes = new TapesClass(Tapes_dataGridView, Nozzle, DownCamera, Cnc);
-            Tapes.GoToFeatureLocation_mEvent += GoToFeatureLocation_m;
+            //Tapes.GoToFeatureLocation_mEvent += GoToFeatureLocation_m;
             Tapes.UseCoordinatesDirectlyEvent += UseCoordinatesDirectly;
             Tapes.SetPaperTapeMeasurementEvent += SetPaperTapeMeasurement;
             Tapes.SetBlackTapeMeasurementEvent += SetBlackTapeMeasurement;
@@ -2509,7 +2509,7 @@ namespace LitePlacer
         private void CNC_BlockingXY_thread(double X, double Y)
         {
             Cnc_ReadyEvent.Reset();
-            Cnc.XY(X, Y);
+            Cnc.XY_Async(X, Y);
             Cnc_ReadyEvent.Wait();
             CNC_BlockingWriteDone = true;
         }
@@ -7688,7 +7688,7 @@ namespace LitePlacer
         // =================================================================================
         // Several rows are selected at Job data:
 
-        private void PlaceThese_button_Click(object sender, EventArgs e)
+        private async void PlaceThese_button_Click(object sender, EventArgs e)
         {
             this.ActiveControl = null; // User might need press enter during the process, which would run this again...
             if (!PrepareToPlace_m())
@@ -7782,7 +7782,7 @@ namespace LitePlacer
                 };
 
                 // Labels are updated, place the row:
-                if (!PlaceRow_m(CurrentRow))
+                if (!await PlaceRow_mAsync(CurrentRow))
                 {
                     ShowMessageBox(
                         "Placement operation failed. Review job status.",
@@ -7805,7 +7805,7 @@ namespace LitePlacer
         // This routine places selected component(s) from CAD data grid view.
         // The mechanism is the same as from job data: a temp row is addded to job data
         // and then that row is processed.
-        private void PlaceOne_button_Click(object sender, EventArgs e)
+        private async void PlaceOne_button_Click(object sender, EventArgs e)
         {
             // Do we need to do something in the first place?
             // is something actually selected?
@@ -7914,7 +7914,7 @@ namespace LitePlacer
                 CurrentGroup_label.Text = JobData_GridView.Rows[LastRowNo].Cells["ComponentType"].Value.ToString() + " (1 pcs.)";
 
                 // Place that row
-                ok = PlaceRow_m(LastRowNo);
+                ok = await PlaceRow_mAsync(LastRowNo);
                 // delete the row
                 JobData_GridView.Rows.RemoveAt(LastRowNo);
                 if (!ok)
@@ -7960,7 +7960,7 @@ namespace LitePlacer
 
         // =================================================================================
         // This routine places the [index] row from Job data grid view:
-        private bool PlaceRow_m(int RowNo)
+        private async Task<bool> PlaceRow_mAsync(int RowNo)
         {
             DisplayText("PlaceRow_m(" + RowNo.ToString() + ")", KnownColor.Blue);
             // Select the row and keep it visible
@@ -8142,7 +8142,7 @@ namespace LitePlacer
                 {
                     count -= placedCount;
                 }
-                if (!Tapes.PrepareForFastPlacement_m(TapeID, count))
+                if (!await Tapes.PrepareForFastPlacement_mAsync(TapeID, count))
                 {
                     return false;
                 }
@@ -8151,7 +8151,7 @@ namespace LitePlacer
             // Place parts:
             foreach (string Component in Components)
             {
-                if (!PlaceComponent_m(Component, RowNo, FirstInRow))
+                if (!await PlaceComponent_mAsync(Component, RowNo, FirstInRow))
                 {
                     JobData_GridView.Rows[RowNo].Selected = false;
                     ReturnValue = false;
@@ -8179,7 +8179,7 @@ namespace LitePlacer
 
         // =================================================================================
         // All rows:
-        private void PlaceAll_button_Click(object sender, EventArgs e)
+        private async void PlaceAll_button_Click(object sender, EventArgs e)
         {
 
             if (!PrepareToPlace_m())
@@ -8210,7 +8210,7 @@ namespace LitePlacer
                     NextGroup_label.Text = "--";
                 };
 
-                if (!PlaceRow_m(i))
+                if (!await PlaceRow_mAsync(i))
                 {
                     break;
                 }
@@ -8324,7 +8324,7 @@ namespace LitePlacer
         // GroupRow is the row index to Job data grid view.
         // =================================================================================
 
-        private bool PlaceComponent_m(string Component, int GroupRow, bool FirstInRow)
+        private async Task<bool> PlaceComponent_mAsync(string Component, int GroupRow, bool FirstInRow)
         {
             DisplayText("PlaceComponent_m: Component: " + Component + ", Row:" + GroupRow.ToString(), KnownColor.Blue);
             // Skip fiducials
@@ -8492,7 +8492,7 @@ namespace LitePlacer
                             break;
                         }
                     }
-                    if (!PlacePart_m(CADdataRow, GroupRow, X_machine, Y_machine, A_machine, FirstInRow))
+                    if (!await PlacePart_mAsync(CADdataRow, GroupRow, X_machine, Y_machine, A_machine, FirstInRow))
                     {
                         return false;
                     }
@@ -8801,9 +8801,9 @@ namespace LitePlacer
 
 
         // ========================================================================================
-        public void CameraToFirstComponent(int TapeNum)
+        public async Task CameraToFirstComponentAsync(int TapeNum)
         {
-            if (!Tapes.PrepareForFastPlacement_m("CC0603KRX7R9BB103", 1))
+            if (!await Tapes.PrepareForFastPlacement_mAsync("CC0603KRX7R9BB103", 1))
             {
                 return;
             }
@@ -8828,7 +8828,7 @@ namespace LitePlacer
 
         // =================================================================================
         // PickUpPartWithHoleMeasurement_m(): Picks next part from the tape, measuring the hole
-        private bool PickUpPartWithHoleMeasurement_m(int TapeNumber)
+        private async Task<bool> PickUpPartWithHoleMeasurement_mAsync(int TapeNumber)
         {
             if (UseCoordinatesDirectly(TapeNumber))
             {
@@ -8841,7 +8841,12 @@ namespace LitePlacer
             DisplayText("PickUpPart_m(), tape no: " + TapeNumber.ToString());
             // Go to part location:
             Cnc.VacuumOff();
-            if (!Tapes.GotoNextPartByMeasurement_m(TapeNumber, out HoleX, out HoleY))
+
+            var result = await Tapes.GotoNextPartByMeasurement_m(TapeNumber);
+            HoleX = result.Item2;
+            HoleY = result.Item3;
+
+            if (!result.Item1)
             {
                 return false;
             }
@@ -9370,7 +9375,7 @@ namespace LitePlacer
         // It should go to X, Y, A
         // CAD data is validated already.
 
-        private bool PlacePart_m(int CADdataRow, int JobDataRow, double X, double Y, double A, bool FirstInRow)
+        private async Task<bool> PlacePart_mAsync(int CADdataRow, int JobDataRow, double X, double Y, double A, bool FirstInRow)
         {
             if (AbortPlacement)
             {
@@ -9422,7 +9427,7 @@ namespace LitePlacer
             {
                 case "Place":
                 case "Place Assisted":
-                    if (!PickUpPartWithHoleMeasurement_m(TapeNum))
+                    if (!await PickUpPartWithHoleMeasurement_mAsync(TapeNum))
                     {
                         return false;
                     }
@@ -11843,7 +11848,7 @@ namespace LitePlacer
             }
         }
 
-        private void HoleTest_button_Click(object sender, EventArgs e)
+        private async void HoleTest_button_Click(object sender, EventArgs e)
         {
             int PartNum = 0;
             int TapeNum = 0;
@@ -11868,7 +11873,12 @@ namespace LitePlacer
             {
                 return;
             }
-            if (Tapes.GetPartHole_m(TapeNum, PartNum, out X, out Y))
+
+            var result = await Tapes.GetPartHole_m(TapeNum, PartNum);
+            X = result.Item2;
+            Y = result.Item3;
+
+            if (result.Item1)
             {
                 CNC_XY_m(X, Y);
             }
@@ -11889,7 +11899,7 @@ namespace LitePlacer
             DownCamera.DrawArrow = true;
         }
 
-    private void ShowPart_button_Click(object sender, EventArgs e)
+    private async void ShowPart_button_Click(object sender, EventArgs e)
         {
             int PartNum = 0;
             int TapeNum = 0;
@@ -11920,7 +11930,12 @@ namespace LitePlacer
                 Row.Cells["NextPart_Column"].Value = temp.ToString();
                 return;
             }
-            if (!Tapes.GetPartHole_m(TapeNum, PartNum, out X, out Y))
+
+            var result = await Tapes.GetPartHole_m(TapeNum, PartNum);
+            X = result.Item2;
+            Y = result.Item3;
+
+            if (!result.Item1)
             {
                 Row.Cells["NextPart_Column"].Value = temp.ToString();
                 return;
@@ -15658,9 +15673,9 @@ namespace LitePlacer
             CNC_XY_m(Cnc.CurrentX - xo, Cnc.CurrentY - yo);
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private async void button3_Click(object sender, EventArgs e)
         {
-            CameraToFirstComponent(0);
+            await CameraToFirstComponentAsync(0);
         }
 
         private void PositionSetupEnable_checkBox_CheckedChanged(object sender, EventArgs e)
