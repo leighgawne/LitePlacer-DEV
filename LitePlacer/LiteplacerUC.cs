@@ -51,7 +51,8 @@ namespace LitePlacer
 
     public partial class LiteplacerUC : UserControl
     {
-        public ICNC Cnc;
+        //public ICNC Cnc;
+        public IMove CncMove;
         public ICamera DownCamera;
         ICamera UpCamera;
         NozzleClass Nozzle;
@@ -125,9 +126,12 @@ namespace LitePlacer
             Setting = SettingsOps.Load(path + "LitePlacer.Appsettings");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
+            //Cnc = Terpsichore.Common.DIBindings.Resolve<ICNC>();
             //Cnc.AddValueUpdaterHandler(ValueUpdater);
-            Cnc.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
+            //Cnc.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
+            CncMove = Terpsichore.Common.DIBindings.Resolve<IMove>();
+            CncMove.UpdateCncConnectionStatus += UpdateCncConnectionStatus;
+
             RegisterForParameterUpdates();
 
             DownCamera = Terpsichore.Common.DIBindings.Resolve<IDownCamera>();
@@ -239,7 +243,7 @@ namespace LitePlacer
 
             LoadCalibrationSettingsToUI();
 
-            CalibrationAction.CNC_XYZ_m = Cnc.CNC_XYA_m;
+            //CalibrationAction.CNC_XYZ_m = Cnc.CNC_XYA_m;
 
             tabControlPages.SelectedTab = tabControlPages.TabPages["tabPageBasicSetup"];
 
@@ -392,11 +396,8 @@ namespace LitePlacer
             tabControlPages.SelectedTab = tabPageBasicSetup;
             LastTabPage = "tabPageBasicSetup";
 
-            Cnc.SlackCompensation = Setting.CNC_SlackCompensation;
             SlackCompensation_checkBox.Checked = Setting.CNC_SlackCompensation;
-            Cnc.SlackCompensationA = Setting.CNC_SlackCompensationA;
             SlackCompensationA_checkBox.Checked = Setting.CNC_SlackCompensationA;
-            Cnc.SmallMovementString = "G1 F" + Setting.CNC_SmallMovementSpeed + " ";
 
             MouseScroll_checkBox.Checked = Setting.CNC_EnableMouseWheelJog;
             NumPadJog_checkBox.Checked = Setting.CNC_EnableNumPadJog;
