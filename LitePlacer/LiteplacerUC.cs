@@ -55,7 +55,7 @@ namespace LitePlacer
         //public ICNC Cnc;
         //public IMove CncMove;
         //public ICamera DownCamera;
-        ICamera UpCamera;
+        //ICamera UpCamera;
         NozzleClass Nozzle;
         TapesClass Tapes;
         public ISettings Setting;
@@ -431,10 +431,10 @@ namespace LitePlacer
             Pump_checkBox.Checked = false;
             Vacuum_checkBox.Checked = false;
 
-            Cnc.Connect(Setting.CNC_SerialPort);  // moved to here, as this can raise error condition, needing the form up
+            Machine.CommsProcessor.Connect(Setting.CNC_SerialPort);  // moved to here, as this can raise error condition, needing the form up
             UpdateCncConnectionStatus();
 
-            if (Cnc.Connected)
+            if (Machine.IsConnected)
             {
                 if (await ControlBoardJustConnectedAsync())
                 {
@@ -552,23 +552,23 @@ namespace LitePlacer
                 }
             }
 
-            if (Cnc.Connected)
+            if (Machine.IsConnected)
             {
-                Cnc.PumpIsOn = true;        // so it will be turned off, no matter what we think the status
-                Cnc.PumpOff_NoWorkaround();
-                Cnc.VacuumDefaultSetting();
+                Machine.Pump.PumpIsOn = true;        // so it will be turned off, no matter what we think the status
+                Machine.Pump.PumpOff_NoWorkaround();
+                Machine.Vacuum.VacuumDefaultSetting();
                 Machine.Motors.MotorPowerOff();  // motor power off
             }
-            Cnc.Close();
+            Machine.CommsProcessor.Disconnect();
 
-            if (DownCamera.IsRunning())
+            if (Machine.DownCamera.IsRunning())
             {
-                DownCamera.Close();
+                Machine.DownCamera.Close();
                 Thread.Sleep(200);   // camera feed needs a frame to close.
             }
-            if (UpCamera.IsRunning())
+            if (Machine.UpCamera.IsRunning())
             {
-                UpCamera.Close();
+                Machine.UpCamera.Close();
                 Thread.Sleep(200);   // camera feed needs a frame to close.
             }
             Thread.Sleep(200);
@@ -1739,18 +1739,18 @@ namespace LitePlacer
             int Yres = 0;
             int pol = 1;
 
-            ICamera cam = DownCamera;
-            if (DownCamera.Active)
+            ICamera cam = Machine.DownCamera;
+            if (Machine.DownCamera.Active)
             {
-                cam = DownCamera;
+                cam = Machine.DownCamera;
                 XmmPerPixel = Setting.DownCam_XmmPerPixel;
                 YmmPerPixel = Setting.DownCam_XmmPerPixel;
                 Xres = Setting.DownCam_DesiredX;
                 Yres = Setting.DownCam_DesiredY;
             }
-            else if (UpCamera.Active)
+            else if (Machine.UpCamera.Active)
             {
-                cam = UpCamera;
+                cam = Machine.UpCamera;
                 XmmPerPixel = Setting.UpCam_XmmPerPixel;
                 YmmPerPixel = Setting.UpCam_YmmPerPixel;
                 Xres = Setting.UpCam_DesiredX;
@@ -1799,7 +1799,7 @@ namespace LitePlacer
             }
         }
 
-        private void General_pictureBox_MouseClick(PictureBox Box, int MouseX, int MouseY)
+        private async void General_pictureBox_MouseClick(PictureBox Box, int MouseX, int MouseY)
         {
             double Xmm, Ymm;
 
@@ -1815,81 +1815,95 @@ namespace LitePlacer
                 X = X * Setting.General_MachineSizeX;
                 double Y = Convert.ToDouble(Box.Size.Height - MouseY) / Convert.ToDouble(Box.Size.Height);
                 Y = Y * Setting.General_MachineSizeY;
-                Cnc.CNC_XY_m(X, Y);
+                
+                await Machine.Move.MoveXYSafeAsync(X, Y);
             }
 
             else
             {
                 BoxTo_mms(out Xmm, out Ymm, MouseX, MouseY, Box);
-                Cnc.CNC_XY_m(Cnc.CurrentX + Xmm, Cnc.CurrentY - Ymm);
+                
+                await Machine.Move.MoveXYSafeAsync(
+                    Machine.Position.CurrentX + Xmm, 
+                    Machine.Position.CurrentY - Ymm);
             }
         }
 
         // =================================================================================
-        private void GoX_button_Click(object sender, EventArgs e)
+        private async void GoX_button_Click(object sender, EventArgs e)
         {
             double X;
-            double Y = Cnc.CurrentY;
-            double A = Cnc.CurrentA;
+            double Y = Machine.Position.CurrentY;
+            double A = Machine.Position.CurrentA;
 
             if (!double.TryParse(GotoX_textBox.Text.Replace(',', '.'), out X))
             {
                 return;
             }
+
             if (Relative_Button.Checked)
             {
-                X += Cnc.CurrentX;
+                X += Machine.Position.CurrentX;
             }
-            Cnc.CNC_XYA_m(X, Y, A);
+
+            await Machine.Move.MoveXYASafeAsync(X, Y, A);
         }
 
         private void GoY_button_Click(object sender, EventArgs e)
         {
-            double X = Cnc.CurrentX;
+            double X = Machine.Position.CurrentX;
             double Y;
-            double A = Cnc.CurrentA;
+            double A = Machine.Position.CurrentA;
+
             if (!double.TryParse(GotoY_textBox.Text.Replace(',', '.'), out Y))
             {
                 return;
             }
+
             if (Relative_Button.Checked)
             {
-                Y += Cnc.CurrentY;
+                Y += Machine.Position.CurrentY;
             }
-            Cnc.CNC_XYA_m(X, Y, A);
+
+            Machine.Move.MoveXYASafeAsync(X, Y, A);
         }
 
-        private void GoZ_button_Click(object sender, EventArgs e)
+        private async void GoZ_button_Click(object sender, EventArgs e)
         {
             double Z;
+
             if (!double.TryParse(GotoZ_textBox.Text.Replace(',', '.'), out Z))
             {
                 return;
             }
+
             if (Relative_Button.Checked)
             {
-                Z += Cnc.CurrentZ;
+                Z += Machine.Position.CurrentZ;
             }
-            Cnc.CNC_Z_m(Z);
+
+            await Machine.Move.MoveZSafeAsync(Z);
         }
 
-        private void GoA_button_Click(object sender, EventArgs e)
+        private async void GoA_button_Click(object sender, EventArgs e)
         {
-            double X = Cnc.CurrentX;
-            double Y = Cnc.CurrentY;
+            double X = Machine.Position.CurrentX;
+            double Y = Machine.Position.CurrentY;
             double A;
             if (!double.TryParse(GotoA_textBox.Text.Replace(',', '.'), out A))
             {
                 return;
             }
+
             if (Relative_Button.Checked)
             {
-                A += Cnc.CurrentA;
+                A += Machine.Position.CurrentA;
             }
-            Cnc.CNC_XYA_m(X, Y, A);
+
+            await Machine.Move.MoveXYASafeAsync(X, Y, A);
         }
 
-        private void Goto_button_Click(object sender, EventArgs e)
+        private async void Goto_button_Click(object sender, EventArgs e)
         {
             double X;  // target coordinates
             double Y;
@@ -1914,45 +1928,48 @@ namespace LitePlacer
 
             if (Relative_Button.Checked)
             {
-                X += Cnc.CurrentX;
-                Y += Cnc.CurrentY;
-                Z += Cnc.CurrentZ;
-                A += Cnc.CurrentA;
+                X += Machine.Position.CurrentX;
+                Y += Machine.Position.CurrentY;
+                Z += Machine.Position.CurrentZ;
+                A += Machine.Position.CurrentA;
             }
             if (Math.Abs(Z) < 0.01)  // allow raising Z and move at one go
             {
-                if (!Cnc.CNC_Z_m(Z))
+                if (!await Machine.Move.MoveZSafeAsync(Z))
                 {
                     return;
                 }
             };
             // move X, Y, A if needed
-            if (!((Math.Abs(X - Cnc.CurrentX) < 0.01) && (Math.Abs(Y - Cnc.CurrentY) < 0.01) && (Math.Abs(A - Cnc.CurrentA) < 0.01)))
+            if (!(
+                (Math.Abs(X - Machine.Position.CurrentX) < 0.01) && 
+                (Math.Abs(Y - Machine.Position.CurrentY) < 0.01) && 
+                (Math.Abs(A - Machine.Position.CurrentA) < 0.01)))
             {
                 // Allow raise Z, goto and low Z:
                 if (!(Math.Abs(Z) < 0.01))
                 {
-                    if (!Cnc.CNC_Z_m(0))
+                    if (!await Machine.Move.MoveZSafeAsync(0))
                     {
                         return;
                     }
                 }
-                if (!Cnc.CNC_XYA_m(X, Y, A))
+                if (!await Machine.Move.MoveXYASafeAsync(X, Y, A))
                 {
                     return;
                 }
-                if (!(Math.Abs(Z - Cnc.CurrentZ) < 0.01))
+                if (!(Math.Abs(Z - Machine.Position.CurrentZ) < 0.01))
                 {
-                    if (!Cnc.CNC_Z_m(Z))
+                    if (!await Machine.Move.MoveZSafeAsync(Z))
                     {
                         return;
                     }
                 };
             }
             // move Z if needed
-            if (!(Math.Abs(Z - Cnc.CurrentZ) < 0.01))
+            if (!(Math.Abs(Z - Machine.Position.CurrentZ) < 0.01))
             {
-                if (!Cnc.CNC_Z_m(Z))
+                if (!await Machine.Move.MoveZSafeAsync(Z))
                 {
                     return;
                 }
@@ -1961,10 +1978,10 @@ namespace LitePlacer
 
         private void LoadCurrentPosition_button_Click(object sender, EventArgs e)
         {
-            GotoX_textBox.Text = Cnc.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            GotoY_textBox.Text = Cnc.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
-            GotoZ_textBox.Text = Cnc.CurrentZ.ToString("0.000", CultureInfo.InvariantCulture);
-            GotoA_textBox.Text = Cnc.CurrentA.ToString("0.000", CultureInfo.InvariantCulture);
+            GotoX_textBox.Text = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
+            GotoY_textBox.Text = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
+            GotoZ_textBox.Text = Machine.Position.CurrentZ.ToString("0.000", CultureInfo.InvariantCulture);
+            GotoA_textBox.Text = Machine.Position.CurrentA.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void SetCurrentPosition_button_Click(object sender, EventArgs e)
@@ -2013,7 +2030,7 @@ namespace LitePlacer
                 DisplayText("A value error", KnownColor.Red, true);
                 return;
             }
-            Cnc.CNC_RawWrite("{\"gc\":\"G28.3 X" + Xstr + " Y" + Ystr + " Z" + Zstr + " A" + Astr + "\"}");
+            Machine.CommsProcessor.SendCommand("{\"gc\":\"G28.3 X" + Xstr + " Y" + Ystr + " Z" + Zstr + " A" + Astr + "\"}");
             Thread.Sleep(50);
         }
 
@@ -2028,16 +2045,13 @@ namespace LitePlacer
         // Different types of control hardware and settings
         // =================================================================================
 
-        private async Task<bool> UpdateCNCBoardType_mAsync()
+        private async Task UpdateCNCBoardType_mAsync()
         {
             var tinyGSystemParameters = DIBindings.Resolve<ITinyGSystemParameters>();
 
             DisplayText("Finding board type:");
-            if (!await Cnc.CNC_Write_mAsync("{\"" + tinyGSystemParameters.hp.Name + "\":\"\"}"))
-            {
-                return false;
-            };
-            return true;
+
+            await Machine.CommsProcessor.SendCommandWaitResponseAsync("{\"" + tinyGSystemParameters.hp.Name + "\":\"\"}");
         }
 
         private bool UpdateCNCBoardSettings_m()
@@ -4121,11 +4135,7 @@ namespace LitePlacer
             // For qQuintic boards that dont' have on-board storage, write the values.
 
             Thread.Sleep(200); // Give TinyG time to wake up
-            bool res = await UpdateCNCBoardType_mAsync();
-            if (!res)
-            {
-                return false;
-            }
+            await UpdateCNCBoardType_mAsync();
 
             if (Cnc.Controlboard == ControlBoardType.TinyG)
             {
@@ -4180,46 +4190,46 @@ namespace LitePlacer
             var tinyGCalibrations = DIBindings.Resolve<ITinyGCalibrations>();
             var tinyGVariables = DIBindings.Resolve<ITinyGVariables>();
 
-            CommsProcessor.RegisterDataReceived(tinyGSystemParameters.hp, (x) => { UpdateControlThreadSafe(Update_hp, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGSystemParameters.hp, (x) => { UpdateControlThreadSafe(Update_hp, x); });
 
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.mt, (x) => { UpdateControlThreadSafe(Update_mt, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1sa, (x) => { UpdateControlThreadSafe(Update_1sa, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1tr, (x) => { UpdateControlThreadSafe(Update_1tr, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1mi, (x) => { UpdateControlThreadSafe(Update_1mi, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor2sa, (x) => { UpdateControlThreadSafe(Update_2sa, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor2tr, (x) => { UpdateControlThreadSafe(Update_2tr, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor2mi, (x) => { UpdateControlThreadSafe(Update_2mi, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor3sa, (x) => { UpdateControlThreadSafe(Update_3sa, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor3tr, (x) => { UpdateControlThreadSafe(Update_3tr, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor3mi, (x) => { UpdateControlThreadSafe(Update_3mi, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4sa, (x) => { UpdateControlThreadSafe(Update_4sa, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4tr, (x) => { UpdateControlThreadSafe(Update_4tr, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4mi, (x) => { UpdateControlThreadSafe(Update_4mi, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xvm, (x) => { UpdateControlThreadSafe(Update_xvm, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xjm, (x) => { UpdateControlThreadSafe(Update_xjm, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xjh, (x) => { UpdateControlThreadSafe(Update_xjh, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xsv, (x) => { UpdateControlThreadSafe(Update_xsv, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.yvm, (x) => { UpdateControlThreadSafe(Update_yvm, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.yjm, (x) => { UpdateControlThreadSafe(Update_yjm, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.yjh, (x) => { UpdateControlThreadSafe(Update_yjh, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.ysv, (x) => { UpdateControlThreadSafe(Update_ysv, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zvm, (x) => { UpdateControlThreadSafe(Update_zvm, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zjm, (x) => { UpdateControlThreadSafe(Update_zjm, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zjh, (x) => { UpdateControlThreadSafe(Update_zjh, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsv, (x) => { UpdateControlThreadSafe(Update_zsv, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.avm, (x) => { UpdateControlThreadSafe(Update_avm, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.ajm, (x) => { UpdateControlThreadSafe(Update_ajm, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xsn, (x) => { UpdateControlThreadSafe(Update_xsn, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.xsx, (x) => { UpdateControlThreadSafe(Update_xsx, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.ysn, (x) => { UpdateControlThreadSafe(Update_ysn, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.ysx, (x) => { UpdateControlThreadSafe(Update_ysx, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsn, (x) => { UpdateControlThreadSafe(Update_zsn, x); });
-            CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsx, (x) => { UpdateControlThreadSafe(Update_zsx, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.mt, (x) => { UpdateControlThreadSafe(Update_mt, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1sa, (x) => { UpdateControlThreadSafe(Update_1sa, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1tr, (x) => { UpdateControlThreadSafe(Update_1tr, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor1mi, (x) => { UpdateControlThreadSafe(Update_1mi, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor2sa, (x) => { UpdateControlThreadSafe(Update_2sa, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor2tr, (x) => { UpdateControlThreadSafe(Update_2tr, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor2mi, (x) => { UpdateControlThreadSafe(Update_2mi, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor3sa, (x) => { UpdateControlThreadSafe(Update_3sa, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor3tr, (x) => { UpdateControlThreadSafe(Update_3tr, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor3mi, (x) => { UpdateControlThreadSafe(Update_3mi, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4sa, (x) => { UpdateControlThreadSafe(Update_4sa, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4tr, (x) => { UpdateControlThreadSafe(Update_4tr, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.motor4mi, (x) => { UpdateControlThreadSafe(Update_4mi, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.xvm, (x) => { UpdateControlThreadSafe(Update_xvm, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.xjm, (x) => { UpdateControlThreadSafe(Update_xjm, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.xjh, (x) => { UpdateControlThreadSafe(Update_xjh, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.xsv, (x) => { UpdateControlThreadSafe(Update_xsv, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.yvm, (x) => { UpdateControlThreadSafe(Update_yvm, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.yjm, (x) => { UpdateControlThreadSafe(Update_yjm, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.yjh, (x) => { UpdateControlThreadSafe(Update_yjh, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.ysv, (x) => { UpdateControlThreadSafe(Update_ysv, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.zvm, (x) => { UpdateControlThreadSafe(Update_zvm, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.zjm, (x) => { UpdateControlThreadSafe(Update_zjm, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.zjh, (x) => { UpdateControlThreadSafe(Update_zjh, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsv, (x) => { UpdateControlThreadSafe(Update_zsv, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.avm, (x) => { UpdateControlThreadSafe(Update_avm, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.ajm, (x) => { UpdateControlThreadSafe(Update_ajm, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.xsn, (x) => { UpdateControlThreadSafe(Update_xsn, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.xsx, (x) => { UpdateControlThreadSafe(Update_xsx, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.ysn, (x) => { UpdateControlThreadSafe(Update_ysn, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.ysx, (x) => { UpdateControlThreadSafe(Update_ysx, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsn, (x) => { UpdateControlThreadSafe(Update_zsn, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGCalibrations.zsx, (x) => { UpdateControlThreadSafe(Update_zsx, x); });
 
-            CommsProcessor.RegisterDataReceived(tinyGVariables.posx, (x) => { UpdateControlThreadSafe(Update_xpos, x); });
-            CommsProcessor.RegisterDataReceived(tinyGVariables.posy, (x) => { UpdateControlThreadSafe(Update_ypos, x); });
-            CommsProcessor.RegisterDataReceived(tinyGVariables.posz, (x) => { UpdateControlThreadSafe(Update_zpos, x); });
-            CommsProcessor.RegisterDataReceived(tinyGVariables.posa, (x) => { UpdateControlThreadSafe(Update_apos, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGVariables.posx, (x) => { UpdateControlThreadSafe(Update_xpos, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGVariables.posy, (x) => { UpdateControlThreadSafe(Update_ypos, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGVariables.posz, (x) => { UpdateControlThreadSafe(Update_zpos, x); });
+            Machine.CommsProcessor.RegisterDataReceived(tinyGVariables.posa, (x) => { UpdateControlThreadSafe(Update_apos, x); });
         }
 
         private void UpdateControlThreadSafe(Action<string> action, string value)
@@ -4693,8 +4703,6 @@ namespace LitePlacer
 
         private void Update_hp(string value)
         {
-            if (InvokeRequired) { Invoke(new Action<string>(Update_hp), new[] { value }); return; }
-
             if (value=="1")
             {
                 Cnc.Controlboard = ControlBoardType.TinyG;
