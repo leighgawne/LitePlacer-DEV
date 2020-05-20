@@ -51,18 +51,19 @@ namespace LitePlacer
 
     public partial class LiteplacerUC : UserControl
     {
+        private IMachine Machine { get; } = DIBindings.Resolve<IMachine>();
         //public ICNC Cnc;
-        public IMove CncMove;
-        public ICamera DownCamera;
+        //public IMove CncMove;
+        //public ICamera DownCamera;
         ICamera UpCamera;
         NozzleClass Nozzle;
         TapesClass Tapes;
-        public IMySettings Setting;
+        public ISettings Setting;
         public BoardSettings.TinyG TinyGBoard = new BoardSettings.TinyG();
         public BoardSettings.qQuintic qQuinticBoard = new BoardSettings.qQuintic();
 
         public IAppLogger AppLogger = Terpsichore.Common.DIBindings.Resolve<IAppLogger>();
-        private ICommsProcessor CommsProcessor = DIBindings.Resolve<ICommsProcessor>();
+        //private ICommsProcessor CommsProcessor = DIBindings.Resolve<ICommsProcessor>();
 
 
         AppSettings SettingsOps;
@@ -437,8 +438,8 @@ namespace LitePlacer
             {
                 if (await ControlBoardJustConnectedAsync())
                 {
-                    Cnc.PumpDefaultSetting();
-                    Cnc.VacuumDefaultSetting();
+                    Machine.Pump.PumpDefaultSetting();
+                    Machine.Vacuum.VacuumDefaultSetting();
                     await OfferHomingAsync();
                 }
             }
@@ -556,7 +557,7 @@ namespace LitePlacer
                 Cnc.PumpIsOn = true;        // so it will be turned off, no matter what we think the status
                 Cnc.PumpOff_NoWorkaround();
                 Cnc.VacuumDefaultSetting();
-                Cnc.CNC_Write_m("{\"md\":\"\"}");  // motor power off
+                Machine.Motors.MotorPowerOff();  // motor power off
             }
             Cnc.Close();
 

@@ -54,7 +54,7 @@ namespace LitePlacer
         ICamera UpCamera;
         NozzleClass Nozzle;
         TapesClass Tapes;
-        public IMySettings Setting;
+        public ISettings Setting;
         public BoardSettings.TinyG TinyGBoard = new BoardSettings.TinyG();
         public BoardSettings.qQuintic qQuinticBoard = new BoardSettings.qQuintic();
 

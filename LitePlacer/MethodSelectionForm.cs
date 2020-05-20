@@ -14,7 +14,7 @@ namespace LitePlacer
 {
 	public partial class MethodSelectionForm : Form
 	{
-        private IMySettings settings = DIBindings.Resolve<IMySettings>();
+        private ISettings settings = DIBindings.Resolve<ISettings>();
 
         public string SelectedMethod = "";
 		public bool ShowCheckBox = false;
