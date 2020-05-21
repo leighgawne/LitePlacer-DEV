@@ -162,19 +162,12 @@
     <Compile Include="BoardSettings.cs" />
     <Compile Include="Bootstrap.cs" />
     <Compile Include="Calibration\Actions\CalibrationAction.cs" />
-    <Compile Include="Calibration\Actions\HomeToCommonPosition.cs" />
     <Compile Include="Calibration\Actions\ICalibrationAction.cs" />
     <Compile Include="LiteplacerUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="LiteplacerUC.Designer.cs">
       <DependentUpon>LiteplacerUC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MethodSelectionForm.cs">
       <SubType>Form</SubType>
@@ -208,10 +201,6 @@
     </Compile>
     <EmbeddedResource Include="LiteplacerUC.resx">
       <DependentUpon>LiteplacerUC.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MethodSelectionForm.resx">
       <DependentUpon>MethodSelectionForm.cs</DependentUpon>

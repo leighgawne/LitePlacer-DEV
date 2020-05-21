@@ -159,11 +159,11 @@ namespace LitePlacer
         {
             try
             {
-                if (MainForm.Cnc.Controlboard == ControlBoardType.TinyG)
-                {
+                //if (MainForm.Cnc.Controlboard == ControlBoardType.TinyG)
+                //{
                     MainForm.DisplayText("Writing TinyG settings file: " + FileName);
                     File.WriteAllText(FileName, "TinyG   \n\r" + JsonConvert.SerializeObject(TinyGSettings, Formatting.Indented));
-                }
+                /*}
                 else if (MainForm.Cnc.Controlboard == ControlBoardType.qQuintic)
                 {
                     MainForm.DisplayText("Writing qQuintic settings file: " + FileName);
@@ -172,7 +172,7 @@ namespace LitePlacer
                 else
                 {
                     MainForm.DisplayText("Skipping writing board settings file; board type unknown");
-                }
+                }*/
                 return true;
             }
             catch (System.Exception excep)

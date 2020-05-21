@@ -26,9 +26,11 @@ namespace LitePlacer
         private DataGridView Grid;
         private NozzleClass Nozzle;
 		private ICamera DownCamera;
-		private ICNC Cnc;
 
         private IAppLogger appLogger = DIBindings.Resolve<IAppLogger>();
+
+        private IMachine Machine { get; } = DIBindings.Resolve<IMachine>();
+
 
         public delegate Task<Tuple<bool, double, double>> GoToFeatureLocation_mHandler(FeatureType Shape, double FindTolerance, double MoveTolerance);
         public event GoToFeatureLocation_mHandler GoToFeatureLocation_mEventAsync;
@@ -45,12 +47,11 @@ namespace LitePlacer
         public delegate bool UseCoordinatesDirectlyHandler(int TapeNum);
         public event UseCoordinatesDirectlyHandler UseCoordinatesDirectlyEvent;
 
-        public TapesClass(DataGridView grd, NozzleClass ndl, ICamera cam, ICNC c)
+        public TapesClass(DataGridView grd, NozzleClass ndl, ICamera cam)
 		{
             Grid = grd;
 			Nozzle = ndl;
 			DownCamera = cam;
-			Cnc = c;
 		}
 
 		// ========================================================================================
@@ -394,7 +395,7 @@ namespace LitePlacer
                 return new Tuple<bool, double, double>(false, ResultX, ResultY);
             }
             // Go there:
-            if (!Cnc.CNC_XY_m(X, Y))
+            if (!await Machine.Move.MoveXYSafeAsync(X, Y))
             {
                 return new Tuple<bool, double, double>(false, ResultX, ResultY);
             };
@@ -407,8 +408,8 @@ namespace LitePlacer
                 appLogger.Error("Can't find tape hole");
                 return new Tuple<bool, double, double>(false, ResultX, ResultY);
             }
-            ResultX = Cnc.CurrentX + X;
-            ResultY = Cnc.CurrentY + Y;
+            ResultX = Machine.Position.CurrentX + X;
+            ResultY = Machine.Position.CurrentY + Y;
             return new Tuple<bool, double, double>(true, ResultX, ResultY);
         }
 
@@ -686,7 +687,7 @@ namespace LitePlacer
                 return new Tuple<bool, double, double>(false, HoleX, HoleY);
             }
             // Go there:
-            if (!Cnc.CNC_XY_m(NextX, NextY))
+            if (!await Machine.Move.MoveXYSafeAsync(NextX, NextY))
 			{
                 return new Tuple<bool, double, double>(false, HoleX, HoleY);
             };
@@ -706,8 +707,8 @@ namespace LitePlacer
             HoleY = result.Item3;
 
             // The hole locations are:
-            HoleX = Cnc.CurrentX + HoleX;
-            HoleY = Cnc.CurrentY + HoleY;
+            HoleX = Machine.Position.CurrentX + HoleX;
+            HoleY = Machine.Position.CurrentY + HoleY;
 
 			// ==================================================
 			// find the part location and go there:

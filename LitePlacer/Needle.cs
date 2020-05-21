@@ -8,6 +8,7 @@ using System.Globalization;
 using Terpsichore.Machine.Sensors;
 using Terpsichore.Machine.Interfaces;
 using Terpsichore.Machine;
+using Terpsichore.Common;
 
 namespace LitePlacer
 {
@@ -28,15 +29,15 @@ namespace LitePlacer
         public bool[] CalibratedArr;
 
         private ICamera Cam;
-        private ICNC Cnc;
+        private IMachine Machine { get; } = DIBindings.Resolve<IMachine>();
+
         private static dynamic MainForm;
 
-        public NozzleClass(ICamera MyCam, ICNC MyCnc, dynamic MainF)
+        public NozzleClass(ICamera MyCam, dynamic MainF)
         {
             MainForm = MainF;
             Calibrated = false;
             Cam = MyCam;
-            Cnc = MyCnc;
             CalibrationPointsArr = new List<NozzlePoint>[MainForm.Setting.Nozzles_maximum];
             CalibrationPoints.Clear();
             CalibratedArr = new bool[MainForm.Setting.Nozzles_maximum];
@@ -161,15 +162,18 @@ namespace LitePlacer
                     Y = 0.0;
                     return false;
                 };
-                double CurrX = Cnc.CurrentX;
-                double CurrY = Cnc.CurrentY;
-                double CurrA = Cnc.CurrentA;
-                if(!MainForm.CalibrateNozzle_m())
+                
+                double CurrX = Machine.Position.CurrentX;
+                double CurrY = Machine.Position.CurrentY;
+                double CurrA = Machine.Position.CurrentA;
+
+                if (!MainForm.CalibrateNozzle_m())
                 {
                     X = 0;
                     Y = 0;
                     return false;
                 }
+
                 if (!MainForm.CNC_XYA_m(CurrX, CurrY, CurrA))
                 {
                     X = 0;

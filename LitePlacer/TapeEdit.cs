@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Terpsichore.Common;
 using Terpsichore.Machine;
 using Terpsichore.Machine.Interfaces;
 using Terpsichore.Machine.Sensors;
@@ -20,7 +21,8 @@ namespace LitePlacer
         public int TapeRowNo;
         public dynamic MainForm;
         ICamera Cam;
-        ICNC Cnc;
+
+        IMachine Machine { get; } = DIBindings.Resolve<IMachine>();
 
         // The parameters of tapes, most taken care by this dialog
 
@@ -47,10 +49,9 @@ namespace LitePlacer
         // double PickupZ, PlacementZ: Z values used for pickup/place operation
         // bool PickupZvalid, PlacementZvalid: if the values are valid (if not, they are measured when used)
 
-        public TapeEditForm(ICNC _cnc, ICamera _cam)
+        public TapeEditForm(ICamera _cam)
         {
             InitializeComponent();
-            Cnc = _cnc;
             Cam = _cam;
         }
 
@@ -375,25 +376,25 @@ namespace LitePlacer
 
         private void GetFirstPosition_button_Click(object sender, EventArgs e)
         {
-            FirstX_textBox.Text = Cnc.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            FirstY_textBox.Text = Cnc.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
-            RotationDirect_textBox.Text = Cnc.CurrentA.ToString("0.000", CultureInfo.InvariantCulture);
+            FirstX_textBox.Text = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
+            FirstY_textBox.Text = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
+            RotationDirect_textBox.Text = Machine.Position.CurrentA.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void GetLastPosition_button_Click(object sender, EventArgs e)
         {
-            LastX_textBox.Text = Cnc.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            LastY_textBox.Text = Cnc.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
+            LastX_textBox.Text = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
+            LastY_textBox.Text = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void GetPickupZ_button_Click(object sender, EventArgs e)
         {
-            PickupZ_textBox.Text = Cnc.CurrentZ.ToString("0.000", CultureInfo.InvariantCulture);
+            PickupZ_textBox.Text = Machine.Position.CurrentZ.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void GetPlacementZ_button_Click(object sender, EventArgs e)
         {
-            PlacementZ_textBox.Text = Cnc.CurrentZ.ToString("0.000", CultureInfo.InvariantCulture);
+            PlacementZ_textBox.Text = Machine.Position.CurrentZ.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void CoordinatesForParts_checkBox_CheckedChanged(object sender, EventArgs e)
@@ -418,7 +419,7 @@ namespace LitePlacer
 
         private void GetACorrection_button_Click(object sender, EventArgs e)
         {
-            RotationDirect_textBox.Text = Cnc.CurrentA.ToString("0.000", CultureInfo.InvariantCulture);
+            RotationDirect_textBox.Text = Machine.Position.CurrentA.ToString("0.000", CultureInfo.InvariantCulture);
         }
     }
 }
