@@ -2116,7 +2116,7 @@ namespace LitePlacer
         }
 
          private async Task OfferHomingAsync()
-        {
+         {
             PositionConfidence = false;
             DialogResult dialogResult = ShowMessageBox(
                 "Home machine now?",

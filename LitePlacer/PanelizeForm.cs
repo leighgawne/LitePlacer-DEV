@@ -40,7 +40,7 @@ namespace LitePlacer
         private double YIncrement = double.NaN;
         // =================================================================================
 
-        private ISettings settings = DIBindings.Resolve<ISettings>();
+        private ISettings settings = DIBindings.Resolve<IAppSettings>().Load();
         private IAppLogger appLogger = DIBindings.Resolve<IAppLogger>();
 
         public delegate void LoadDataGridHandler(string FileName, DataGridView dgv, DataTableType TableType);

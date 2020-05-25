@@ -10236,7 +10236,7 @@
             // MotorPower_timer
             // 
             this.MotorPower_timer.Interval = 1000;
-            this.MotorPower_timer.Tick += new System.EventHandler(this.MotorPower_timer_Tick);
+            //this.MotorPower_timer.Tick += new System.EventHandler(this.MotorPower_timer_Tick);
             // 
             // GoX_button
             // 

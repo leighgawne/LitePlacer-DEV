@@ -27,7 +27,7 @@ namespace LitePlacer
 
         private Size GridSizeSave= new Size();
 
-        private ISettings settings = DIBindings.Resolve<ISettings>();
+        private ISettings settings = DIBindings.Resolve<IAppSettings>().Load();
         private IAppLogger appLoggerUC = DIBindings.Resolve<IAppLogger>();
 
 
