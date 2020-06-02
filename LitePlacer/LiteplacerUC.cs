@@ -248,6 +248,10 @@ namespace LitePlacer
 
             tabControlPages.SelectedTab = tabControlPages.TabPages["tabPageBasicSetup"];
 
+            List<string> Devices = Machine.DownCamera.GetDeviceList();
+            List<string> Devices2 = Machine.DownCamera.GetMonikerStrings();
+
+
             //OpenSecondaryDownCameraForm();
         }
 
@@ -2605,11 +2609,13 @@ namespace LitePlacer
             Machine.UpCamera.Close();
             SetDownCameraDefaults();
             SetUpCameraDefaults();
+            SetNozzleCameraDefaults();
             if (KeepActive_checkBox.Checked)
             {
                 StartUpCamera_m();
                 Machine.UpCamera.Active = false;
                 StartDownCamera_m();
+                StartNozzleCamera_m();
             }
             SelectCamera(Machine.DownCamera);
 
@@ -2683,13 +2689,21 @@ namespace LitePlacer
                 };
                 StartDownCamera_m();
             }
+            else if (cam == Machine.UpCamera)
+            {
+                if (Machine.UpCamera.IsRunning())
+                {
+                    Machine.UpCamera.Close();
+                };
+                StartDownCamera_m();
+            }
             else
             {
-                if (Machine.DownCamera.IsRunning())
+                if (Machine.NozzleCamera.IsRunning())
                 {
-                    Machine.DownCamera.Close();
+                    Machine.NozzleCamera.Close();
                 };
-                StartUpCamera_m();
+                StartNozzleCamera_m();
             }
         }
 
@@ -2726,7 +2740,7 @@ namespace LitePlacer
             {
                 ShowMessageBox(
                     "Up camera and Down camera point to same physical device.",
-                    "ICamera selection isse",
+                    "Camera selection isse",
                     MessageBoxButtons.OK
                 );
                 UpdateCameraCameraStatus_labelThreadSafe();
@@ -2783,7 +2797,7 @@ namespace LitePlacer
             {
                 ShowMessageBox(
                     "Up camera and Down camera point to same physical device.",
-                    "ICamera selection issue",
+                    "Camera selection issue",
                     MessageBoxButtons.OK
                 );
                 UpdateCameraCameraStatus_labelThreadSafe();
@@ -2800,10 +2814,67 @@ namespace LitePlacer
                 UpdateCameraCameraStatus_labelThreadSafe();
                 return false;
             };
+
+            if (!Machine.UpCamera.Start("Machine.NozzleCamera", Setting.UpcamMoniker))
+            {
+                ShowMessageBox(
+                    "Problem Starting up camera.",
+                    "Up camera problem",
+                    MessageBoxButtons.OK
+                );
+                UpdateCameraCameraStatus_labelThreadSafe();
+                return false;
+            };
+
             Machine.UpCamera.Active = true;
             UpdateCameraCameraStatus_labelThreadSafe();
             return true;
         }
+
+        private bool StartNozzleCamera_m()
+        {
+            Machine.NozzleCamera.Active = false;
+            if (Machine.NozzleCamera.IsRunning())
+            {
+                DisplayText("Machine.NozzleCamera already running");
+                Machine.NozzleCamera.Active = true;
+                UpdateCameraCameraStatus_labelThreadSafe();
+                return true;
+            };
+
+            Machine.NozzleCamera.Active = false;
+            if (Setting.NozzlecamMoniker == "")
+            {
+                // Very first runs, no attempt to connect cameras yet. This is ok.
+                UpdateCameraCameraStatus_labelThreadSafe();
+                return true;
+            };
+            // Check that the device exists
+            List<string> monikers = Machine.NozzleCamera.GetMonikerStrings();
+            if (!monikers.Contains(Setting.NozzlecamMoniker))
+            {
+                DisplayText("Downcamera moniker not found. Moniker: " + Setting.NozzlecamMoniker);
+                UpdateCameraCameraStatus_labelThreadSafe();
+                return false;
+            }
+
+            if (!Machine.NozzleCamera.Start("Machine.NozzleCamera", Setting.NozzlecamMoniker))
+            {
+                ShowMessageBox(
+                    "Problem Starting nozzle camera.",
+                    "Nozzle Camera problem",
+                    MessageBoxButtons.OK
+                );
+                CameraStatus_label.Text = "Not Connected";
+                Machine.NozzleCamera.Active = false;
+                UpdateCameraCameraStatus_labelThreadSafe();
+                return false;
+            };
+            Machine.NozzleCamera.Active = true;
+            UpdateCameraCameraStatus_labelThreadSafe();
+            return true;
+        }
+
 
         // =================================================================================
 
@@ -2886,6 +2957,32 @@ namespace LitePlacer
             Machine.UpCamera.DrawBox = false;
             Machine.UpCamera.DrawArrow = false;
             UpCameraDrawBox_checkBox.Checked = false;
+        }
+
+        private void SetNozzleCameraDefaults()
+        {
+            Machine.NozzleCamera.Id = "Nozzlecamera";
+            Machine.NozzleCamera.DesiredX = Setting.NozzleCam_DesiredX;
+            Machine.NozzleCamera.DesiredY = Setting.NozzleCam_DesiredY;
+            Machine.NozzleCamera.BoxSizeX = 200;
+            Machine.NozzleCamera.BoxSizeY = 200;
+            Machine.NozzleCamera.BoxRotationDeg = 0;
+            Machine.NozzleCamera.ImageBox = Cam_pictureBox;
+            Machine.NozzleCamera.Mirror = false;
+            Machine.NozzleCamera.ClearDisplayFunctionsList();
+            Machine.NozzleCamera.SnapshotColor = Setting.NozzleCam_SnapshotColor;
+            // Draws
+            Machine.NozzleCamera.DrawCross = true;
+            Machine.NozzleCamera.DrawDashedCross = false;
+            Machine.NozzleCamera.DrawGrid = false;
+            Machine.NozzleCamera.Draw_Snapshot = false;
+            // Finds:
+            Machine.NozzleCamera.FindCircles = false;
+            Machine.NozzleCamera.FindRectangles = false;
+            Machine.NozzleCamera.FindComponent = false;
+            Machine.NozzleCamera.TestAlgorithm = false;
+            Machine.NozzleCamera.DrawBox = false;
+            Machine.NozzleCamera.DrawArrow = false;
         }
 
         // =================================================================================
