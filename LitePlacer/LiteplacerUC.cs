@@ -458,16 +458,17 @@ namespace LitePlacer
 
         public void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            string path = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
+            int i = path.LastIndexOf('\\');
+            path = path.Remove(i + 1);
+            Setting = SettingsOps.Load(path + "LitePlacer.Appsettings");
+
             bool OK = true;
             bool res;
             Setting.CNC_EnableMouseWheelJog = MouseScroll_checkBox.Checked;
             Setting.CNC_EnableNumPadJog = NumPadJog_checkBox.Checked;
             Setting.General_CheckForUpdates = CheckForUpdate_checkBox.Checked;
             Setting.General_MuteLogging = DisableLog_checkBox.Checked;
-
-            string path = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
-            int i = path.LastIndexOf('\\');
-            path = path.Remove(i + 1);
 
             res = SaveTempCADdata();
             OK = OK && res;
