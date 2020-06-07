@@ -41,6 +41,7 @@ using Terpsichore.Common;
 using Terpsichore.Machine.Interfaces;
 using Terpsichore.Machine;
 using Terpsichore.Machine.EmbeddedController;
+using Terpsichore.Machine.Vision;
 //using Solvethirteen.Desktop.Workspace;
 
 namespace LitePlacer
@@ -2873,6 +2874,9 @@ namespace LitePlacer
             };
             Machine.NozzleCamera.Active = true;
             UpdateCameraCameraStatus_labelThreadSafe();
+
+            DIBindings.Resolve<INozzleCameraPipeline>().StartPipelineProcessing();
+
             return true;
         }
 
