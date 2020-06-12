@@ -42,6 +42,7 @@ using Terpsichore.Machine.Interfaces;
 using Terpsichore.Machine;
 using Terpsichore.Machine.EmbeddedController;
 using Terpsichore.Machine.Vision;
+using Newtonsoft.Json.Converters;
 //using Solvethirteen.Desktop.Workspace;
 
 namespace LitePlacer
@@ -144,7 +145,6 @@ namespace LitePlacer
             //Machine.UpCamera = new Camera() { ReportInfoCallback = DisplayText };
             Nozzle = new NozzleClass(Machine.UpCamera, this);
             Tapes = new TapesClass(Tapes_dataGridView, Nozzle, Machine.DownCamera);
-            Tapes.GoToFeatureLocation_mEventAsync += GoToFeatureLocation_mAsync;
             Tapes.UseCoordinatesDirectlyEvent += UseCoordinatesDirectly;
             Tapes.SetPaperTapeMeasurementEvent += SetPaperTapeMeasurement;
             Tapes.SetBlackTapeMeasurementEvent += SetBlackTapeMeasurement;
@@ -165,6 +165,8 @@ namespace LitePlacer
             tabControlPages.TabPages.Remove(Components_tabPage);
             // and uncomment this:
             // LoadDataGrid(path + "LitePlacer.ComponentData", ComponentData_dataGridView);
+
+            filters.Clear();
 
             LoadDataGrid(path + "LitePlacer.HomingFunctions", Temp_dataGridView, DataTableType.VideoProcessing);
             DataGridViewCopy(Temp_dataGridView, ref Homing_dataGridView, false);
@@ -198,6 +200,17 @@ namespace LitePlacer
 
             LoadDataGrid(path + "LitePlacer.UpCamSnapshotFunctions", Temp_dataGridView, DataTableType.VideoProcessing);
             DataGridViewCopy(Temp_dataGridView, ref UpcamSnapshot_dataGridView, false);
+
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (StreamWriter sw = new StreamWriter("vision_filters.json"))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                writer.Formatting = Formatting.Indented;
+                serializer.Serialize(writer, filters);
+            }
 
             LoadTapesTable(path + "LitePlacer.TapesData_v2");
             // LoadDataGrid(path + "LitePlacer.TapesData", Tapes_dataGridView, DataTableType.Tapes);
@@ -254,6 +267,7 @@ namespace LitePlacer
 
 
             //OpenSecondaryDownCameraForm();
+            SetHomingMeasurement();
         }
 
         // ==============================================================================================
@@ -670,15 +684,20 @@ namespace LitePlacer
         private int Ver2FormatID = 20000001;  // Just in case we need to identify the format we are using. 
         public bool LoadingDataGrid = false;  // to avoid problems with cell value changed event and unfilled grids
 
+        List<Terpsichore.Machine.Vision.IFilter> filters = new List<Terpsichore.Machine.Vision.IFilter>();
+
 
         public void LoadDataGrid(string FileName, DataGridView dgv, DataTableType TableType)
         {
             try
             {
+                Terpsichore.Machine.Vision.IFilter filter = DIBindings.Resolve<Terpsichore.Machine.Vision.IFilter>();
+
                 bool Ver2 = false;
                 LoadingDataGrid = true;
                 int first;
 
+                filter.Name = Path.GetFileName(FileName).Replace("Liteplacer.", "").Replace("Functions", "");
 
                 if (File.Exists(FileName + "_v2"))
                 {
@@ -746,6 +765,8 @@ namespace LitePlacer
                     int i_out;
                     for (int i = 0; i < rows; ++i)
                     {
+                        var filterElement = DIBindings.Resolve<IFilterElement>();
+
                         dgv.Rows.Add();
                         for (int j = 0; j < cols; ++j)
                         {
@@ -753,7 +774,114 @@ namespace LitePlacer
                             {
                                 if (br.ReadBoolean())
                                 {
-                                    dgv.Rows[i].Cells[i_out].Value = br.ReadString();
+                                    var stringValue = br.ReadString();
+
+                                    dgv.Rows[i].Cells[i_out].Value = stringValue;
+
+                                    if (TableType == DataTableType.VideoProcessing)
+                                    {
+                                        switch (Headers[j])
+                                        {
+                                            case "Funct_column":
+                                            {
+                                                switch (stringValue)
+                                                {
+                                                    case "Grayscale":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.Grayscale;
+                                                        break;
+                                                    }
+                                                    case "Contrast scretch":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.ContrastStretch;
+                                                        break;
+                                                    }
+                                                    case "Kill color":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.KillColour;
+                                                        break;
+                                                    }
+                                                    case "Keep color":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.KeepColour;
+                                                        break;
+                                                    }
+                                                    case "Invert":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.Invert;
+                                                        break;
+                                                    }
+                                                    case "Meas. zoom":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.MeasusreZoom;
+                                                        break;
+                                                    }
+                                                    case "Edge detect":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.EdgeDetect;
+                                                        break;
+                                                    }
+                                                    case "Noise reduction":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.NoiseReduction;
+                                                        break;
+                                                    }
+                                                    case "Threshold":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.Threshold;
+                                                        break;
+                                                    }
+                                                    case "Histogram":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.Histogram;
+                                                        break;
+                                                    }
+                                                    case "Blur":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.Blur;
+                                                        break;
+                                                    }
+                                                    case "Gaussian blur":
+                                                    {
+                                                        filterElement.FilterType = E_FilterTypes.GaussianBlur;
+                                                        break;
+                                                    }
+                                                }
+
+                                                break;
+                                            }
+                                            case "Enabled_column":
+                                            {
+                                                filterElement.Enabled = bool.Parse(stringValue);
+                                                break;
+                                            }
+                                            case "Int1_column":
+                                            {
+                                                filterElement.IntParameter = int.Parse(stringValue);
+                                                break;
+                                            }
+                                            case "Double1_column":
+                                            {
+                                                filterElement.DoubleParameter = double.Parse(stringValue);
+                                                break;
+                                            }
+                                            case "R_column":
+                                            {
+                                                filterElement.R = int.Parse(stringValue);
+                                                break;
+                                            }
+                                            case "G_column":
+                                            {
+                                                filterElement.G = int.Parse(stringValue);
+                                                break;
+                                            }
+                                            case "B_column":
+                                            {
+                                                filterElement.B = int.Parse(stringValue);
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
                                 else
                                 {
@@ -770,10 +898,18 @@ namespace LitePlacer
                                 else br.ReadBoolean();
                             }
                         }
+
+                        filter.FilterElements.Add(filterElement);
                     }
                     br.Close();
+
+                    var headerInfo = string.Join(", ", Headers);
                 }
+
                 LoadingDataGrid = false;
+
+                filters.Add(filter);
+
             }
             catch (System.Exception excep)
             {
@@ -2142,12 +2278,12 @@ namespace LitePlacer
             PositionConfidence = false;
             ValidMeasurement_checkBox.Checked = false;
             OpticalHome_button.BackColor = Color.Red;
-            if (!await MechanicalHoming_mAsync())
+            if (!await Machine.Homing.MechanicalHoming_mAsync())
             {
                 OpticalHome_button.BackColor = Color.Red;
                 return false;
             }
-            if (!await OpticalHoming_mAsync())
+            if (!await Machine.Homing.OpticalHoming_mAsync())
             {
                 OpticalHome_button.BackColor = Color.Red;
                 return false;
@@ -2160,7 +2296,7 @@ namespace LitePlacer
                     return false;
                 }
                 // home again
-                if (!await OpticalHoming_mAsync())
+                if (!await Machine.Homing.OpticalHoming_mAsync())
                 {
                     OpticalHome_button.BackColor = Color.Red;
                     return false;
@@ -2359,213 +2495,6 @@ namespace LitePlacer
         // At return, the camera is located on top of the circle.
         // X and Y are set to remainding error (true position: currect + error)
         // =====================================================================
-
-        public async Task<Tuple<bool, double, double>> GoToFeatureLocation_mAsync(FeatureType Shape, double FindTolerance, double MoveTolerance)
-        {
-            double X = 0.0F;
-            double Y = 0.0F;
-
-            bool isRunning = Machine.DownCamera.IsRunning();
-
-            DisplayText("GoToFeatureLocation_m(), FindTolerance: " + FindTolerance.ToString() + ", MoveTolerance: " + MoveTolerance.ToString());
-            SelectCamera(Machine.DownCamera);
-            X = 100;
-            Y = 100;
-            FindTolerance = FindTolerance / Setting.DownCam_XmmPerPixel;
-            if (!Machine.DownCamera.IsRunning())
-            {
-                ShowMessageBox(
-                    "Attempt to find circle, downcamera is not running.",
-                    "ICamera not running",
-                    MessageBoxButtons.OK);
-                return new Tuple<bool, double, double>(false, X, Y);
-            }
-            int count = 0;
-            int res = 0;
-            int tries = 0;
-            //bool ProcessingStateSave = Machine.DownCamera.PauseProcessing;
-            //Machine.DownCamera.PauseProcessing = true;
-            do
-            {
-                // Measure location
-                for (tries = 0; tries < 8; tries++)
-                {
-                    if (Shape==FeatureType.Circle)
-                    {
-                        res = Machine.DownCamera.GetClosestCircle(out X, out Y, FindTolerance);
-                    }
-                    else if (Shape == FeatureType.Rectangle)
-                    {
-                        res = Machine.DownCamera.GetClosestRectangle(out X, out Y, FindTolerance);
-                    }
-                    else if (Shape == FeatureType.Both)
-                    {
-                        res = Machine.DownCamera.GetClosestCircle(out X, out Y, FindTolerance);
-                        if (res==0)
-                        {
-                            res = Machine.DownCamera.GetClosestRectangle(out X, out Y, FindTolerance);
-                        }
-                    }
-                    else
-                    {
-                        ShowMessageBox(
-                            "GoToFeatureLocation called with unknown feature " + Shape.ToString(),
-                            "Programmer error:",
-                            MessageBoxButtons.OK);
-                        return new Tuple<bool, double, double>(false, X, Y);
-                    }
-
-                    if (res != 0)
-                    {
-                        break;
-                    }
-                    Thread.Sleep(80); // next frame + vibration damping
-                    if (tries >= 7)
-                    {
-                        DisplayText("Failed in 8 tries.");
-                        ShowMessageBox(
-                            "Optical positioning: Can't find Feature",
-                            "No found",
-                            MessageBoxButtons.OK);
-                        //Machine.DownCamera.PauseProcessing = ProcessingStateSave;
-                        return new Tuple<bool, double, double>(false, X, Y);
-                    }
-                }
-                X = X * Setting.DownCam_XmmPerPixel;
-                Y = -Y * Setting.DownCam_YmmPerPixel;
-                DisplayText("Optical positioning, round " + count.ToString() + ", dX= " + X.ToString() + ", dY= " + Y.ToString() + ", tries= " + tries.ToString());
-                // If we are further than move tolerance, go there
-                if ((Math.Abs(X) > MoveTolerance) || (Math.Abs(Y) > MoveTolerance))
-                {
-                    if (!await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX + X, Machine.Position.CurrentY + Y))
-                    {
-                        return new Tuple<bool, double, double>(false, X, Y);
-                    }
-                }
-                count++;
-            }  // repeat this until we didn't need to move
-            while ((count < 8)
-                && ((Math.Abs(X) > MoveTolerance)
-                || (Math.Abs(Y) > MoveTolerance)));
-
-            //Machine.DownCamera.PauseProcessing = ProcessingStateSave;
-            if (count >= 7)
-            {
-                ShowMessageBox(
-                    "Optical positioning: Process is unstable, result is unreliable!",
-                    "Count exeeded",
-                    MessageBoxButtons.OK);
-                return new Tuple<bool, double, double>(false, X, Y);
-            }
-            return new Tuple<bool, double, double>(true, X, Y);
-        }
-
-
-        private async Task<bool> OpticalHoming_mAsync()
-        {
-            DisplayText("Optical homing");
-            SetHomingMeasurement();
-            // Find within 20mm, goto within 0.05
-            var result = await GoToFeatureLocation_mAsync(FeatureType.Circle, 20.0, 0.05);
-
-            if (!result.Item1)
-            {
-                return false;
-            }
-
-            double X = result.Item2;
-            double Y = result.Item3;
-
-            // Measure 7 times, get median: 
-            SetHomingMeasurement();
-            List<double> Xlist = new List<double>();
-            List<double> Ylist = new List<double>();
-            int res;
-            int Successes = 0;
-            int Tries = 0;
-            do
-            {
-                Tries++;
-                res = Machine.DownCamera.GetClosestCircle(out X, out Y, 0.1/ Setting.DownCam_XmmPerPixel); 
-                if (res==1)
-                {
-                    Successes++;
-                    X = -X * Setting.DownCam_XmmPerPixel;
-                    Y = -Y * Setting.DownCam_YmmPerPixel;
-                    Xlist.Add(X);
-                    Ylist.Add(Y);
-                    DisplayText("X: " + X.ToString("0.000") + ", Y: " + Y.ToString("0.000"));
-                }
-            }
-            while ((Successes<7)&&(Tries<20));
-            if (Tries >= 20)
-            {
-                DisplayText("Optical homing failed, 20 tries did not give 7 results.");
-                return false;
-            }
-            Xlist.Sort();
-            Ylist.Sort();
-            X = Xlist[3];
-            Y = Ylist[3];
-            // CNC_RawWrite("G28.3 X" + X.ToString("0.000") + " Y" + Y.ToString("0.000"));
-            Machine.CommsProcessor.SendCommand("{\"gc\":\"G28.3 X" + X.ToString("0.000") + " Y" + Y.ToString("0.000") + "\"}");
-            Thread.Sleep(50);
-            Machine.Position.CurrentX = 0.0;
-            Machine.Position.CurrentY = 0.0;
-            Update_xpos("0.00");
-            Update_ypos("0.00");
-            DisplayText("Optical homing OK.");
-            return true;
-        }
-
-        private async Task<bool> MechanicalHoming_mAsync()
-        {
-            Machine.Move.ProbingMode(false);
-            if (!await Machine.Homing.CNC_Home_mAsync("Z"))
-            {
-                return false;
-            };
-            // DisplayText("move Z");
-            if (!await Machine.Move.MoveZSafeAsync(Setting.General_ShadeGuard_mm))		// make room for shade
-            {
-                return false;
-            };
-            if (!await Machine.Homing.CNC_Home_mAsync("Y"))
-            {
-                return false;
-            };
-            if (!await Machine.Homing.CNC_Home_mAsync("X"))
-            {
-                return false;
-            };
-            // DisplayText("move A");
-            if (!await Machine.Move.MoveASafeAsync(0))
-            {
-                return false;
-            };
-            if (Setting.General_ShadeGuard_mm > 0.0)
-            {
-                Machine.Move.ZGuardOff();
-
-                if (!await Machine.Move.MoveXYSafeAsync(10, 10))
-                {
-                    Machine.Move.ZGuardOn();
-                    return false;
-                };
-
-                DisplayText("Z back up Z");  // Z back up
-
-                if (!await Machine.Move.MoveZSafeAsync(0))
-                {
-                    Machine.Move.ZGuardOn();
-                    return false;
-                };
-
-                Machine.Move.ZGuardOn();
-            };
-
-            return true;
-        }
 
         private async void OpticalHome_button_Click(object sender, EventArgs e)
         {
@@ -8320,11 +8249,11 @@ namespace LitePlacer
             Thread.Sleep(50);
             Machine.CommsProcessor.SendCommand("{\"zsx\":2}");
             Thread.Sleep(50);
-            if (!await MechanicalHoming_mAsync())
+            if (!await Machine.Homing.MechanicalHoming_mAsync())
             {
                 return false;
             }
-            if (!await OpticalHoming_mAsync())
+            if (!await Machine.Homing.OpticalHoming_mAsync())
             {
                 return false;
             }
@@ -9553,7 +9482,7 @@ namespace LitePlacer
             }
             double FindTolerance = Setting.Placement_FiducialTolerance;
 
-            var result = await GoToFeatureLocation_mAsync(FidShape, FindTolerance, 0.1);
+            var result = await Machine.Move.GoToFeatureLocation_mAsync(FidShape, FindTolerance, 0.1);
 
             if (!result.Item1)
             {

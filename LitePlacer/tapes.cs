@@ -13,14 +13,6 @@ using Terpsichore.Common;
 
 namespace LitePlacer
 {
-    public enum FeatureType
-    {
-        Circle,
-        Rectangle,
-        Both
-    };
-
-
     class TapesClass
 	{
         private DataGridView Grid;
@@ -31,9 +23,6 @@ namespace LitePlacer
 
         private IMachine Machine { get; } = DIBindings.Resolve<IMachine>();
 
-
-        public delegate Task<Tuple<bool, double, double>> GoToFeatureLocation_mHandler(FeatureType Shape, double FindTolerance, double MoveTolerance);
-        public event GoToFeatureLocation_mHandler GoToFeatureLocation_mEventAsync;
 
         public delegate void SetPaperTapeMeasurementHandler();
         public event SetPaperTapeMeasurementHandler SetPaperTapeMeasurementEvent;
@@ -401,7 +390,7 @@ namespace LitePlacer
             };
 
             // get hole exact location:
-            var result = await GoToFeatureLocation_mEventAsync(FeatureType.Circle, 1.8, 0.1);
+            var result = await Machine.Move.GoToFeatureLocation_mAsync(FeatureType.Circle, 1.8, 0.1);
 
             if (!result.Item1)
             {
@@ -695,7 +684,7 @@ namespace LitePlacer
             // Get hole exact location:
             // We want to find the hole less than 2mm from where we think it should be. (Otherwise there is a risk
             // of picking a wrong hole.)
-            var result = await GoToFeatureLocation_mEventAsync(FeatureType.Circle, 1.8, 0.5);
+            var result = await Machine.Move.GoToFeatureLocation_mAsync(FeatureType.Circle, 1.8, 0.5);
 
             if (!result.Item1)
 			{
