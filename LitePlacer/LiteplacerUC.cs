@@ -2805,6 +2805,7 @@ namespace LitePlacer
             UpdateCameraCameraStatus_labelThreadSafe();
 
             DIBindings.Resolve<INozzleCameraPipeline>().StartPipelineProcessing();
+            DIBindings.Resolve<IHomingPipeline>().StartPipelineProcessing();
 
             return true;
         }
