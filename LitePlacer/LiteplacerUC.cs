@@ -2796,7 +2796,7 @@ namespace LitePlacer
                     "Nozzle Camera problem",
                     MessageBoxButtons.OK
                 );
-                CameraStatus_label.Text = "Not Connected";
+                //CameraStatus_label.Text = "Not Connected";
                 Machine.NozzleCamera.Active = false;
                 UpdateCameraCameraStatus_labelThreadSafe();
                 return false;
@@ -2835,9 +2835,9 @@ namespace LitePlacer
             Machine.DownCamera.Id = "Downcamera";
             Machine.DownCamera.DesiredX = Setting.DownCam_DesiredX;
             Machine.DownCamera.DesiredY = Setting.DownCam_DesiredY;
-            Machine.DownCamera.BoxSizeX = 200;
-            Machine.DownCamera.BoxSizeY = 200;
-            Machine.DownCamera.BoxRotationDeg = 0;
+            Machine.DownCamera.Box.BoxSizeX = 200;
+            Machine.DownCamera.Box.BoxSizeY = 200;
+            Machine.DownCamera.Box.BoxRotationDeg = 0;
             Machine.DownCamera.ImageBox = Cam_pictureBox;
             Machine.DownCamera.Mirror = false;
             Machine.DownCamera.ClearDisplayFunctionsList();
@@ -2870,9 +2870,9 @@ namespace LitePlacer
             Machine.UpCamera.DesiredX = Setting.UpCam_DesiredX;
             Machine.UpCamera.DesiredY = Setting.UpCam_DesiredY;
 
-            Machine.UpCamera.BoxSizeX = 200;
-            Machine.UpCamera.BoxSizeY = 200;
-            Machine.UpCamera.BoxRotationDeg = 0;
+            Machine.UpCamera.Box.BoxSizeX = 200;
+            Machine.UpCamera.Box.BoxSizeY = 200;
+            Machine.UpCamera.Box.BoxRotationDeg = 0;
             Machine.UpCamera.ImageBox = Cam_pictureBox;
             Machine.UpCamera.Mirror = true;
             Machine.UpCamera.ClearDisplayFunctionsList();
@@ -2899,9 +2899,9 @@ namespace LitePlacer
             Machine.NozzleCamera.Id = "Nozzlecamera";
             Machine.NozzleCamera.DesiredX = Setting.NozzleCam_DesiredX;
             Machine.NozzleCamera.DesiredY = Setting.NozzleCam_DesiredY;
-            Machine.NozzleCamera.BoxSizeX = 200;
-            Machine.NozzleCamera.BoxSizeY = 200;
-            Machine.NozzleCamera.BoxRotationDeg = 0;
+            Machine.NozzleCamera.Box.BoxSizeX = 200;
+            Machine.NozzleCamera.Box.BoxSizeY = 200;
+            Machine.NozzleCamera.Box.BoxRotationDeg = 0;
             Machine.NozzleCamera.ImageBox = Cam_pictureBox;
             Machine.NozzleCamera.Mirror = false;
             Machine.NozzleCamera.ClearDisplayFunctionsList();
@@ -2947,17 +2947,17 @@ namespace LitePlacer
             ClearEditTargets();
 
             double f;
-            f = Setting.DownCam_XmmPerPixel * Machine.DownCamera.BoxSizeX;
+            f = Setting.DownCam_XmmPerPixel * Machine.DownCamera.Box.BoxSizeX;
             DownCameraBoxX_textBox.Text = f.ToString("0.00", CultureInfo.InvariantCulture);
             DownCameraBoxXmmPerPixel_label.Text = "(" + Setting.DownCam_XmmPerPixel.ToString("0.0000", CultureInfo.InvariantCulture) + "mm/pixel)";
-            f = Setting.DownCam_YmmPerPixel * Machine.DownCamera.BoxSizeY;
+            f = Setting.DownCam_YmmPerPixel * Machine.DownCamera.Box.BoxSizeY;
             DownCameraBoxY_textBox.Text = f.ToString("0.00", CultureInfo.InvariantCulture);
             DownCameraBoxYmmPerPixel_label.Text = "(" + Setting.DownCam_YmmPerPixel.ToString("0.0000", CultureInfo.InvariantCulture) + "mm/pixel)";
 
-            f = Setting.UpCam_XmmPerPixel * Machine.UpCamera.BoxSizeX;
+            f = Setting.UpCam_XmmPerPixel * Machine.UpCamera.Box.BoxSizeX;
             UpCameraBoxX_textBox.Text = f.ToString("0.00", CultureInfo.InvariantCulture);
             UpCameraBoxXmmPerPixel_label.Text = "(" + Setting.UpCam_XmmPerPixel.ToString("0.000", CultureInfo.InvariantCulture) + "mm/pixel)";
-            f = Setting.UpCam_YmmPerPixel * Machine.UpCamera.BoxSizeY;
+            f = Setting.UpCam_YmmPerPixel * Machine.UpCamera.Box.BoxSizeY;
             UpCameraBoxY_textBox.Text = f.ToString("0.00", CultureInfo.InvariantCulture);
             UpCameraBoxYmmPerPixel_label.Text = "(" + Setting.UpCam_YmmPerPixel.ToString("0.000", CultureInfo.InvariantCulture) + "mm/pixel)";
 
@@ -3305,7 +3305,7 @@ namespace LitePlacer
             double val;
             if (double.TryParse(DownCameraBoxX_textBox.Text.Replace(',', '.'), out val))
             {
-                Setting.DownCam_XmmPerPixel = val / Machine.DownCamera.BoxSizeX;
+                Setting.DownCam_XmmPerPixel = val / Machine.DownCamera.Box.BoxSizeX;
                 DownCameraBoxXmmPerPixel_label.Text = "(" + Setting.DownCam_XmmPerPixel.ToString("0.0000", CultureInfo.InvariantCulture) + "mm/pixel)";
             }
         }
@@ -3329,7 +3329,7 @@ namespace LitePlacer
             double val;
             if (double.TryParse(UpCameraBoxX_textBox.Text.Replace(',', '.'), out val))
             {
-                Setting.UpCam_XmmPerPixel = val / Machine.UpCamera.BoxSizeX;
+                Setting.UpCam_XmmPerPixel = val / Machine.UpCamera.Box.BoxSizeX;
                 UpCameraBoxXmmPerPixel_label.Text = "(" + Setting.UpCam_XmmPerPixel.ToString("0.0000", CultureInfo.InvariantCulture) + "mm/pixel)";
             }
         }
@@ -3353,7 +3353,7 @@ namespace LitePlacer
             double val;
             if (double.TryParse(DownCameraBoxY_textBox.Text.Replace(',', '.'), out val))
             {
-                Setting.DownCam_YmmPerPixel = val / Machine.DownCamera.BoxSizeY;
+                Setting.DownCam_YmmPerPixel = val / Machine.DownCamera.Box.BoxSizeY;
                 DownCameraBoxYmmPerPixel_label.Text = "(" + Setting.DownCam_YmmPerPixel.ToString("0.0000", CultureInfo.InvariantCulture) + "mm/pixel)";
             }
         }
@@ -3381,7 +3381,7 @@ namespace LitePlacer
             double val;
             if (double.TryParse(UpCameraBoxY_textBox.Text.Replace(',', '.'), out val))
             {
-                Setting.UpCam_YmmPerPixel = val / Machine.UpCamera.BoxSizeY;
+                Setting.UpCam_YmmPerPixel = val / Machine.UpCamera.Box.BoxSizeY;
                 UpCameraBoxYmmPerPixel_label.Text = "(" + Setting.UpCam_YmmPerPixel.ToString("0.0000", CultureInfo.InvariantCulture) + "mm/pixel)";
             }
         }
@@ -6585,9 +6585,9 @@ namespace LitePlacer
                 );
             }
             Machine.DownCamera.DrawCross = true;
-            Machine.DownCamera.BoxSizeX = 200;
-            Machine.DownCamera.BoxSizeY = 200;
-            Machine.DownCamera.BoxRotationDeg = 0;
+            Machine.DownCamera.Box.BoxSizeX = 200;
+            Machine.DownCamera.Box.BoxSizeY = 200;
+            Machine.DownCamera.Box.BoxRotationDeg = 0;
             Machine.DownCamera.TestAlgorithm = false;
             Machine.DownCamera.Draw_Snapshot = false;
             Machine.DownCamera.FindCircles = false;
@@ -10209,9 +10209,9 @@ namespace LitePlacer
                 return false;
             }
 
-            Machine.DownCamera.BoxSizeX = (int)Math.Round((sizeX) / Setting.DownCam_XmmPerPixel);
-            Machine.DownCamera.BoxSizeY = (int)Math.Round((sizeY) / Setting.DownCam_YmmPerPixel);
-            Machine.DownCamera.BoxRotationDeg = rot;
+            Machine.DownCamera.Box.BoxSizeX = (int)Math.Round((sizeX) / Setting.DownCam_XmmPerPixel);
+            Machine.DownCamera.Box.BoxSizeY = (int)Math.Round((sizeY) / Setting.DownCam_YmmPerPixel);
+            Machine.DownCamera.Box.BoxRotationDeg = rot;
             Machine.DownCamera.DrawBox = true;
             return true;
         }
@@ -12075,12 +12075,12 @@ namespace LitePlacer
             }
             Setting.DownCam_XmmPerPixel = dist / (X1 - X2);
             DownCameraBoxXmmPerPixel_label.Text = "(" + Setting.DownCam_XmmPerPixel.ToString("0.0000", CultureInfo.InvariantCulture) + "mm/pixel)";
-            double BoxX = Setting.DownCam_XmmPerPixel * Machine.DownCamera.BoxSizeX;
+            double BoxX = Setting.DownCam_XmmPerPixel * Machine.DownCamera.Box.BoxSizeX;
             DownCameraBoxX_textBox.Text = BoxX.ToString("0.000", CultureInfo.InvariantCulture);
 
             Setting.DownCam_YmmPerPixel = dist / (Y2 - Y1);
             DownCameraBoxYmmPerPixel_label.Text = "(" + Setting.DownCam_YmmPerPixel.ToString("0.0000", CultureInfo.InvariantCulture) + "mm/pixel)";
-            double BoxY = Setting.DownCam_YmmPerPixel * Machine.DownCamera.BoxSizeY;
+            double BoxY = Setting.DownCam_YmmPerPixel * Machine.DownCamera.Box.BoxSizeY;
             DownCameraBoxY_textBox.Text = BoxY.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
@@ -14830,7 +14830,7 @@ namespace LitePlacer
         {
             if (DownCameraRotationFollowsA)
             {
-                Machine.DownCamera.BoxRotationDeg = Machine.Position.CurrentA;
+                Machine.DownCamera.Box.BoxRotationDeg = Machine.Position.CurrentA;
             }
         }
 
