@@ -2540,13 +2540,13 @@ namespace LitePlacer
             Machine.UpCamera.Close();
             SetDownCameraDefaults();
             SetUpCameraDefaults();
-            SetNozzleCameraDefaults();
+            //SetNozzleCameraDefaults();
             if (KeepActive_checkBox.Checked)
             {
                 StartUpCamera_m();
                 Machine.UpCamera.Active = false;
                 StartDownCamera_m();
-                StartNozzleCamera_m();
+                //StartNozzleCamera_m();
             }
             SelectCamera(Machine.DownCamera);
 
@@ -2630,11 +2630,11 @@ namespace LitePlacer
             }
             else
             {
-                if (Machine.NozzleCamera.IsRunning())
+                /*if (Machine.NozzleCamera.IsRunning())
                 {
                     Machine.NozzleCamera.Close();
                 };
-                StartNozzleCamera_m();
+                StartNozzleCamera_m();*/
             }
         }
 
@@ -2762,7 +2762,7 @@ namespace LitePlacer
             return true;
         }
 
-        private bool StartNozzleCamera_m()
+        /*private bool StartNozzleCamera_m()
         {
             Machine.NozzleCamera.Active = false;
             if (Machine.NozzleCamera.IsRunning())
@@ -2789,7 +2789,7 @@ namespace LitePlacer
                 return false;
             }
 
-            if (!Machine.NozzleCamera.Start("Machine.NozzleCamera", Setting.NozzlecamMoniker))
+            /*if (!Machine.NozzleCamera.Start("Machine.NozzleCamera", Setting.NozzlecamMoniker))
             {
                 ShowMessageBox(
                     "Problem Starting nozzle camera.",
@@ -2804,11 +2804,11 @@ namespace LitePlacer
             Machine.NozzleCamera.Active = true;
             UpdateCameraCameraStatus_labelThreadSafe();
 
-            DIBindings.Resolve<INozzleCameraPipeline>().StartPipelineProcessing();
-            DIBindings.Resolve<IHomingPipeline>().StartPipelineProcessing();
+            //DIBindings.Resolve<INozzleCameraPipeline>().StartPipelineProcessing();
+            //DIBindings.Resolve<IHomingPipeline>().StartPipelineProcessing();
 
             return true;
-        }
+        }*/
 
 
         // =================================================================================
@@ -2894,7 +2894,7 @@ namespace LitePlacer
             UpCameraDrawBox_checkBox.Checked = false;
         }
 
-        private void SetNozzleCameraDefaults()
+        /*private void SetNozzleCameraDefaults()
         {
             Machine.NozzleCamera.Id = "Nozzlecamera";
             Machine.NozzleCamera.DesiredX = Setting.NozzleCam_DesiredX;
@@ -2918,7 +2918,7 @@ namespace LitePlacer
             Machine.NozzleCamera.TestAlgorithm = false;
             Machine.NozzleCamera.DrawBox = false;
             Machine.NozzleCamera.DrawArrow = false;
-        }
+        }*/
 
         // =================================================================================
         private void tabPageSetupCameras_Begin()
