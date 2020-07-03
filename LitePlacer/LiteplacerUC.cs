@@ -205,12 +205,12 @@ namespace LitePlacer
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
 
-            using (StreamWriter sw = new StreamWriter("vision_filters.json"))
+            /*using (StreamWriter sw = new StreamWriter("vision_filters.json"))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
                 writer.Formatting = Formatting.Indented;
                 serializer.Serialize(writer, filters);
-            }
+            }*/
 
             LoadTapesTable(path + "LitePlacer.TapesData_v2");
             // LoadDataGrid(path + "LitePlacer.TapesData", Tapes_dataGridView, DataTableType.Tapes);
