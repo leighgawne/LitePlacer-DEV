@@ -1883,7 +1883,7 @@ namespace LitePlacer
             int Yres = 0;
             int pol = 1;
 
-            ICamera cam = Machine.DownCamera;
+            ICameraLegacy cam = Machine.DownCamera;
             if (Machine.DownCamera.Active)
             {
                 cam = Machine.DownCamera;
@@ -2578,7 +2578,7 @@ namespace LitePlacer
         }
 
 
-        private void SelectCamera(ICamera cam)
+        private void SelectCamera(ICameraLegacy cam)
         {
             if (cam == Machine.DownCamera)
             {
@@ -3105,7 +3105,7 @@ namespace LitePlacer
 
         private void SetCurrentCameraParameters()
         {
-            ICamera CurrentCam;
+            ICameraLegacy CurrentCam;
             if (Machine.UpCamera.IsRunning())
             {
                 CurrentCam = Machine.UpCamera;
@@ -8876,7 +8876,7 @@ namespace LitePlacer
             return rot;
         }
 
-        private int MeasureClosestComponentInPx(out double X, out double Y, out double A, ICamera Cam, double Tolerance, int averages)
+        private int MeasureClosestComponentInPx(out double X, out double Y, out double A, ICameraLegacy Cam, double Tolerance, int averages)
         {
             X = 0;
             double Xsum = 0;
@@ -12362,7 +12362,7 @@ namespace LitePlacer
         // ==========================================================================================================
         // Components:
 
-        private void DebugComponents_Camera(double Tolerance, ICamera Cam, double mmPerPixel)
+        private void DebugComponents_Camera(double Tolerance, ICameraLegacy Cam, double mmPerPixel)
         {
             double X = 0;
             double Y = 0;
@@ -12823,7 +12823,7 @@ namespace LitePlacer
             {
                 return;
             }
-            ICamera cam= Machine.DownCamera;
+            ICameraLegacy cam= Machine.DownCamera;
             switch (CamerasSetUp_tabControl.SelectedTab.Name)
             {
                 case "DownCamera_tabPage":
@@ -15117,7 +15117,7 @@ namespace LitePlacer
             List<string> Monikers;
             ComboBox Box;
             string MonikerStr;
-            ICamera Cam;
+            ICameraLegacy Cam;
             if (CamerasSetUp_tabControl.SelectedTab.Name== "DownCamera_tabPage")
             {
                 Monikers = Machine.DownCamera.GetMonikerStrings();

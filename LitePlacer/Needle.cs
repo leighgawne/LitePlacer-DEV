@@ -28,12 +28,12 @@ namespace LitePlacer
         public List<NozzlePoint>[] CalibrationPointsArr;
         public bool[] CalibratedArr;
 
-        private ICamera Cam;
+        private ICameraLegacy Cam;
         private IMachine Machine { get; } = DIBindings.Resolve<IMachine>();
 
         private static dynamic MainForm;
 
-        public NozzleClass(ICamera MyCam, dynamic MainF)
+        public NozzleClass(ICameraLegacy MyCam, dynamic MainF)
         {
             MainForm = MainF;
             Calibrated = false;

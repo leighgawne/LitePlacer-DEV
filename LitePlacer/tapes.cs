@@ -17,7 +17,7 @@ namespace LitePlacer
 	{
         private DataGridView Grid;
         private NozzleClass Nozzle;
-		private ICamera DownCamera;
+		private ICameraLegacy DownCamera;
 
         private IAppLogger appLogger = DIBindings.Resolve<IAppLogger>();
 
@@ -36,7 +36,7 @@ namespace LitePlacer
         public delegate bool UseCoordinatesDirectlyHandler(int TapeNum);
         public event UseCoordinatesDirectlyHandler UseCoordinatesDirectlyEvent;
 
-        public TapesClass(DataGridView grd, NozzleClass ndl, ICamera cam)
+        public TapesClass(DataGridView grd, NozzleClass ndl, ICameraLegacy cam)
 		{
             Grid = grd;
 			Nozzle = ndl;

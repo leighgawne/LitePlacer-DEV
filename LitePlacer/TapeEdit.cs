@@ -20,7 +20,7 @@ namespace LitePlacer
         public DataGridViewRow Row;
         public int TapeRowNo;
         public dynamic MainForm;
-        ICamera Cam;
+        ICameraLegacy Cam;
 
         IMachine Machine { get; } = DIBindings.Resolve<IMachine>();
 
@@ -49,7 +49,7 @@ namespace LitePlacer
         // double PickupZ, PlacementZ: Z values used for pickup/place operation
         // bool PickupZvalid, PlacementZvalid: if the values are valid (if not, they are measured when used)
 
-        public TapeEditForm(ICamera _cam)
+        public TapeEditForm(ICameraLegacy _cam)
         {
             InitializeComponent();
             Cam = _cam;
