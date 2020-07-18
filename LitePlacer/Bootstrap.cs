@@ -11,10 +11,6 @@ namespace LitePlacer
     {
         static public void Initialise()
         {
-            //DIBindings.CreateSingletonBinding<IMySettings, MySettings>();
-
-            Terpsichore.Common.Bootstrap.Initialise();
-            Terpsichore.Machine.Bootstrap.Initialise();
         }
     }
 }
