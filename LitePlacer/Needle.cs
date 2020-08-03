@@ -163,9 +163,9 @@ namespace LitePlacer
                     return false;
                 };
                 
-                double CurrX = Machine.Position.CurrentX;
-                double CurrY = Machine.Position.CurrentY;
-                double CurrA = Machine.Position.CurrentA;
+                double CurrX = Machine.Position.DesiredX;
+                double CurrY = Machine.Position.DesiredY;
+                double CurrA = Machine.Position.CommandedA;
 
                 if (!MainForm.CalibrateNozzle_m())
                 {

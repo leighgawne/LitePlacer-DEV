@@ -376,25 +376,25 @@ namespace LitePlacer
 
         private void GetFirstPosition_button_Click(object sender, EventArgs e)
         {
-            FirstX_textBox.Text = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            FirstY_textBox.Text = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
-            RotationDirect_textBox.Text = Machine.Position.CurrentA.ToString("0.000", CultureInfo.InvariantCulture);
+            FirstX_textBox.Text = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
+            FirstY_textBox.Text = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
+            RotationDirect_textBox.Text = Machine.Position.CommandedA.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void GetLastPosition_button_Click(object sender, EventArgs e)
         {
-            LastX_textBox.Text = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            LastY_textBox.Text = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
+            LastX_textBox.Text = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
+            LastY_textBox.Text = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void GetPickupZ_button_Click(object sender, EventArgs e)
         {
-            PickupZ_textBox.Text = Machine.Position.CurrentZ.ToString("0.000", CultureInfo.InvariantCulture);
+            PickupZ_textBox.Text = Machine.Position.CommandedZ.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void GetPlacementZ_button_Click(object sender, EventArgs e)
         {
-            PlacementZ_textBox.Text = Machine.Position.CurrentZ.ToString("0.000", CultureInfo.InvariantCulture);
+            PlacementZ_textBox.Text = Machine.Position.CommandedZ.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void CoordinatesForParts_checkBox_CheckedChanged(object sender, EventArgs e)
@@ -419,7 +419,7 @@ namespace LitePlacer
 
         private void GetACorrection_button_Click(object sender, EventArgs e)
         {
-            RotationDirect_textBox.Text = Machine.Position.CurrentA.ToString("0.000", CultureInfo.InvariantCulture);
+            RotationDirect_textBox.Text = Machine.Position.CommandedA.ToString("0.000", CultureInfo.InvariantCulture);
         }
     }
 }

@@ -1479,11 +1479,11 @@ namespace LitePlacer
             }
 
             Machine.Jogging.JoggingBusy = true;
-            await Machine.Move.MoveASafeAsync(Machine.Position.CurrentA + Mag);
+            await Machine.Move.MoveASafeAsync(Machine.Position.CommandedA + Mag);
             
             if (Machine.DownCamera.Draw_Snapshot)
             {
-                Machine.DownCamera.RotateSnapshot(Machine.Position.CurrentA);
+                Machine.DownCamera.RotateSnapshot(Machine.Position.CommandedA);
                 while (Machine.DownCamera.rotating)
                 {
                     Thread.Sleep(10);
@@ -1761,7 +1761,7 @@ namespace LitePlacer
             if (e.KeyCode == Keys.F5)
             {
                 Machine.Jogging.JoggingBusy = true;
-                await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX - Mag, Machine.Position.CurrentY);
+                await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX - Mag, Machine.Position.DesiredY);
                 e.Handled = true;
                 Machine.Jogging.JoggingBusy = false;
                 return;
@@ -1771,7 +1771,7 @@ namespace LitePlacer
             if (e.KeyCode == Keys.F6)
             {
                 Machine.Jogging.JoggingBusy = true;
-                await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX + Mag, Machine.Position.CurrentY);
+                await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX + Mag, Machine.Position.DesiredY);
                 e.Handled = true;
                 Machine.Jogging.JoggingBusy = false;
                 return;
@@ -1781,7 +1781,7 @@ namespace LitePlacer
             if (e.KeyCode == Keys.F7)
             {
                 Machine.Jogging.JoggingBusy = true;
-                await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX, Machine.Position.CurrentY + Mag);
+                await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX, Machine.Position.DesiredY + Mag);
                 e.Handled = true;
                 Machine.Jogging.JoggingBusy = false;
                 return;
@@ -1791,7 +1791,7 @@ namespace LitePlacer
             if (e.KeyCode == Keys.F8)
             {
                 Machine.Jogging.JoggingBusy = true;
-                await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX, Machine.Position.CurrentY - Mag);
+                await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX, Machine.Position.DesiredY - Mag);
                 e.Handled = true;
                 Machine.Jogging.JoggingBusy = false;
                 return;
@@ -1805,10 +1805,10 @@ namespace LitePlacer
                 {
                     Mag = 90.0;
                 }
-                await Machine.Move.MoveASafeAsync(Machine.Position.CurrentA + Mag);
+                await Machine.Move.MoveASafeAsync(Machine.Position.CommandedA + Mag);
                 if (Machine.DownCamera.Draw_Snapshot)
                 {
-                    Machine.DownCamera.RotateSnapshot(Machine.Position.CurrentA);
+                    Machine.DownCamera.RotateSnapshot(Machine.Position.CommandedA);
                     while (Machine.DownCamera.rotating)
                     {
                         Thread.Sleep(10);
@@ -1827,10 +1827,10 @@ namespace LitePlacer
                 {
                     Mag = 90.0;
                 }
-                await Machine.Move.MoveASafeAsync(Machine.Position.CurrentA - Mag);
+                await Machine.Move.MoveASafeAsync(Machine.Position.CommandedA - Mag);
                 if (Machine.DownCamera.Draw_Snapshot)
                 {
-                    Machine.DownCamera.RotateSnapshot(Machine.Position.CurrentA);
+                    Machine.DownCamera.RotateSnapshot(Machine.Position.CommandedA);
                     while (Machine.DownCamera.rotating)
                     {
                         Thread.Sleep(10);
@@ -1845,7 +1845,7 @@ namespace LitePlacer
             if (e.KeyCode == Keys.F11)
             {
                 Machine.Jogging.JoggingBusy = true;
-                await Machine.Move.MoveZSafeAsync(Machine.Position.CurrentZ - Mag);
+                await Machine.Move.MoveZSafeAsync(Machine.Position.CommandedZ - Mag);
                 e.Handled = true;
                 Machine.Jogging.JoggingBusy = false;
                 return;
@@ -1855,7 +1855,7 @@ namespace LitePlacer
             if ((e.KeyCode == Keys.F12) && (Mag < 50))
             {
                 Machine.Jogging.JoggingBusy = true;
-                await Machine.Move.MoveZSafeAsync(Machine.Position.CurrentZ + Mag);
+                await Machine.Move.MoveZSafeAsync(Machine.Position.CommandedZ + Mag);
                 Machine.Jogging.JoggingBusy = false;
                 e.Handled = true;
                 return;
@@ -1968,8 +1968,8 @@ namespace LitePlacer
                 BoxTo_mms(out Xmm, out Ymm, MouseX, MouseY, Box);
                 
                 await Machine.Move.MoveXYSafeAsync(
-                    Machine.Position.CurrentX + Xmm, 
-                    Machine.Position.CurrentY - Ymm);
+                    Machine.Position.DesiredX + Xmm, 
+                    Machine.Position.DesiredY - Ymm);
             }
         }
 
@@ -1977,8 +1977,8 @@ namespace LitePlacer
         private async void GoX_button_Click(object sender, EventArgs e)
         {
             double X;
-            double Y = Machine.Position.CurrentY;
-            double A = Machine.Position.CurrentA;
+            double Y = Machine.Position.DesiredY;
+            double A = Machine.Position.CommandedA;
 
             if (!double.TryParse(GotoX_textBox.Text.Replace(',', '.'), out X))
             {
@@ -1987,7 +1987,7 @@ namespace LitePlacer
 
             if (Relative_Button.Checked)
             {
-                X += Machine.Position.CurrentX;
+                X += Machine.Position.DesiredX;
             }
 
             await Machine.Move.MoveXYASafeAsync(X, Y, A);
@@ -1995,9 +1995,9 @@ namespace LitePlacer
 
         private void GoY_button_Click(object sender, EventArgs e)
         {
-            double X = Machine.Position.CurrentX;
+            double X = Machine.Position.DesiredX;
             double Y;
-            double A = Machine.Position.CurrentA;
+            double A = Machine.Position.CommandedA;
 
             if (!double.TryParse(GotoY_textBox.Text.Replace(',', '.'), out Y))
             {
@@ -2006,7 +2006,7 @@ namespace LitePlacer
 
             if (Relative_Button.Checked)
             {
-                Y += Machine.Position.CurrentY;
+                Y += Machine.Position.DesiredY;
             }
 
             Machine.Move.MoveXYASafeAsync(X, Y, A);
@@ -2023,7 +2023,7 @@ namespace LitePlacer
 
             if (Relative_Button.Checked)
             {
-                Z += Machine.Position.CurrentZ;
+                Z += Machine.Position.CommandedZ;
             }
 
             await Machine.Move.MoveZSafeAsync(Z);
@@ -2031,8 +2031,8 @@ namespace LitePlacer
 
         private async void GoA_button_Click(object sender, EventArgs e)
         {
-            double X = Machine.Position.CurrentX;
-            double Y = Machine.Position.CurrentY;
+            double X = Machine.Position.DesiredX;
+            double Y = Machine.Position.DesiredY;
             double A;
             if (!double.TryParse(GotoA_textBox.Text.Replace(',', '.'), out A))
             {
@@ -2041,7 +2041,7 @@ namespace LitePlacer
 
             if (Relative_Button.Checked)
             {
-                A += Machine.Position.CurrentA;
+                A += Machine.Position.CommandedA;
             }
 
             await Machine.Move.MoveXYASafeAsync(X, Y, A);
@@ -2072,10 +2072,10 @@ namespace LitePlacer
 
             if (Relative_Button.Checked)
             {
-                X += Machine.Position.CurrentX;
-                Y += Machine.Position.CurrentY;
-                Z += Machine.Position.CurrentZ;
-                A += Machine.Position.CurrentA;
+                X += Machine.Position.DesiredX;
+                Y += Machine.Position.DesiredY;
+                Z += Machine.Position.CommandedZ;
+                A += Machine.Position.CommandedA;
             }
             if (Math.Abs(Z) < 0.01)  // allow raising Z and move at one go
             {
@@ -2086,9 +2086,9 @@ namespace LitePlacer
             };
             // move X, Y, A if needed
             if (!(
-                (Math.Abs(X - Machine.Position.CurrentX) < 0.01) && 
-                (Math.Abs(Y - Machine.Position.CurrentY) < 0.01) && 
-                (Math.Abs(A - Machine.Position.CurrentA) < 0.01)))
+                (Math.Abs(X - Machine.Position.DesiredX) < 0.01) && 
+                (Math.Abs(Y - Machine.Position.DesiredY) < 0.01) && 
+                (Math.Abs(A - Machine.Position.CommandedA) < 0.01)))
             {
                 // Allow raise Z, goto and low Z:
                 if (!(Math.Abs(Z) < 0.01))
@@ -2102,7 +2102,7 @@ namespace LitePlacer
                 {
                     return;
                 }
-                if (!(Math.Abs(Z - Machine.Position.CurrentZ) < 0.01))
+                if (!(Math.Abs(Z - Machine.Position.CommandedZ) < 0.01))
                 {
                     if (!await Machine.Move.MoveZSafeAsync(Z))
                     {
@@ -2111,7 +2111,7 @@ namespace LitePlacer
                 };
             }
             // move Z if needed
-            if (!(Math.Abs(Z - Machine.Position.CurrentZ) < 0.01))
+            if (!(Math.Abs(Z - Machine.Position.CommandedZ) < 0.01))
             {
                 if (!await Machine.Move.MoveZSafeAsync(Z))
                 {
@@ -2122,10 +2122,10 @@ namespace LitePlacer
 
         private void LoadCurrentPosition_button_Click(object sender, EventArgs e)
         {
-            GotoX_textBox.Text = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            GotoY_textBox.Text = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
-            GotoZ_textBox.Text = Machine.Position.CurrentZ.ToString("0.000", CultureInfo.InvariantCulture);
-            GotoA_textBox.Text = Machine.Position.CurrentA.ToString("0.000", CultureInfo.InvariantCulture);
+            GotoX_textBox.Text = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
+            GotoY_textBox.Text = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
+            GotoZ_textBox.Text = Machine.Position.CommandedZ.ToString("0.000", CultureInfo.InvariantCulture);
+            GotoA_textBox.Text = Machine.Position.CommandedA.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void SetCurrentPosition_button_Click(object sender, EventArgs e)
@@ -2374,10 +2374,10 @@ namespace LitePlacer
                 return true;
             };
 
-            double MarkX = Machine.Position.CurrentX;
-            double MarkY = Machine.Position.CurrentY;
-            double MarkZ = Machine.Position.CurrentZ;
-            double MarkA = Machine.Position.CurrentA;
+            double MarkX = Machine.Position.DesiredX;
+            double MarkY = Machine.Position.DesiredY;
+            double MarkZ = Machine.Position.CommandedZ;
+            double MarkA = Machine.Position.CommandedA;
 
             bool UpCamWasRunning = false;
             if (Machine.UpCamera.Active)
@@ -3627,10 +3627,10 @@ namespace LitePlacer
         // =================================================================================
         private void SetPCB0_button_Click(object sender, EventArgs e)
         {
-            JigX_textBox.Text = Machine.Position.CurrentX.ToString("0.00", CultureInfo.InvariantCulture);
-            Setting.General_JigOffsetX = Machine.Position.CurrentX;
-            JigY_textBox.Text = Machine.Position.CurrentY.ToString("0.00", CultureInfo.InvariantCulture);
-            Setting.General_JigOffsetY = Machine.Position.CurrentY;
+            JigX_textBox.Text = Machine.Position.DesiredX.ToString("0.00", CultureInfo.InvariantCulture);
+            Setting.General_JigOffsetX = Machine.Position.DesiredX;
+            JigY_textBox.Text = Machine.Position.DesiredY.ToString("0.00", CultureInfo.InvariantCulture);
+            Setting.General_JigOffsetY = Machine.Position.DesiredY;
         }
 
 
@@ -3694,10 +3694,10 @@ namespace LitePlacer
         // =================================================================================
         private void SetPickupCenter_button_Click(object sender, EventArgs e)
         {
-            PickupCenterX_textBox.Text = Machine.Position.CurrentX.ToString("0.00", CultureInfo.InvariantCulture);
-            Setting.General_PickupCenterX = Machine.Position.CurrentX;
-            PickupCenterY_textBox.Text = Machine.Position.CurrentY.ToString("0.00", CultureInfo.InvariantCulture);
-            Setting.General_PickupCenterY = Machine.Position.CurrentY;
+            PickupCenterX_textBox.Text = Machine.Position.DesiredX.ToString("0.00", CultureInfo.InvariantCulture);
+            Setting.General_PickupCenterX = Machine.Position.DesiredX;
+            PickupCenterY_textBox.Text = Machine.Position.DesiredY.ToString("0.00", CultureInfo.InvariantCulture);
+            Setting.General_PickupCenterY = Machine.Position.DesiredY;
             PickupCenterX_textBox.ForeColor = Color.Black;
             PickupCenterY_textBox.ForeColor = Color.Black;
         }
@@ -3782,18 +3782,18 @@ namespace LitePlacer
 
                 case 1:
                     SetNozzleOffset_stage = 2;
-                    NozzleOffsetMarkX = Machine.Position.CurrentX;
-                    NozzleOffsetMarkY = Machine.Position.CurrentY;
+                    NozzleOffsetMarkX = Machine.Position.DesiredX;
+                    NozzleOffsetMarkY = Machine.Position.DesiredY;
                     await Machine.Move.MoveZSafeAsync(0);
-                    await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX - 75.0, Machine.Position.CurrentY - 29.0);
+                    await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX - 75.0, Machine.Position.DesiredY - 29.0);
                     Machine.DownCamera.DrawCross = true;
                     NozzleOffset_label.Text = "Jog camera above the same point, \n\rthen click \"Next\"";
                     break;
 
                 case 2:
                     SetNozzleOffset_stage = 0;
-                    Setting.DownCam_NozzleOffsetX = NozzleOffsetMarkX - Machine.Position.CurrentX;
-                    Setting.DownCam_NozzleOffsetY = NozzleOffsetMarkY - Machine.Position.CurrentY;
+                    Setting.DownCam_NozzleOffsetX = NozzleOffsetMarkX - Machine.Position.DesiredX;
+                    Setting.DownCam_NozzleOffsetY = NozzleOffsetMarkY - Machine.Position.DesiredY;
                     NozzleOffsetX_textBox.Text = Setting.DownCam_NozzleOffsetX.ToString("0.00", CultureInfo.InvariantCulture);
                     NozzleOffsetY_textBox.Text = Setting.DownCam_NozzleOffsetY.ToString("0.00", CultureInfo.InvariantCulture);
                     NozzleOffset_label.Visible = false;
@@ -3860,13 +3860,13 @@ namespace LitePlacer
 
         private void SetUpCamPosition_button_Click(object sender, EventArgs e)
         {
-            UpcamPositionX_textBox.Text = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            Setting.UpCam_PositionX = Machine.Position.CurrentX;
-            UpcamPositionY_textBox.Text = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
-            Setting.UpCam_PositionY = Machine.Position.CurrentY;
+            UpcamPositionX_textBox.Text = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
+            Setting.UpCam_PositionX = Machine.Position.DesiredX;
+            UpcamPositionY_textBox.Text = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
+            Setting.UpCam_PositionY = Machine.Position.DesiredY;
             DisplayText("True position (with Nozzle offset):");
-            DisplayText("X: " + (Machine.Position.CurrentX - Setting.DownCam_NozzleOffsetX).ToString());
-            DisplayText("Y: " + (Machine.Position.CurrentY - Setting.DownCam_NozzleOffsetY).ToString());
+            DisplayText("X: " + (Machine.Position.DesiredX - Setting.DownCam_NozzleOffsetX).ToString());
+            DisplayText("Y: " + (Machine.Position.DesiredY - Setting.DownCam_NozzleOffsetY).ToString());
         }
 
         private async void GotoUpCamPosition_button_Click(object sender, EventArgs e)
@@ -5750,7 +5750,7 @@ namespace LitePlacer
         {
             if (InvokeRequired) { Invoke(new Action<string>(Update_xpos), new[] { value }); return; }
             TrueX_label.Text = value;
-            xpos_textBox.Text = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
+            xpos_textBox.Text = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
             //DisplayText("Update_xpos: " + Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture));
         }
 
@@ -5758,7 +5758,7 @@ namespace LitePlacer
         {
             if (InvokeRequired) { Invoke(new Action<string>(Update_ypos), new[] { value }); return; }
             ypos_textBox.Text = value;
-            xpos_textBox.Text = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
+            xpos_textBox.Text = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
             //DisplayText("Update_ypos, x: " + Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture));
         }
 
@@ -5906,9 +5906,9 @@ namespace LitePlacer
 
         private async void TestX_button_Click(object sender, EventArgs e)
         {
-            await Machine.Move.MoveXYSafeAsync(0.0, Machine.Position.CurrentY);
-            await Machine.Move.MoveXYSafeAsync(Setting.General_MachineSizeX, Machine.Position.CurrentY);
-            await Machine.Move.MoveXYSafeAsync(0.0, Machine.Position.CurrentY);
+            await Machine.Move.MoveXYSafeAsync(0.0, Machine.Position.DesiredY);
+            await Machine.Move.MoveXYSafeAsync(Setting.General_MachineSizeX, Machine.Position.DesiredY);
+            await Machine.Move.MoveXYSafeAsync(0.0, Machine.Position.DesiredY);
             //Thread t = new Thread(() => TestX_thread());
             //t.IsBackground = true;
             //t.Start();
@@ -5916,9 +5916,9 @@ namespace LitePlacer
 
         private async void TestY_thread()
         {
-            await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX, 0);
-            await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX, Setting.General_MachineSizeY);
-            await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX, 0);
+            await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX, 0);
+            await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX, Setting.General_MachineSizeY);
+            await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX, 0);
         }
 
         private void TestY_button_Click(object sender, EventArgs e)
@@ -6224,14 +6224,14 @@ namespace LitePlacer
                     }
                     SetProbing_button.Enabled = true;
                     CancelProbing_button.Enabled = true;
-                    Setting.General_ZtoPCB = Machine.Position.CurrentZ;
+                    Setting.General_ZtoPCB = Machine.Position.CommandedZ;
                     Zlb_label.Text = "Jog Z axis until the Nozzle just barely touches the PCB\nThen click \"Next\"";
                     SetProbing_stage = 2;
                     break;
 
                 case 2:
-                    Setting.General_PlacementBackOff = Setting.General_ZtoPCB - Machine.Position.CurrentZ;
-                    Setting.General_ZtoPCB = Machine.Position.CurrentZ;
+                    Setting.General_PlacementBackOff = Setting.General_ZtoPCB - Machine.Position.CommandedZ;
+                    Setting.General_ZtoPCB = Machine.Position.CommandedZ;
                     Machine.Move.ProbingMode(false);
                     SetProbing_button.Text = "Start";
                     Zlb_label.Text = "";
@@ -6290,54 +6290,54 @@ namespace LitePlacer
 
         private void SetMark1_button_Click(object sender, EventArgs e)
         {
-            Setting.General_Mark1X = Machine.Position.CurrentX;
-            Setting.General_Mark1Y = Machine.Position.CurrentY;
-            Setting.General_Mark1A = Machine.Position.CurrentA;
+            Setting.General_Mark1X = Machine.Position.DesiredX;
+            Setting.General_Mark1Y = Machine.Position.DesiredY;
+            Setting.General_Mark1A = Machine.Position.CommandedA;
             Setting.General_Mark1Name = Mark1_textBox.Text;
             Bookmark1_button.Text = Setting.General_Mark1Name;
         }
 
         private void SetMark2_button_Click(object sender, EventArgs e)
         {
-            Setting.General_Mark2X = Machine.Position.CurrentX;
-            Setting.General_Mark2Y = Machine.Position.CurrentY;
-            Setting.General_Mark2A = Machine.Position.CurrentA;
+            Setting.General_Mark2X = Machine.Position.DesiredX;
+            Setting.General_Mark2Y = Machine.Position.DesiredY;
+            Setting.General_Mark2A = Machine.Position.CommandedA;
             Setting.General_Mark2Name = Mark2_textBox.Text;
             Bookmark2_button.Text = Setting.General_Mark2Name;
         }
 
         private void SetMark3_button_Click(object sender, EventArgs e)
         {
-            Setting.General_Mark3X = Machine.Position.CurrentX;
-            Setting.General_Mark3Y = Machine.Position.CurrentY;
-            Setting.General_Mark3A = Machine.Position.CurrentA;
+            Setting.General_Mark3X = Machine.Position.DesiredX;
+            Setting.General_Mark3Y = Machine.Position.DesiredY;
+            Setting.General_Mark3A = Machine.Position.CommandedA;
             Setting.General_Mark3Name = Mark3_textBox.Text;
             Bookmark3_button.Text = Setting.General_Mark3Name;
         }
 
         private void SetMark4_button_Click(object sender, EventArgs e)
         {
-            Setting.General_Mark4X = Machine.Position.CurrentX;
-            Setting.General_Mark4Y = Machine.Position.CurrentY;
-            Setting.General_Mark4A = Machine.Position.CurrentA;
+            Setting.General_Mark4X = Machine.Position.DesiredX;
+            Setting.General_Mark4Y = Machine.Position.DesiredY;
+            Setting.General_Mark4A = Machine.Position.CommandedA;
             Setting.General_Mark4Name = Mark4_textBox.Text;
             Bookmark4_button.Text = Setting.General_Mark4Name;
         }
 
         private void SetMark5_button_Click(object sender, EventArgs e)
         {
-            Setting.General_Mark5X = Machine.Position.CurrentX;
-            Setting.General_Mark5Y = Machine.Position.CurrentY;
-            Setting.General_Mark5A = Machine.Position.CurrentA;
+            Setting.General_Mark5X = Machine.Position.DesiredX;
+            Setting.General_Mark5Y = Machine.Position.DesiredY;
+            Setting.General_Mark5A = Machine.Position.CommandedA;
             Setting.General_Mark5Name = Mark5_textBox.Text;
             Bookmark5_button.Text = Setting.General_Mark5Name;
         }
 
         private void SetMark6_button_Click(object sender, EventArgs e)
         {
-            Setting.General_Mark6X = Machine.Position.CurrentX;
-            Setting.General_Mark6Y = Machine.Position.CurrentY;
-            Setting.General_Mark6A = Machine.Position.CurrentA;
+            Setting.General_Mark6X = Machine.Position.DesiredX;
+            Setting.General_Mark6Y = Machine.Position.DesiredY;
+            Setting.General_Mark6A = Machine.Position.CommandedA;
             Setting.General_Mark6Name = Mark6_textBox.Text;
             Bookmark6_button.Text = Setting.General_Mark6Name;
         }
@@ -6346,9 +6346,9 @@ namespace LitePlacer
         {
             if ((ModifierKeys & Keys.Control) == Keys.Control)
             {
-                Setting.General_Mark1X = Machine.Position.CurrentX;
-                Setting.General_Mark1Y = Machine.Position.CurrentY;
-                Setting.General_Mark1A = Machine.Position.CurrentA;
+                Setting.General_Mark1X = Machine.Position.DesiredX;
+                Setting.General_Mark1Y = Machine.Position.DesiredY;
+                Setting.General_Mark1A = Machine.Position.CommandedA;
                 return;
             };
             await Machine.Move.MoveXYASafeAsync(Setting.General_Mark1X, Setting.General_Mark1Y, Setting.General_Mark1A);
@@ -6358,9 +6358,9 @@ namespace LitePlacer
         {
             if ((ModifierKeys & Keys.Control) == Keys.Control)
             {
-                Setting.General_Mark2X = Machine.Position.CurrentX;
-                Setting.General_Mark2Y = Machine.Position.CurrentY;
-                Setting.General_Mark2A = Machine.Position.CurrentA;
+                Setting.General_Mark2X = Machine.Position.DesiredX;
+                Setting.General_Mark2Y = Machine.Position.DesiredY;
+                Setting.General_Mark2A = Machine.Position.CommandedA;
                 return;
             };
             await Machine.Move.MoveXYASafeAsync(Setting.General_Mark2X, Setting.General_Mark2Y, Setting.General_Mark2A);
@@ -6370,9 +6370,9 @@ namespace LitePlacer
         {
             if ((ModifierKeys & Keys.Control) == Keys.Control)
             {
-                Setting.General_Mark3X = Machine.Position.CurrentX;
-                Setting.General_Mark3Y = Machine.Position.CurrentY;
-                Setting.General_Mark3A = Machine.Position.CurrentA;
+                Setting.General_Mark3X = Machine.Position.DesiredX;
+                Setting.General_Mark3Y = Machine.Position.DesiredY;
+                Setting.General_Mark3A = Machine.Position.CommandedA;
                 return;
             };
             await Machine.Move.MoveXYASafeAsync(Setting.General_Mark3X, Setting.General_Mark3Y, Setting.General_Mark3A);
@@ -6382,9 +6382,9 @@ namespace LitePlacer
         {
             if ((ModifierKeys & Keys.Control) == Keys.Control)
             {
-                Setting.General_Mark4X = Machine.Position.CurrentX;
-                Setting.General_Mark4Y = Machine.Position.CurrentY;
-                Setting.General_Mark4A = Machine.Position.CurrentA;
+                Setting.General_Mark4X = Machine.Position.DesiredX;
+                Setting.General_Mark4Y = Machine.Position.DesiredY;
+                Setting.General_Mark4A = Machine.Position.CommandedA;
                 return;
             };
             await Machine.Move.MoveXYASafeAsync(Setting.General_Mark4X, Setting.General_Mark4Y, Setting.General_Mark4A);
@@ -6394,9 +6394,9 @@ namespace LitePlacer
         {
             if ((ModifierKeys & Keys.Control) == Keys.Control)
             {
-                Setting.General_Mark5X = Machine.Position.CurrentX;
-                Setting.General_Mark5Y = Machine.Position.CurrentY;
-                Setting.General_Mark5A = Machine.Position.CurrentA;
+                Setting.General_Mark5X = Machine.Position.DesiredX;
+                Setting.General_Mark5Y = Machine.Position.DesiredY;
+                Setting.General_Mark5A = Machine.Position.CommandedA;
                 return;
             };
             await Machine.Move.MoveXYASafeAsync(Setting.General_Mark5X, Setting.General_Mark5Y, Setting.General_Mark5A);
@@ -6406,9 +6406,9 @@ namespace LitePlacer
         {
             if ((ModifierKeys & Keys.Control) == Keys.Control)
             {
-                Setting.General_Mark6X = Machine.Position.CurrentX;
-                Setting.General_Mark6Y = Machine.Position.CurrentY;
-                Setting.General_Mark6A = Machine.Position.CurrentA;
+                Setting.General_Mark6X = Machine.Position.DesiredX;
+                Setting.General_Mark6Y = Machine.Position.DesiredY;
+                Setting.General_Mark6A = Machine.Position.CommandedA;
                 return;
             };
             await Machine.Move.MoveXYASafeAsync(Setting.General_Mark6X, Setting.General_Mark6Y, Setting.General_Mark6A);
@@ -8360,9 +8360,9 @@ namespace LitePlacer
                 {
                     return false;
                 }
-                double Zpickup = Machine.Position.CurrentZ - Setting.General_PlacementBackOff + Setting.Placement_Depth;
+                double Zpickup = Machine.Position.CommandedZ - Setting.General_PlacementBackOff + Setting.Placement_Depth;
                 Tapes_dataGridView.Rows[TapeNumber].Cells["Z_Pickup_Column"].Value = Zpickup.ToString();
-                DisplayText("PickUpPart_m(): Probed Z= " + Machine.Position.CurrentZ.ToString());
+                DisplayText("PickUpPart_m(): Probed Z= " + Machine.Position.CommandedZ.ToString());
             }
             else
             {
@@ -8692,9 +8692,9 @@ namespace LitePlacer
                 {
                     return false;
                 };
-                double Zplace = Machine.Position.CurrentZ - Setting.General_PlacementBackOff + Setting.Placement_Depth;
+                double Zplace = Machine.Position.CommandedZ - Setting.General_PlacementBackOff + Setting.Placement_Depth;
                 Tapes_dataGridView.Rows[TapeNum].Cells["Z_Place_Column"].Value = Zplace.ToString();
-                DisplayText("PutPartDown_m(): Probed placement Z= " + Machine.Position.CurrentZ.ToString());
+                DisplayText("PutPartDown_m(): Probed placement Z= " + Machine.Position.CommandedZ.ToString());
             }
             else
             {
@@ -8741,8 +8741,8 @@ namespace LitePlacer
                 {
                     return false;
                 }
-                LoosePartPlaceZ = Machine.Position.CurrentZ - Setting.General_PlacementBackOff + Setting.Placement_Depth;
-                DisplayText("PutLoosePartDown_m(): probed Z= " + Machine.Position.CurrentZ.ToString());
+                LoosePartPlaceZ = Machine.Position.CommandedZ - Setting.General_PlacementBackOff + Setting.Placement_Depth;
+                DisplayText("PutLoosePartDown_m(): probed Z= " + Machine.Position.CommandedZ.ToString());
                 DisplayText("PutLoosePartDown_m(): placement Z= " + LoosePartPlaceZ.ToString());
             }
             else
@@ -8953,7 +8953,7 @@ namespace LitePlacer
                 }
                 else
                 {
-                    if (!await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX + X, Machine.Position.CurrentY + Y))
+                    if (!await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX + X, Machine.Position.DesiredY + Y))
                     {
                         return false;
                     }
@@ -8962,7 +8962,7 @@ namespace LitePlacer
             // go exactly on top of component for user confidence and for snapshot to be at right place
             if (Snapshot)
             {
-                if (!await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX + X, Machine.Position.CurrentY + Y))
+                if (!await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX + X, Machine.Position.DesiredY + Y))
                 {
                     return false;
                 }
@@ -8974,7 +8974,7 @@ namespace LitePlacer
                 Y = 0.0;
             };
 
-            if (!Nozzle.Move_m(Machine.Position.CurrentX + X, Machine.Position.CurrentY + Y, A))
+            if (!Nozzle.Move_m(Machine.Position.DesiredX + X, Machine.Position.DesiredY + Y, A))
             {
                 return false;
             }
@@ -8987,8 +8987,8 @@ namespace LitePlacer
                     Machine.DownCamera.Draw_Snapshot = true;
                     return false;
                 }
-                LoosePartPickupZ = Machine.Position.CurrentZ - Setting.General_PlacementBackOff + Setting.Placement_Depth;
-                DisplayText("PickUpLoosePart_m(): Probed Z= " + Machine.Position.CurrentZ.ToString());
+                LoosePartPickupZ = Machine.Position.CommandedZ - Setting.General_PlacementBackOff + Setting.Placement_Depth;
+                DisplayText("PickUpLoosePart_m(): Probed Z= " + Machine.Position.CommandedZ.ToString());
                 DisplayText("PickUpLoosePart_m(): Pickup Z= " + LoosePartPickupZ.ToString());
             }
             else
@@ -9176,9 +9176,9 @@ namespace LitePlacer
                     }
                 } while (!EnterKeyHit);
                 Machine.DownCamera.Draw_Snapshot = false;
-                X = Machine.Position.CurrentX;
-                Y = Machine.Position.CurrentY;
-                A = Machine.Position.CurrentA;
+                X = Machine.Position.DesiredX;
+                Y = Machine.Position.DesiredY;
+                A = Machine.Position.CommandedA;
             };
 
             // Take the part to position:
@@ -9497,8 +9497,8 @@ namespace LitePlacer
             double X = result.Item2;
             double Y = result.Item3;
 
-            fid.X_machine = Machine.Position.CurrentX + X;
-            fid.Y_machine = Machine.Position.CurrentY + Y;
+            fid.X_machine = Machine.Position.DesiredX + X;
+            fid.Y_machine = Machine.Position.DesiredY + Y;
             // For user confidence, show it:
             for (int i = 0; i < 50; i++)
             {
@@ -10151,8 +10151,8 @@ namespace LitePlacer
 
         private async void TestNozzleRecognition_button_Click(object sender, EventArgs e)
         {
-            double X = Machine.Position.CurrentX;
-            double Y = Machine.Position.CurrentY;
+            double X = Machine.Position.DesiredX;
+            double Y = Machine.Position.DesiredY;
             await CalibrateNozzle_mAsync();
             await Machine.Move.MoveXYASafeAsync(X, Y, 0.0);
         }
@@ -11234,8 +11234,8 @@ namespace LitePlacer
             // Id_Column: User settable name for the tape
             Tapes_dataGridView.Rows[index].Cells["Id_Column"].Value = index.ToString();
             // FirstX_Column, FirstY_Column: Originally set approximate location for the first hole
-            Tapes_dataGridView.Rows[index].Cells["FirstX_Column"].Value = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            Tapes_dataGridView.Rows[index].Cells["FirstY_Column"].Value = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[index].Cells["FirstX_Column"].Value = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[index].Cells["FirstY_Column"].Value = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
             // Orientation_Column: Which way the tape is set. It is the direction to go for next part
             Tapes_dataGridView.Rows[index].Cells["Orientation_Column"].Value = "+X";
             // Rotation_Column: Which way the parts are rotated on the tape. if 0, parts form +Y oriented tape
@@ -11249,8 +11249,8 @@ namespace LitePlacer
             // NextPart_Column tells the part number of next part. 
             // NextX, NextY tell the approximate hole location for the next part. Incremented when a part is picked up.
             Tapes_dataGridView.Rows[index].Cells["NextPart_Column"].Value = "1";
-            Tapes_dataGridView.Rows[index].Cells["Next_X_Column"].Value = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            Tapes_dataGridView.Rows[index].Cells["Next_Y_Column"].Value = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[index].Cells["Next_X_Column"].Value = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[index].Cells["Next_Y_Column"].Value = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
             // Z_Pickup_Column, Z_Place_Column: The Z values are measured when first part is placed. Picking up and
             // placing the next parts will then be faster.
             Tapes_dataGridView.Rows[index].Cells["Z_Pickup_Column"].Value = "--";
@@ -11262,9 +11262,9 @@ namespace LitePlacer
             // automatic feeder), orientation does not apply, rotation is used and manually set A correction is also used (it is
             // almost impossible to mount feeders or part holders exactly perpedicular).
             Tapes_dataGridView.Rows[index].Cells["CoordinatesForParts_Column"].Value = false;
-            Tapes_dataGridView.Rows[index].Cells["LastX_Column"].Value = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
-            Tapes_dataGridView.Rows[index].Cells["LastY_Column"].Value = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
-            Tapes_dataGridView.Rows[index].Cells["RotationDirect_Column"].Value = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[index].Cells["LastX_Column"].Value = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[index].Cells["LastY_Column"].Value = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[index].Cells["RotationDirect_Column"].Value = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
             TapesGridEditRow = index;
             Invoke_TapeEditDialog(index);
         }
@@ -11314,12 +11314,12 @@ namespace LitePlacer
                 return;
             };
             int row = Tapes_dataGridView.CurrentCell.RowIndex;
-            Tapes_dataGridView.Rows[row].Cells["FirstX_Column"].Value = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            Tapes_dataGridView.Rows[row].Cells["FirstY_Column"].Value = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[row].Cells["FirstX_Column"].Value = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[row].Cells["FirstY_Column"].Value = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
             // fix #22 update next coordinates when setting hole 1
             Tapes_dataGridView.Rows[row].Cells["NextPart_Column"].Value = "1";
-            Tapes_dataGridView.Rows[row].Cells["Next_X_Column"].Value = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-            Tapes_dataGridView.Rows[row].Cells["Next_Y_Column"].Value = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[row].Cells["Next_X_Column"].Value = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
+            Tapes_dataGridView.Rows[row].Cells["Next_Y_Column"].Value = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
 
         }
 
@@ -11420,8 +11420,8 @@ namespace LitePlacer
             }
             DataGridViewRow Row = Tapes_dataGridView.Rows[Tapes_dataGridView.CurrentCell.RowIndex];
             Row.Cells["NextPart_Column"].Value = no.ToString();
-            Row.Cells["Next_X_Column"].Value = Machine.Position.CurrentX.ToString();
-            Row.Cells["Next_Y_Column"].Value = Machine.Position.CurrentY.ToString();
+            Row.Cells["Next_X_Column"].Value = Machine.Position.DesiredX.ToString();
+            Row.Cells["Next_Y_Column"].Value = Machine.Position.DesiredY.ToString();
         }
 
         private async void Tape_GoToNext_button_Click(object sender, EventArgs e)
@@ -11926,12 +11926,12 @@ namespace LitePlacer
 
         private async void Test1_button_Click(object sender, EventArgs e)
         {
-            double Xmark = Machine.Position.CurrentX;
-            double Ymark = Machine.Position.CurrentY;
+            double Xmark = Machine.Position.DesiredX;
+            double Ymark = Machine.Position.DesiredY;
             DisplayText("test 1: Pick up this (probing)");
             Machine.Pump.PumpOn();
             Machine.Vacuum.VacuumOff();
-            if (!Nozzle.Move_m(Machine.Position.CurrentX, Machine.Position.CurrentY, Machine.Position.CurrentA))
+            if (!Nozzle.Move_m(Machine.Position.DesiredX, Machine.Position.DesiredY, Machine.Position.CommandedA))
             {
                 Machine.Pump.PumpOff_NoWorkaround();
                 return;
@@ -11951,10 +11951,10 @@ namespace LitePlacer
         // static int test2_state = 0;
         private async void Test2_button_Click(object sender, EventArgs e)
         {
-            double Xmark = Machine.Position.CurrentX;
-            double Ymark = Machine.Position.CurrentY;
+            double Xmark = Machine.Position.DesiredX;
+            double Ymark = Machine.Position.DesiredY;
             DisplayText("test 2: Place here (probing)");
-            if (!Nozzle.Move_m(Machine.Position.CurrentX, Machine.Position.CurrentY, Machine.Position.CurrentA))
+            if (!Nozzle.Move_m(Machine.Position.DesiredX, Machine.Position.DesiredY, Machine.Position.CommandedA))
             {
                 return;
             }
@@ -11969,9 +11969,9 @@ namespace LitePlacer
 
         private async void Test3_button_Click(object sender, EventArgs e)
         {
-            Xmark = Machine.Position.CurrentX;
-            Ymark = Machine.Position.CurrentY;
-            await Machine.Move.MoveXYSafeAsync((Machine.Position.CurrentX + Setting.DownCam_NozzleOffsetX), (Machine.Position.CurrentY + Setting.DownCam_NozzleOffsetY));
+            Xmark = Machine.Position.DesiredX;
+            Ymark = Machine.Position.DesiredY;
+            await Machine.Move.MoveXYSafeAsync((Machine.Position.DesiredX + Setting.DownCam_NozzleOffsetX), (Machine.Position.DesiredY + Setting.DownCam_NozzleOffsetY));
             await Nozzle_ProbeDown_mAsync();
         }
 
@@ -11985,7 +11985,7 @@ namespace LitePlacer
             double xo = Setting.DownCam_NozzleOffsetX;
             double yp = Setting.UpCam_PositionY;
             double yo = Setting.DownCam_NozzleOffsetY;
-            Nozzle.Move_m(xp - xo, yp - yo, Machine.Position.CurrentA);
+            Nozzle.Move_m(xp - xo, yp - yo, Machine.Position.CommandedA);
         }
 
         // =================================================================================
@@ -11995,9 +11995,9 @@ namespace LitePlacer
         private double Ymark;
         private async void Test5_button_Click(object sender, EventArgs e)
         {
-            Xmark = Machine.Position.CurrentX;
-            Ymark = Machine.Position.CurrentY;
-            if (!Nozzle.Move_m(Machine.Position.CurrentX, Machine.Position.CurrentY, Machine.Position.CurrentA))
+            Xmark = Machine.Position.DesiredX;
+            Ymark = Machine.Position.DesiredY;
+            if (!Nozzle.Move_m(Machine.Position.DesiredX, Machine.Position.DesiredY, Machine.Position.CommandedA))
             {
                 return;
             }
@@ -12040,7 +12040,7 @@ namespace LitePlacer
                     MessageBoxButtons.OK);
                 return;
             }
-            await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX - (dist / 2.0), Machine.Position.CurrentY - (dist / 2.0));
+            await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX - (dist / 2.0), Machine.Position.DesiredY - (dist / 2.0));
             Thread.Sleep(500);
             if (Machine.DownCamera.GetClosestCircle(out X1, out Y1, 250.0) <= 0)
             {
@@ -12051,7 +12051,7 @@ namespace LitePlacer
                 return;
             }
             double X2, Y2;
-            await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX + dist, Machine.Position.CurrentY + dist);
+            await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX + dist, Machine.Position.DesiredY + dist);
             Thread.Sleep(500);
             if (Machine.DownCamera.GetClosestCircle(out X2, out Y2, 250.0) <= 0)
             {
@@ -12063,7 +12063,7 @@ namespace LitePlacer
             }
             // sanity check
             double X3, Y3;
-            await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX - (dist / 2.0), Machine.Position.CurrentY - (dist / 2.0));
+            await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX - (dist / 2.0), Machine.Position.DesiredY - (dist / 2.0));
             Thread.Sleep(500);
             if (Machine.DownCamera.GetClosestCircle(out X3, out Y3, 10.0) <= 0)
             {
@@ -12202,7 +12202,7 @@ namespace LitePlacer
         {
             SelectCamera(Machine.UpCamera);
             DisplayText("UpCam_TakeSnapshot()");
-            Machine.UpCamera.SnapshotRotation = Machine.Position.CurrentA;
+            Machine.UpCamera.SnapshotRotation = Machine.Position.CommandedA;
             Machine.UpCamera.BuildMeasurementFunctionsList(UpcamSnapshot_dataGridView);
             Machine.UpCamera.TakeSnapshot();
 
@@ -12241,7 +12241,7 @@ namespace LitePlacer
             // DownCam Snapshot is ok, copy it to original too
             Machine.DownCamera.SnapshotOriginalImage = new Bitmap(Machine.DownCamera.SnapshotImage);
 
-            Machine.DownCamera.SnapshotRotation = Machine.Position.CurrentA;
+            Machine.DownCamera.SnapshotRotation = Machine.Position.CommandedA;
         }
 
         private void UpcamSnapshot_ColorBox_MouseClick(object sender, MouseEventArgs e)
@@ -12272,7 +12272,7 @@ namespace LitePlacer
 
         private void DownCam_TakeSnapshot_button_Click(object sender, EventArgs e)
         {
-            Machine.DownCamera.SnapshotRotation = Machine.Position.CurrentA;
+            Machine.DownCamera.SnapshotRotation = Machine.Position.CommandedA;
             Machine.DownCamera.BuildMeasurementFunctionsList(DowncamSnapshot_dataGridView);
             Machine.DownCamera.TakeSnapshot();
         }
@@ -13974,9 +13974,9 @@ namespace LitePlacer
 
             if (col <= Nozzledata_StartZColumn)
             {
-                grid.Rows[row].Cells[Nozzledata_StartXColumn].Value = Machine.Position.CurrentX.ToString("0.000", CultureInfo.InvariantCulture);
-                grid.Rows[row].Cells[Nozzledata_StartYColumn].Value = Machine.Position.CurrentY.ToString("0.000", CultureInfo.InvariantCulture);
-                grid.Rows[row].Cells[Nozzledata_StartZColumn].Value = Machine.Position.CurrentZ.ToString("0.000", CultureInfo.InvariantCulture);
+                grid.Rows[row].Cells[Nozzledata_StartXColumn].Value = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
+                grid.Rows[row].Cells[Nozzledata_StartYColumn].Value = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
+                grid.Rows[row].Cells[Nozzledata_StartZColumn].Value = Machine.Position.CommandedZ.ToString("0.000", CultureInfo.InvariantCulture);
                 grid.CurrentCell = grid.Rows[row].Cells[Nozzledata_StartZColumn + 2];
             }
             else
@@ -14034,17 +14034,17 @@ namespace LitePlacer
                 // get current position
                 // check that one but only one coordinate has changed
                 int count = 0;
-                if (Math.Abs(X - Machine.Position.CurrentX) > 0.01)
+                if (Math.Abs(X - Machine.Position.DesiredX) > 0.01)
                 {
                     DisplayText("X changed");
                     count++;
                 }
-                if (Math.Abs(Y - Machine.Position.CurrentY) > 0.01)
+                if (Math.Abs(Y - Machine.Position.DesiredY) > 0.01)
                 {
                     DisplayText("Y changed");
                     count++;
                 }
-                if (Math.Abs(Z - Machine.Position.CurrentZ) > 0.01)
+                if (Math.Abs(Z - Machine.Position.CommandedZ) > 0.01)
                 {
                     DisplayText("Z changed");
                     count++;
@@ -14067,20 +14067,20 @@ namespace LitePlacer
                 {
                     grid.CurrentCell = grid.Rows[row].Cells[2 * MoveNo + Nozzledata_StartZColumn + 2];
                 }
-                if (Math.Abs(X - Machine.Position.CurrentX) > 0.01)
+                if (Math.Abs(X - Machine.Position.DesiredX) > 0.01)
                 {
                     grid.Rows[row].Cells[dCol].Value = "X";
-                    grid.Rows[row].Cells[amCol].Value = (Machine.Position.CurrentX - X).ToString();
+                    grid.Rows[row].Cells[amCol].Value = (Machine.Position.DesiredX - X).ToString();
                     return;
                 }
-                if (Math.Abs(Y - Machine.Position.CurrentY) > 0.01)
+                if (Math.Abs(Y - Machine.Position.DesiredY) > 0.01)
                 {
                     grid.Rows[row].Cells[dCol].Value = "Y";
-                    grid.Rows[row].Cells[amCol].Value = (Machine.Position.CurrentY - Y).ToString();
+                    grid.Rows[row].Cells[amCol].Value = (Machine.Position.DesiredY - Y).ToString();
                     return;
                 }
                 grid.Rows[row].Cells[dCol].Value = "Z";
-                grid.Rows[row].Cells[amCol].Value = (Machine.Position.CurrentZ - Z).ToString();
+                grid.Rows[row].Cells[amCol].Value = (Machine.Position.CommandedZ - Z).ToString();
                 return;
             }
         }
@@ -14433,15 +14433,15 @@ namespace LitePlacer
 
             if (axis=="Z")
             {
-                if (!await Machine.Move.MoveZSafeAsync(Machine.Position.CurrentZ + val))
+                if (!await Machine.Move.MoveZSafeAsync(Machine.Position.CommandedZ + val))
                 {
                     return new Tuple<bool, bool>(false, AllDone);
                 }
             }
             else
             {
-                double X = Machine.Position.CurrentX;
-                double Y = Machine.Position.CurrentY;
+                double X = Machine.Position.DesiredX;
+                double Y = Machine.Position.DesiredY;
                 switch (axis)
                 {
                     case "X":
@@ -14830,7 +14830,7 @@ namespace LitePlacer
         {
             if (DownCameraRotationFollowsA)
             {
-                Machine.DownCamera.Box.BoxRotationDeg = Machine.Position.CurrentA;
+                Machine.DownCamera.Box.BoxRotationDeg = Machine.Position.CommandedA;
             }
         }
 
@@ -15237,14 +15237,14 @@ namespace LitePlacer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Nozzle.Move_m(Machine.Position.CurrentX, Machine.Position.CurrentY, Machine.Position.CurrentA);
+            Nozzle.Move_m(Machine.Position.DesiredX, Machine.Position.DesiredY, Machine.Position.CommandedA);
         }
 
         private async void button2_Click(object sender, EventArgs e)
         {
             double xo = Setting.DownCam_NozzleOffsetX;
             double yo = Setting.DownCam_NozzleOffsetY;
-            await Machine.Move.MoveXYSafeAsync(Machine.Position.CurrentX - xo, Machine.Position.CurrentY - yo);
+            await Machine.Move.MoveXYSafeAsync(Machine.Position.DesiredX - xo, Machine.Position.DesiredY - yo);
         }
 
         private async void button3_Click(object sender, EventArgs e)

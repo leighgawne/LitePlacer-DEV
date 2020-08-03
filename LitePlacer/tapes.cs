@@ -397,8 +397,8 @@ namespace LitePlacer
                 appLogger.Error("Can't find tape hole");
                 return new Tuple<bool, double, double>(false, ResultX, ResultY);
             }
-            ResultX = Machine.Position.CurrentX + X;
-            ResultY = Machine.Position.CurrentY + Y;
+            ResultX = Machine.Position.DesiredX + X;
+            ResultY = Machine.Position.DesiredY + Y;
             return new Tuple<bool, double, double>(true, ResultX, ResultY);
         }
 
@@ -696,8 +696,8 @@ namespace LitePlacer
             HoleY = result.Item3;
 
             // The hole locations are:
-            HoleX = Machine.Position.CurrentX + HoleX;
-            HoleY = Machine.Position.CurrentY + HoleY;
+            HoleX = Machine.Position.DesiredX + HoleX;
+            HoleY = Machine.Position.DesiredY + HoleY;
 
 			// ==================================================
 			// find the part location and go there:
