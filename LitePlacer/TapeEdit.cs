@@ -376,15 +376,15 @@ namespace LitePlacer
 
         private void GetFirstPosition_button_Click(object sender, EventArgs e)
         {
-            FirstX_textBox.Text = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
-            FirstY_textBox.Text = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
+            FirstX_textBox.Text = Machine.Position.CommandedX.ToString("0.000", CultureInfo.InvariantCulture);
+            FirstY_textBox.Text = Machine.Position.CommandedY.ToString("0.000", CultureInfo.InvariantCulture);
             RotationDirect_textBox.Text = Machine.Position.CommandedA.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void GetLastPosition_button_Click(object sender, EventArgs e)
         {
-            LastX_textBox.Text = Machine.Position.DesiredX.ToString("0.000", CultureInfo.InvariantCulture);
-            LastY_textBox.Text = Machine.Position.DesiredY.ToString("0.000", CultureInfo.InvariantCulture);
+            LastX_textBox.Text = Machine.Position.CommandedX.ToString("0.000", CultureInfo.InvariantCulture);
+            LastY_textBox.Text = Machine.Position.CommandedY.ToString("0.000", CultureInfo.InvariantCulture);
         }
 
         private void GetPickupZ_button_Click(object sender, EventArgs e)
